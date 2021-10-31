@@ -1,6 +1,6 @@
 import requests
 from urllib import parse
-from backend.riotapi.ApiConnect import ApiConnect
+from riotapi.ApiConnect import ApiConnect
 
 class Summoner:
 
