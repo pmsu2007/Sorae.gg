@@ -3,8 +3,8 @@ import requests
 
 class ApiConnect:
 
-    def __init__(self, api_key):
-        self._apiKey = api_key
+    def __init__(self):
+        self._apiKey = ""
 
     def getHeader (self):
         headers = {
