@@ -26,6 +26,14 @@ class GameRecord(models.Model):
     경기 기록
     '''
     summoner_name = models.CharField(max_length=20, primary_key=True)
+    champLevel = models.IntegerField()
+    champName = models.CharField(max_length=20)
+    kill = models.IntegerField()
+    death = models.IntegerField()
+    assist = models.IntegerField()
+    CS = models.IntegerField()
+    gameResult = models.BooleanField()
+    playTime = models.IntegerField()
 
     def __str__(self):
         return self.summoner_name
@@ -57,6 +65,8 @@ class UpdateDB:
                               , free_leaguePoints=info['free']['leaguePoints'])
         _modelInstance.save()
 
+    def saveGameRecord(self, info):
+        _modelInstance = GameRecord(summoner_name=self._userName, champLevel=info['champLevel'])
 
 if __name__ == "__main__":
     DB = UpdateDB("민스님")
