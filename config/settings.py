@@ -31,8 +31,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'main.apps.MainConfig',
-    'summoner.apps.SummonerConfig',
+    'rest_framework', # Django REST framework
+    'main.apps.MainConfig', # main 관련 테이블 생성
+    'summoner.apps.SummonerConfig', # summoner 관련 테이블 생성
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

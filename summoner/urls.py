@@ -1,7 +1,8 @@
-from django.urls import path
+from django.urls import include, path
+from django.contrib import admin
+from summoner.views import TierListAPI
 
-from . import views
 
 urlpatterns = [
-    path('', views.index),
+    path('', TierListAPI.as_view())
 ]

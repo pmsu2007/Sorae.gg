@@ -26,20 +26,20 @@ class Summoner:
         response = requests.get(URL, headers=self._connect.getHeader())
         data = response.json()
 
-        print(data)
         for rank in data:
             if rank['queueType'] == "RANKED_SOLO_5x5":
-                solo = {'tier': rank["tier"], 'rank': rank["rank"], 'wins': rank["wins"],
-                        'losses': rank["losses"], 'leaguePoints': rank["leaguePoints"]}
-            else:
-                solo = {'tier': "", 'rank': "", 'wins': 0,
-                        'losses': 0, 'leaguePoints': 0}
+                if self._summonerName in rank['summonerName']:
+                    solo = {'tier': rank["tier"], 'rank': rank["rank"], 'wins': rank["wins"],
+                            'losses': rank["losses"], 'leaguePoints': rank["leaguePoints"]}
+                else:
+                    solo = {'tier': "", 'rank': "", 'wins': 0, 'losses': 0, 'leaguePoints': 0}
+
             if rank['queueType'] == "RANKED_FLEX_SR":
-                free = {'tier': rank["tier"], 'rank': rank["rank"], 'wins': rank["wins"],
-                        'losses': rank["losses"], 'leaguePoints': rank["leaguePoints"]}
-            else:
-                free = {'tier': "", 'rank': "", 'wins': 0,
-                        'losses': 0, 'leaguePoints': 0}
+                if self._summonerName in rank['summonerName']:
+                    free = {'tier': rank["tier"], 'rank': rank["rank"], 'wins': rank["wins"],
+                            'losses': rank["losses"], 'leaguePoints': rank["leaguePoints"]}
+                else:
+                    free = {'tier': "", 'rank': "", 'wins': 0, 'losses': 0, 'leaguePoints': 0}
 
         info = {'solo': solo, 'free': free}
         return info
@@ -56,7 +56,7 @@ class Summoner:
             if participant["summonerName"] == self._summonerName:
                 info['playTime'] = participant["timePlayed"]
                 info['championLevel'] = participant['championLevel']
-                info['championName'] = participant['championName']
+                #info['championName'] = participant['championName']
                 info['kill'] = participant["kills"]
                 info['death'] = participant["deaths"]
                 info['assist'] = participant["assists"]
@@ -87,4 +87,4 @@ if __name__ == "__main__":
     #with open('myinfo.json', 'w') as f:
     #    json.dump(data, f)
     print(user.getTier())
-    print(user.getTotalRecord(0,10))
+   # print(user.getTotalRecord(0,10))

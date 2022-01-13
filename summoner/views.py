@@ -1,7 +1,27 @@
-from django.shortcuts import render
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .serializers import TierSerializer
+from .models import Tier, UpdateDB
+from riotapi.SummonerData import Summoner
 
-# Create your views here.
-from django.http import HttpResponse
 
-def index(request):
-    return HttpResponse("안녕하세요 main에 오신것을 환영합니다.")
+class TierListAPI(APIView):
+
+    def get(self, request):
+        summonerName = request.GET['userName']  # localhost:8000/summoner?userName=민스님
+
+        summoner = Summoner(summonerName)
+        data = summoner.getTier()
+        DB = UpdateDB(summonerName)
+        DB.saveTier(data)
+
+        TierquerySet = Tier.objects.all()
+        TierquerySet = TierquerySet.filter(summoner_name=summonerName)
+
+        serializer = TierSerializer(TierquerySet, many=True)
+        return Response(serializer.data)
+
+
+if __name__ == "__main__":
+    user = Summoner("민스님")
+    print(user.getTier())
