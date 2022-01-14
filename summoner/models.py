@@ -25,8 +25,7 @@ class GameRecord(models.Model):
     '''
     경기 기록
     '''
-    summoner_name = models.CharField(max_length=20, primary_key=True)
-    match_ID = models.CharField(max_length=15, primary_key=True)
+    summoner_name = models.CharField(max_length=20, primary_key=True)  # summonerName + matchID
     champ_level = models.IntegerField()
     champ_name = models.CharField(max_length=20)
     kill = models.IntegerField()
@@ -45,7 +44,6 @@ class Summoner(models.Model):
     '''
     summoner_name = models.CharField(max_length=20, primary_key=True)
     summoner_level = models.IntegerField()
-    #summoner_rank = models.IntegerField()
     summoner_icon = models.IntegerField()
 
     def __str__(self):
@@ -67,7 +65,7 @@ class UpdateDB:
         _modelInstance.save()
 
     def createGameRecord(self, info):
-        _modelInstance = GameRecord(summoner_name=self._userName, match_ID=info['matchID'], champ_level=info['champLevel'],
+        _modelInstance = GameRecord(summoner_name=self._userName+info['matchID'], champ_level=info['champLevel'],
                                     champ_name=info['champName'], kill=info['kill'], death=info['death'], assist=info['assist'],
                                     CS=info['CS'], game_result=info['gameResult'], play_time=info['playTime'])
         _modelInstance.save()
@@ -77,10 +75,20 @@ class UpdateDB:
                                   , summoner_icon=info['profileIconId'])
 
     def updateTier(self, info):
-        _modelInstance = info
+        _modelInstance = Tier.object.all()
+        _modelInstance = _modelInstance.filter(summoner_name=self._userName)
+        _modelInstance.update(solo_tier=info['solo']['tier'], solo_rank = info['solo']['rank']
+                              , solo_wins=info['solo']['wins'], solo_losses=info['solo']['losses']
+                              , solo_leaguePoints=info['solo']['leaguePoints']
+                              , free_tier=info['free']['tier'], free_rank=info['free']['rank']
+                              , free_wins=info['free']['wins'], free_losses=info['free']['losses']
+                              , free_leaguePoints=info['free']['leaguePoints'])
 
     def updateSummoner(self, info):
-        _modelInstance = info
+        _modelInstance = Summoner.object.all()
+        _modelInstance = _modelInstance.filter(summoner_name=self._userName)
+        _modelInstance.update(summoner_level=info['summonerLevel'], summoner_icon=info['profileIconId'])
+
 
 if __name__ == "__main__":
     DB = UpdateDB("민스님")
