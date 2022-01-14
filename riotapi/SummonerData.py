@@ -1,7 +1,7 @@
 import requests
 from urllib import parse
 from riotapi.ApiConnect import ApiConnect
-import json
+
 
 class Summoner:
 
@@ -61,12 +61,13 @@ class Summoner:
         data = response.json()
 
         info = {'playTime': 0, 'champLevel': 0, 'championName': "", 'kill': 0, 'death': 0,
-                'assist': 0, 'CS': 0, 'gameResult': "" }
+                'assist': 0, 'CS': 0, 'gameResult': "", 'matchID': ""}
 
         for participant in data["info"]["participants"]:
             if participant["summonerName"] == self._summonerName:
+                info['matchID'] = matchID
                 info['champLevel'] = participant['champLevel']
-                info['championName'] = participant['championName']
+                info['champName'] = participant['championName']
                 info['kill'] = participant["kills"]
                 info['death'] = participant["deaths"]
                 info['assist'] = participant["assists"]
@@ -95,6 +96,14 @@ class Summoner:
             recordList.append(self.getRecord(matchID))
         return recordList
 
+    def getSummoner(self):
+        '''
+        summonerLevel
+        profileIcon
+        '''
+
+        return self._ID
+
 if __name__ == "__main__":
     user = Summoner("민스님")
     print(user._ID)
@@ -103,3 +112,4 @@ if __name__ == "__main__":
     #    json.dump(data, f)
     print(user.getTier())
     print(user.getTotalRecord(0,10))
+    print(user.getSummoner())
