@@ -331,3 +331,4 @@ backend/media/
 # Project folder
 .idea
 
+db.sqlite3
