@@ -8,7 +8,7 @@ from riotapi.SummonerData import Summoner
 class TierListAPI(APIView):
 
     def get(self, request):
-        summonerName = request.GET['userName']  # localhost:8000/summoner?userName=민스님
+        summonerName = request.GET['userName']  # localhost:8000/summoner?userName=민스님 //userName을 파라미터로 받는다
 
         summoner = Summoner(summonerName)
         data = summoner.getTier()

@@ -11,23 +11,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 
     <!--css-->
-    <link rel="stylesheet" href="./main.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
 </head>
 <body>
     <div class="l-container">
     <div class="header">
         <nav>
-            <a href="./index.html"><img src="./home-image.png" class="home-image"></a>
+            <a href="./index.html"><img src="{% static 'images/home-image.png' %}" class="home-image"></a>
         </nav>
     </div>
         <div class="logo">
-            <img src="./league-of-legends-icon.png" title = "" alt = "" class = "logo-image">
+            <img src="{% static 'images/league-of-legends-icon.png' %}" title = "" alt = "" class = "logo-image">
         </div>
         <div class="serach-box">
-        <form class="search-form" action="./summoner/" method="get" autocomplete="off">
+        <form class="search-form" action="../summoner/" method="get" autocomplete="off">
             <input type="text" name="userName" class="search-text" placeholder="소환사명을 입력해주세요" autocomplete="off">
             <button type="submit" class="search-button">
-                <img src="./search-icon.png" class="search-icon"> 
+                <img src="{% static 'images/search-icon.png' %}" class="search-icon">
             </button>
         </form>
         </div>
