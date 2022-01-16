@@ -102,7 +102,7 @@ class UpdateDB:
         Summoner 테이블에 레코드 생성
         """
         _modelInstance = Summoner(summoner_name=self._userName, summoner_level=info['summonerLevel']
-                                  , summoner_icon=info['profileIconId'])
+                                  , summoner_icon=info['summonerIcon'])
 
     def updateTier(self, info):
         """
@@ -123,7 +123,7 @@ class UpdateDB:
         """
         _modelInstance = Summoner.objects.all()
         _modelInstance = _modelInstance.filter(summoner_name=self._userName)
-        _modelInstance.update(summoner_level=info['summonerLevel'], summoner_icon=info['profileIconId'])
+        _modelInstance.update(summoner_level=info['summonerLevel'], summoner_icon=info['summonerIcon'])
 
 
     def deleteGameRecord(self, summonerName):
