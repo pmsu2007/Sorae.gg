@@ -5,23 +5,23 @@ from riotapi.ApiConnect import ApiConnect
 
 class Summoner:
 
+    """
+    Riot API로부터 데이터를 가공하는 모듈
+    """
+
     def __init__(self, summonerName):
         self._connect = ApiConnect()
         self._summonerName = summonerName
         self._ID = self._connect.getEncryptID(summonerName)
-        '''
+        """
         accountId : Encrypted account ID
         id : Encrypted summoner ID
         puuid : Encrypted PUUID
-        '''
+        """
     def getTier(self):
         '''
-        솔로랭크 & 자유랭크 정보
-        tier : PLATINUM
-        rank : II
-        wins :  188
-        loses : 167
-        leaguePoints : 29
+        솔로랭크 & 자유랭크 정보를 딕셔너리로 반환
+        :return: Tier information(dict)
         '''
         URL = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/" + self._ID["id"]
         response = requests.get(URL, headers=self._connect.getHeader())
@@ -32,12 +32,10 @@ class Summoner:
 
         for rank in data:
             if rank['queueType'] == "RANKED_SOLO_5x5":
-                if self._summonerName in rank['summonerName']:
                     solo = {'tier': rank["tier"], 'rank': rank["rank"], 'wins': rank["wins"],
                             'losses': rank["losses"], 'leaguePoints': rank["leaguePoints"]}
 
             if rank['queueType'] == "RANKED_FLEX_SR":
-                if self._summonerName in rank['summonerName']:
                     free = {'tier': rank["tier"], 'rank': rank["rank"], 'wins': rank["wins"],
                             'losses': rank["losses"], 'leaguePoints': rank["leaguePoints"]}
 
@@ -46,21 +44,14 @@ class Summoner:
 
     def getRecord(self, matchID):
         '''
-        게임 기록 정보
-        playTime : 2203 -> 60으로 나눠서 사용
-        champLevel : 17
-        championName : Akali
-        kill : 11
-        death : 6
-        assist : 5
-        CS : 183
-        gameResult : False
+        한 경기 기록 정보를 딕셔너리로 반환
+        :return: GameRecord information(dict)
         '''
         URL = "https://asia.api.riotgames.com/lol/match/v5/matches/" + matchID
         response = requests.get(URL, headers=self._connect.getHeader())
         data = response.json()
 
-        info = {'playTime': 0, 'champLevel': 0, 'championName': "", 'kill': 0, 'death': 0,
+        info = {'playTime': 0, 'champLevel': 0, 'champName': "", 'kill': 0, 'death': 0,
                 'assist': 0, 'CS': 0, 'gameResult': "", 'matchID': ""}
 
         for participant in data["info"]["participants"]:
@@ -83,8 +74,9 @@ class Summoner:
 
     def getTotalRecord(self, start, end):
         '''
-        start부터 end까지 총 게임 기록
-        matchID를 받아서 getRecord에 넘겨준다.
+        start - end 까지 모든 게임 기록
+        matchID getRecord 에 파라미터로 넘겨준다.
+        :return: GameRecord informations (list)
         '''
         URL = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/" \
               + self._ID["puuid"] + "/ids?start=" + str(start) + "&count=" + str(end)
@@ -97,12 +89,21 @@ class Summoner:
         return recordList
 
     def getSummoner(self):
-        '''
-        summonerLevel
-        profileIcon
-        '''
+        """
+        소환사 정보를 딕셔너리로 반환
+        :return: Summoner information(dict)
+        """
+        encodingSummonerName = parse.quote(self._summonerName)
+        URL = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + encodingSummonerName
+        response = requests.get(URL, headers=self._connect.getHeader())
+        data = response.json()
 
-        return self._ID
+        info = {'summonerIcon':0, 'summonerLevel': 0}
+        if data['name'] == self._summonerName:
+            info['summonerLevel'] = data['summonerLevel']
+            info['summonerIcon'] = data['profileIconId']
+
+        return info
 
 if __name__ == "__main__":
     user = Summoner("민스님")
