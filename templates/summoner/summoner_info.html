@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block tiitle %} 소환사 : {{ userName }} {% endblock tiitle %} 
+{%block content%}
+<div class="l_container">
+{% if info %}
+    <!--소환사 이름이 존재-->
+{% else %}
+    <!--소환사 이름이 존재 X(Error)-->
+    
+    <div class="error alert alert-danger" role="alert">
+        
+    </div>
+{% endif %}
+</div>
+{%endblock%}
