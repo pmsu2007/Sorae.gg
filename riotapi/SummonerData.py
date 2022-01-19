@@ -51,24 +51,32 @@ class SummonerAPI:
         response = requests.get(URL, headers=self._connect.getHeader())
         data = response.json()
 
-        info = {'playTime': 0, 'champLevel': 0, 'champName': "", 'kill': 0, 'death': 0,
-                'assist': 0, 'CS': 0, 'gameResult': "", 'matchID': ""}
+        info = {'playTime': 0, 'champLevel': 0, 'champName': "", 'kill': 0, 'death': 0, 'assist': 0, 'CS': 0,
+                'gameResult': "", 'matchID': "", 'perks': 0, 'items': 0, 'spells': 0,
+                'gameMode': data['info']['gameMode'], 'totalDamage': 0}
 
-        for participant in data["info"]["participants"]:
+        for participant in data['info']['participants']:
             if participant["summonerName"] == self._summonerName:
                 info['matchID'] = matchID
                 info['champLevel'] = participant['champLevel']
                 info['champName'] = participant['championName']
-                info['kill'] = participant["kills"]
-                info['death'] = participant["deaths"]
-                info['assist'] = participant["assists"]
+                info['kill'] = participant['kills']
+                info['death'] = participant['deaths']
+                info['assist'] = participant['assists']
                 info['CS'] = participant['totalMinionsKilled']
                 info['gameResult'] = participant['win']
-                info['playTime'] = participant["timePlayed"]
-                #item = [participant["item0"], participant["item1"], participant["item2"], participant["item3"],
-                #        participant["item4"], participant["item5"], participant["item6"]]
-                #info['item'] = item
-                # 스펠, 같이 플레이한 소환사, 총 킬수
+                info['playTime'] = participant['timePlayed']
+                info['totalDamage'] = participant['totalDamageDealtToChampions']
+                info['visionWard'] = participant['visionWardsBoughtInGame']
+                item = [participant["item0"], participant["item1"], participant["item2"], participant["item3"],
+                        participant["item4"], participant["item5"], participant["item6"]]
+                info['items'] = item
+                perks = [participant['perks']['styles'][0]['selections'][0]['perk'],
+                         participant['perks']['styles'][1]['style']]
+                info['perks'] = perks
+                spells = [participant['summoner1Id'], participant['summoner2Id']]
+                info['spells'] = spells
+
         print(info)
         return info
 
