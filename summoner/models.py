@@ -43,6 +43,7 @@ class GameRecord(models.Model):
     """
     game_ID = models.CharField(max_length=30, primary_key=True)  # summonerName + matchID
     summoner_name = models.ForeignKey("User", related_name="record", on_delete=models.CASCADE, db_column="summoner_name")
+    game_mode = models.CharField(max_length=20)
     champ_level = models.IntegerField()
     champ_name = models.CharField(max_length=20)
     kill = models.IntegerField()
@@ -51,9 +52,23 @@ class GameRecord(models.Model):
     CS = models.IntegerField()
     game_result = models.BooleanField()
     play_time = models.IntegerField()
-    #
+    total_damage = models.IntegerField()
+    vision_ward = models.IntegerField()
 
-
+class DetailRecord(models.Model):
+    game_ID = models.ForeignKey("GameRecord", related_name="detail", on_delete=models.CASCADE,
+                                db_column="game_ID", primary_key=True)
+    primary_perk = models.IntegerField()
+    sub_perk = models.IntegerField()
+    item0 = models.IntegerField()
+    item1 = models.IntegerField()
+    item2 = models.IntegerField()
+    item3 = models.IntegerField()
+    item4 = models.IntegerField()
+    item5 = models.IntegerField()
+    item6 = models.IntegerField()
+    spell1 = models.IntegerField()
+    spell2 = models.IntegerField()
 
 
 
@@ -90,10 +105,11 @@ class UpdateDB:
         GameRecord 테이블에 레코드 생성
         """
         _modelInstance = GameRecord(game_ID=self._userName+info['matchID'], champ_level=info['champLevel'],
-                                    champ_name=info['champName'], kill=info['kill'],
+                                    champ_name=info['champName'], kill=info['kill'], game_mode=info['gameMode'],
                                     death=info['death'], assist=info['assist'], CS=info['CS'],
                                     game_result=info['gameResult'], play_time=info['playTime'],
-                                    summoner_name=User.objects.get(summoner_name=self._userName))
+                                    summoner_name=User.objects.get(summoner_name=self._userName),
+                                    total_damage=info['totalDamage'], vision_ward=info['visionWard'])
         _modelInstance.save()
 
     def createUser(self, info):
@@ -102,6 +118,18 @@ class UpdateDB:
         """
         _modelInstance = User(summoner_name=self._userName, summoner_level=info['summonerLevel'],
                               summoner_icon=info['summonerIcon'])
+        _modelInstance.save()
+
+    def createDetailRecord(self, info):
+        """
+        DetailRecord 테이블에 레코드 생성
+        """
+        _modelInstance = DetailRecord(game_ID=GameRecord.objects.get(game_ID=self._userName+info['matchID']),
+                                      primary_perk=info['perks'][0], sub_perk=info['perks'][1],
+                                      item0=info['items'][0], item1=info['items'][1], item2=info['items'][2],
+                                      item3=info['items'][3], item4=info['items'][4], item5=info['items'][5],
+                                      item6=info['items'][6], spell1=info['spells'][0], spell2=info['spells'][1])
+        _modelInstance.save()
 
     def updateTier(self, info):
         """
