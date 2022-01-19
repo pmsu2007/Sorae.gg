@@ -14,20 +14,24 @@
     <!--link css-->
     {% block css_link %}
     {% endblock css_link %}
-
+    <!--font apply-->
     <style>
         body { font-family: "Roboto", "Noto Sans KR", sans-serif; }
     </style>
 
 </head>
 <body>
+<!-- navigation bar-->
 {% include "nav.html" %}
+
 <!-- main content start -->
 {% block content %}
 
 {% endblock content %}  
 <!-- main content end -->  
 
+<!--footer-->
+{% include "footer.html" %}
 <!--jQuery-->
 <script src="{% static 'jquery-3.6.0.min.js' %}"></script>
 <!-- Bootstrap js-->
