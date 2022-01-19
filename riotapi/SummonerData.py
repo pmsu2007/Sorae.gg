@@ -3,7 +3,7 @@ from urllib import parse
 from riotapi.ApiConnect import ApiConnect
 
 
-class Summoner:
+class SummonerAPI:
 
     """
     Riot API로부터 데이터를 가공하는 모듈
@@ -88,7 +88,7 @@ class Summoner:
             recordList.append(self.getRecord(matchID))
         return recordList
 
-    def getSummoner(self):
+    def getUser(self):
         """
         소환사 정보를 딕셔너리로 반환
         :return: Summoner information(dict)
@@ -106,11 +106,11 @@ class Summoner:
         return info
 
 if __name__ == "__main__":
-    user = Summoner("민스님")
+    user = SummonerAPI("민스님")
     print(user._ID)
     #data = user.getTier()
     #with open('myinfo.json', 'w') as f:
     #    json.dump(data, f)
     print(user.getTier())
     print(user.getTotalRecord(0,10))
-    print(user.getSummoner())
+    print(user.getUser())
