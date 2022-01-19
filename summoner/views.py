@@ -10,29 +10,30 @@ class API(APIView):
 
     def get(self, request):
         summonerName = request.GET['userName']  # localhost:8000/summoner?userName=민스님 //userName을 파라미터로 받는다
-        # encodingSummonerName = parse.quote(summonerName)
-        # API
 
+        # API
         summonerAPI = SummonerAPI(summonerName)
         tierData = summonerAPI.getTier()
         gameRecordData = summonerAPI.getTotalRecord(0,10)
         userData = summonerAPI.getUser()
 
-        # DB 조회
-        UserquerySet = User.objects.filter(summoner_name=summonerName)
         # DB 저장
-        '''
         DB = UpdateDB(summonerName)
         DB.createUser(userData)
         DB.createTier(tierData)
         for record in gameRecordData:
             DB.createGameRecord(record)
-        '''
+            DB.createDetailRecord(record)
+
+        # DB 조회
+        UserquerySet = User.objects.filter(summoner_name=summonerName)
+
         # serializer
         serializer = UserSerializer(UserquerySet, many=True)
         return Response(serializer.data)
 
     def post(self, request):
+        #
         # summonerName = JSONParser().parse(request)
         # print(summonerName)
         pass
