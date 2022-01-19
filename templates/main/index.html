@@ -1,46 +1,40 @@
-<!DOCTYPE html>
-<html lang="kr">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>전적검색</title>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Test 전적검색{% endblock title %}
     <!--font-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 
-    <!--css-->
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
-</head>
-<body>
-    <div class="l-container">
-    <div class="header">
-        <nav>
-            <a href="./index.html"><img src="{% static 'images/home-image.png' %}" class="home-image"></a>
-        </nav>
-    </div>
-        <div class="logo">
-            <img src="{% static 'images/league-of-legends-icon.png' %}" title = "" alt = "" class = "logo-image">
-        </div>
-        <div class="serach-box">
-        <form class="search-form" action="../summoner/" method="get" autocomplete="off">
-            <input type="text" name="userName" class="search-text" placeholder="소환사명을 입력해주세요" autocomplete="off">
-            <button type="submit" class="search-button">
-                <img src="{% static 'images/search-icon.png' %}" class="search-icon">
-            </button>
-        </form>
-        </div>
-    </div>
-    <div class="footer">
-        <div class="developer footer-item">
-           Developers: 김남주, 김성민, 박민수
-        </div>
-        <div class="contact footer-item">
-            <a href="https://github.com/pmsu2007/OPGG_Clone">Github</a>
-        </div>
+    {% block css_link %}
+    <link rel="stylesheet" href="{% static 'css/main.css'%}">
+    {% endblock css_link %}
+
+
+{% block content %}
+
+<div class="l-container container-fluid">
+
+    <div class="logo">
+        <img src="{% static 'images/league-of-legends-black.png' %}" title = "" alt = "" class = "logo-image">
     </div>
 
-</body>
-</html>
+    <div class="serach-box">
+        <form class="search-form" action = "/summoner/" method="get" autocomplete="off">
+            {% csrf_token %}
+            <!-- <input type="text" name="userName" class="search-text" placeholder="소환사명을 입력해주세요" autocomplete="off"> -->
+            <div class="input-group mb-3 search-text">
+                <span class="input-group-text" id="inputGroup-sizing-default">소환사명</span>
+                <input type="text" name="userName" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" autocomplete="off" placeholder="소환사명을 입력해주세요">
+                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                    <img src="{% static 'images/search-icon.png' %}" class="search-icon">
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--empty-->
+<div class="empty"></div>
+
+{% endblock content %}

@@ -14,6 +14,15 @@ class Summoner:
         id : Encrypted summoner ID
         puuid : Encrypted PUUID
         '''
+    def isValid(self):
+        '''
+        check if response is valid
+        return false if invalid data(summonerName) is input
+        '''
+        if 'status' in self._ID.keys():
+            return False
+        return True
+        print(self._ID['status'])
     def getTier(self):
         '''
         솔로랭크 & 자유랭크 정보
@@ -60,13 +69,13 @@ class Summoner:
         response = requests.get(URL, headers=self._connect.getHeader())
         data = response.json()
 
-        info = {'playTime': 0, 'champLevel': 0, 'championName': "", 'kill': 0, 'death': 0,
+        info = {'playTime': 0, 'champLevel': 0, 'champName': "", 'kill': 0, 'death': 0,
                 'assist': 0, 'CS': 0, 'gameResult': "" }
 
         for participant in data["info"]["participants"]:
             if participant["summonerName"] == self._summonerName:
                 info['champLevel'] = participant['champLevel']
-                info['championName'] = participant['championName']
+                info['champName'] = participant['championName']
                 info['kill'] = participant["kills"]
                 info['death'] = participant["deaths"]
                 info['assist'] = participant["assists"]
@@ -77,7 +86,6 @@ class Summoner:
                 #        participant["item4"], participant["item5"], participant["item6"]]
                 #info['item'] = item
                 # 스펠, 같이 플레이한 소환사, 총 킬수
-        print(info)
         return info
 
     def getTotalRecord(self, start, end):
@@ -95,11 +103,3 @@ class Summoner:
             recordList.append(self.getRecord(matchID))
         return recordList
 
-if __name__ == "__main__":
-    user = Summoner("민스님")
-    print(user._ID)
-    #data = user.getTier()
-    #with open('myinfo.json', 'w') as f:
-    #    json.dump(data, f)
-    print(user.getTier())
-    print(user.getTotalRecord(0,10))

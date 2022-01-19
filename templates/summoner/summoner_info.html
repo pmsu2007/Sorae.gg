@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block tiitle %} 소환사 : {{ userName }} {% endblock tiitle %} 
+
+{% block css_link %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+<link rel="stylesheet" href="{% static 'css/summoner.css' %}">
+{% endblock css_link %}
+
+{%block content%}
+<div class="l_container">
+{% if info %} <!-- 소환사 정보가 존재하면 -->
+    <!--소환사 정보 Start-->
+
+    
+
+    <!--소환사 정보 End-->
+{% else %} <!--소환사 이름이 존재 X(Error)-->
+    <!--Error Start-->
+    <div class="error-box alert alert-danger align-text-top" role="alert">
+        <h1>소환사 '{{ userName }}'에 대한 정보가 존재하지 않습니다!</h1>
+    </div>
+    <div class="error-img">
+        <img class="rounded mx-auto d-block" src="{% static 'images/not_found.png' %}" alt="not_found">
+    </div>
+
+    <div class="empty"></div>
+    
+    <!--Error End-->
+{% endif %}
+</div>
+{%endblock%}
