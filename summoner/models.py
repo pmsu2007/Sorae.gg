@@ -1,18 +1,28 @@
 from django.db import models
-from riotapi.SummonerData import Summoner
-
 
 '''
 모델 변경사항 있을 시,
 makemigrations & migrate 해줘야 함
 '''
 
+class User(models.Model):
+    """
+    유저 정보
+    summoner_name 으로 조회
+    """
+    summoner_name = models.CharField(max_length=20, primary_key=True)
+    summoner_level = models.IntegerField()
+    summoner_icon = models.IntegerField()
+
+
+
 class Tier(models.Model):
     """
     티어 정보에 대한 테이블
     summoner_name 으로 조회
     """
-    summoner_name = models.CharField(max_length=20, primary_key=True)
+    summoner_name = models.ForeignKey("User", related_name="tier", on_delete=models.CASCADE,
+                                      db_column="summoner_name", primary_key=True)
     solo_tier = models.CharField(max_length=20)
     solo_rank = models.CharField(max_length=20)
     solo_wins = models.IntegerField()
@@ -24,8 +34,6 @@ class Tier(models.Model):
     free_losses = models.IntegerField()
     free_leaguePoints = models.IntegerField()
 
-    def __str__(self):
-        return self.summoner_name
 
 
 class GameRecord(models.Model):
@@ -34,7 +42,7 @@ class GameRecord(models.Model):
     summoner_name 으로 조회
     """
     game_ID = models.CharField(max_length=30, primary_key=True)  # summonerName + matchID
-    summoner_name = models.CharField(max_length=20)
+    summoner_name = models.ForeignKey("User", related_name="record", on_delete=models.CASCADE, db_column="summoner_name")
     champ_level = models.IntegerField()
     champ_name = models.CharField(max_length=20)
     kill = models.IntegerField()
@@ -44,21 +52,10 @@ class GameRecord(models.Model):
     game_result = models.BooleanField()
     play_time = models.IntegerField()
     #
-    def __str__(self):
-        return self.summoner_name
 
 
-class Summoner(models.Model):
-    """
-    유저 정보
-    summoner_name 으로 조회
-    """
-    summoner_name = models.CharField(max_length=20, primary_key=True)
-    summoner_level = models.IntegerField()
-    summoner_icon = models.IntegerField()
 
-    def __str__(self):
-        return self.summoner_name
+
 
 
 class UpdateDB:
@@ -79,7 +76,8 @@ class UpdateDB:
         """
         Tier 테이블에 레코드 생성
         """
-        _modelInstance = Tier(summoner_name=self._userName, solo_tier=info['solo']['tier'], solo_rank = info['solo']['rank']
+        _modelInstance = Tier(summoner_name=User.objects.get(summoner_name=self._userName)
+                              , solo_tier=info['solo']['tier'], solo_rank=info['solo']['rank']
                               , solo_wins=info['solo']['wins'], solo_losses=info['solo']['losses']
                               , solo_leaguePoints=info['solo']['leaguePoints']
                               , free_tier=info['free']['tier'], free_rank=info['free']['rank']
@@ -91,18 +89,19 @@ class UpdateDB:
         """
         GameRecord 테이블에 레코드 생성
         """
-        _modelInstance = GameRecord(game_ID=self._userName+info['matchID'], summoner_name=self._userName,
-                                    champ_level=info['champLevel'], champ_name=info['champName'], kill=info['kill'],
+        _modelInstance = GameRecord(game_ID=self._userName+info['matchID'], champ_level=info['champLevel'],
+                                    champ_name=info['champName'], kill=info['kill'],
                                     death=info['death'], assist=info['assist'], CS=info['CS'],
-                                    game_result=info['gameResult'], play_time=info['playTime'])
+                                    game_result=info['gameResult'], play_time=info['playTime'],
+                                    summoner_name=User.objects.get(summoner_name=self._userName))
         _modelInstance.save()
 
-    def createSummoner(self, info):
+    def createUser(self, info):
         """
         Summoner 테이블에 레코드 생성
         """
-        _modelInstance = Summoner(summoner_name=self._userName, summoner_level=info['summonerLevel']
-                                  , summoner_icon=info['summonerIcon'])
+        _modelInstance = User(summoner_name=self._userName, summoner_level=info['summonerLevel'],
+                              summoner_icon=info['summonerIcon'])
 
     def updateTier(self, info):
         """
@@ -117,11 +116,11 @@ class UpdateDB:
                               , free_wins=info['free']['wins'], free_losses=info['free']['losses']
                               , free_leaguePoints=info['free']['leaguePoints'])
 
-    def updateSummoner(self, info):
+    def updateUser(self, info):
         """
         Summoner 테이블의 user 레코드 수정
         """
-        _modelInstance = Summoner.objects.all()
+        _modelInstance = User.objects.all()
         _modelInstance = _modelInstance.filter(summoner_name=self._userName)
         _modelInstance.update(summoner_level=info['summonerLevel'], summoner_icon=info['summonerIcon'])
 
