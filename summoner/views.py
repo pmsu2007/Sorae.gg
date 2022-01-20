@@ -13,13 +13,13 @@ def search(request):
     summoner = SummonerAPI(summonerName)
 
     if not summoner.isValid() :
-        return render(request, 'summoner/summoner_info.html', {'userName':summonerName})
+        return render(request, 'summoner/summoner_info.html', {'userName':summonerName, 'isValid':False})
     
     tier = summoner.getTier()
 
     record = summoner.getTotalRecord(0,10)
 
-    info = {'userName': summonerName, 'tier':tier, 'record': record}
+    info = {'userName': summonerName, 'tier':tier, 'record': record, 'isValid':True}
 
     return render(request,'summoner/summoner_info.html', info)
 
