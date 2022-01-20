@@ -1,36 +1,27 @@
 import requests
 from urllib import parse
 from riotapi.ApiConnect import ApiConnect
-import json
 
-class Summoner:
+
+class SummonerAPI:
+
+    """
+    Riot API로부터 데이터를 가공하는 모듈
+    """
 
     def __init__(self, summonerName):
         self._connect = ApiConnect()
         self._summonerName = summonerName
         self._ID = self._connect.getEncryptID(summonerName)
-        '''
+        """
         accountId : Encrypted account ID
         id : Encrypted summoner ID
         puuid : Encrypted PUUID
-        '''
-    def isValid(self):
-        '''
-        check if response is valid
-        return false if invalid data(summonerName) is input
-        '''
-        if 'status' in self._ID.keys():
-            return False
-        return True
-        print(self._ID['status'])
+        """
     def getTier(self):
         '''
-        솔로랭크 & 자유랭크 정보
-        tier : PLATINUM
-        rank : II
-        wins :  188
-        loses : 167
-        leaguePoints : 29
+        솔로랭크 & 자유랭크 정보를 딕셔너리로 반환
+        :return: Tier information(dict)
         '''
         URL = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/" + self._ID["id"]
         response = requests.get(URL, headers=self._connect.getHeader())
@@ -41,12 +32,10 @@ class Summoner:
 
         for rank in data:
             if rank['queueType'] == "RANKED_SOLO_5x5":
-                if self._summonerName in rank['summonerName']:
                     solo = {'tier': rank["tier"], 'rank': rank["rank"], 'wins': rank["wins"],
                             'losses': rank["losses"], 'leaguePoints': rank["leaguePoints"]}
 
             if rank['queueType'] == "RANKED_FLEX_SR":
-                if self._summonerName in rank['summonerName']:
                     free = {'tier': rank["tier"], 'rank': rank["rank"], 'wins': rank["wins"],
                             'losses': rank["losses"], 'leaguePoints': rank["leaguePoints"]}
 
@@ -55,43 +44,47 @@ class Summoner:
 
     def getRecord(self, matchID):
         '''
-        게임 기록 정보
-        playTime : 2203 -> 60으로 나눠서 사용
-        champLevel : 17
-        championName : Akali
-        kill : 11
-        death : 6
-        assist : 5
-        CS : 183
-        gameResult : False
+        한 경기 기록 정보를 딕셔너리로 반환
+        :return: GameRecord information(dict)
         '''
         URL = "https://asia.api.riotgames.com/lol/match/v5/matches/" + matchID
         response = requests.get(URL, headers=self._connect.getHeader())
         data = response.json()
 
-        info = {'playTime': 0, 'champLevel': 0, 'champName': "", 'kill': 0, 'death': 0,
-                'assist': 0, 'CS': 0, 'gameResult': "" }
+        info = {'playTime': 0, 'champLevel': 0, 'champName': "", 'kill': 0, 'death': 0, 'assist': 0, 'CS': 0,
+                'gameResult': "", 'matchID': "", 'perks': 0, 'items': 0, 'spells': 0,
+                'gameMode': data['info']['gameMode'], 'totalDamage': 0}
 
-        for participant in data["info"]["participants"]:
+        for participant in data['info']['participants']:
             if participant["summonerName"] == self._summonerName:
+                info['matchID'] = matchID
                 info['champLevel'] = participant['champLevel']
                 info['champName'] = participant['championName']
-                info['kill'] = participant["kills"]
-                info['death'] = participant["deaths"]
-                info['assist'] = participant["assists"]
+                info['kill'] = participant['kills']
+                info['death'] = participant['deaths']
+                info['assist'] = participant['assists']
                 info['CS'] = participant['totalMinionsKilled']
                 info['gameResult'] = participant['win']
-                info['playTime'] = participant["timePlayed"]
-                #item = [participant["item0"], participant["item1"], participant["item2"], participant["item3"],
-                #        participant["item4"], participant["item5"], participant["item6"]]
-                #info['item'] = item
-                # 스펠, 같이 플레이한 소환사, 총 킬수
+                info['playTime'] = participant['timePlayed']
+                info['totalDamage'] = participant['totalDamageDealtToChampions']
+                info['visionWard'] = participant['visionWardsBoughtInGame']
+                item = [participant["item0"], participant["item1"], participant["item2"], participant["item3"],
+                        participant["item4"], participant["item5"], participant["item6"]]
+                info['items'] = item
+                perks = [participant['perks']['styles'][0]['selections'][0]['perk'],
+                         participant['perks']['styles'][1]['style']]
+                info['perks'] = perks
+                spells = [participant['summoner1Id'], participant['summoner2Id']]
+                info['spells'] = spells
+
+        print(info)
         return info
 
     def getTotalRecord(self, start, end):
         '''
-        start부터 end까지 총 게임 기록
-        matchID를 받아서 getRecord에 넘겨준다.
+        start - end 까지 모든 게임 기록
+        matchID getRecord 에 파라미터로 넘겨준다.
+        :return: GameRecord informations (list)
         '''
         URL = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/" \
               + self._ID["puuid"] + "/ids?start=" + str(start) + "&count=" + str(end)
@@ -103,3 +96,29 @@ class Summoner:
             recordList.append(self.getRecord(matchID))
         return recordList
 
+    def getUser(self):
+        """
+        소환사 정보를 딕셔너리로 반환
+        :return: Summoner information(dict)
+        """
+        encodingSummonerName = parse.quote(self._summonerName)
+        URL = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + encodingSummonerName
+        response = requests.get(URL, headers=self._connect.getHeader())
+        data = response.json()
+
+        info = {'summonerIcon':0, 'summonerLevel': 0}
+        if data['name'] == self._summonerName:
+            info['summonerLevel'] = data['summonerLevel']
+            info['summonerIcon'] = data['profileIconId']
+
+        return info
+
+if __name__ == "__main__":
+    user = SummonerAPI("민스님")
+    print(user._ID)
+    #data = user.getTier()
+    #with open('myinfo.json', 'w') as f:
+    #    json.dump(data, f)
+    print(user.getTier())
+    print(user.getTotalRecord(0,10))
+    print(user.getUser())
