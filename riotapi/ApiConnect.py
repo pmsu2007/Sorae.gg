@@ -4,7 +4,7 @@ import requests
 class ApiConnect:
 
     def __init__(self):
-        self._apiKey = "RGAPI-e8e2be83-3f5f-405e-8c21-3f56c9ad736d"
+        self._apiKey = "RGAPI-85a53c7d-739d-40d9-a546-d45babeb2323"
 
     def getHeader (self):
         headers = {
@@ -21,6 +21,3 @@ class ApiConnect:
         response = requests.get(URL, headers=self.getHeader())
         data = response.json()
         return data
-
-if __name__ == "__main__":
-    print("hi")
