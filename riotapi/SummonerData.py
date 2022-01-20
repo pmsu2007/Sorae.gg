@@ -18,6 +18,17 @@ class SummonerAPI:
         id : Encrypted summoner ID
         puuid : Encrypted PUUID
         """
+
+    def isValid(self):
+        '''
+        check if response is valid
+        return false if invalid data(summonerName) is input
+        '''
+        if 'status' in self._ID.keys():
+            return False
+        return True
+        print(self._ID['status'])
+
     def getTier(self):
         '''
         솔로랭크 & 자유랭크 정보를 딕셔너리로 반환
