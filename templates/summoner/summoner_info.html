@@ -38,7 +38,10 @@
         <div class="rank-wrap">
             <div class="rank-box solo-rank">
                 <p class="text-center my-2 fs-5">솔로랭크</p>
-                <p class="text-center my-4 fs-3 tier-name">{{ tier.solo.tier }} {{ tier.solo.rank }}</p>
+                <p class="text-center my-4 fs-3 tier-name">
+                    <span class="soloRank">{{ tier.solo.tier }}</span>
+                    <span class="soloTier"> {{ tier.solo.rank }}</span>
+                </p>
                 <!--image-->
                 <div class="WinLose">
                     <span class="soloWin">{{ tier.solo.wins }}승</span>
@@ -48,7 +51,10 @@
             </div>
             <div class="rank-box free-rank">
                 <p class="text-center my-2 fs-5">자유 5:5 랭크</p>
-                <p class="text-center my-4 fs-3 tier-name">{{ tier.free.tier }} {{ tier.free.rank }}</p>
+                <p class="text-center my-4 fs-3 tier-name">
+                    <span class="freeRank">{{ tier.free.tier }}</span>
+                    <span class="freeTier"> {{ tier.free.rank }}</span>
+                </p>
                 <!--image-->
                 <div class="WinLose">
                     <span class="freeWin">{{ tier.free.wins }}승</span>
