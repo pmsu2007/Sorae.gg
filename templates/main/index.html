@@ -21,13 +21,14 @@
     </div>
 
     <div class="serach-box">
-        <form class="search-form" action = "/summoner/" method="get" autocomplete="off">
+        <form class="search-form" action = "{% url 'summoner' %}" method="get" autocomplete="off">
             {% csrf_token %}
+            <!-- post 방식으로 userName 받은 후 /summoner?userName='소환사명' 로 URL 연결 -->
             <!-- <input type="text" name="userName" class="search-text" placeholder="소환사명을 입력해주세요" autocomplete="off"> -->
             <div class="input-group mb-3 search-text">
                 <span class="input-group-text" id="inputGroup-sizing-default">소환사명</span>
                 <input type="text" name="userName" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" autocomplete="off" placeholder="소환사명을 입력해주세요">
-                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                <button type="submit" cldass="btn btn-outline-secondary btn-sm">
                     <img src="{% static 'images/search-icon.png' %}" class="search-icon">
                 </button>
             </div>
