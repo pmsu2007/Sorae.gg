@@ -88,7 +88,7 @@ class SummonerAPI:
                 spells = [participant['summoner1Id'], participant['summoner2Id']]
                 info['spells'] = spells
 
-        print(info)
+        # print(info)
         return info
 
     def getTotalRecord(self, start, end):
@@ -123,13 +123,3 @@ class SummonerAPI:
             info['summonerIcon'] = data['profileIconId']
 
         return info
-
-if __name__ == "__main__":
-    user = SummonerAPI("민스님")
-    print(user._ID)
-    #data = user.getTier()
-    #with open('myinfo.json', 'w') as f:
-    #    json.dump(data, f)
-    print(user.getTier())
-    print(user.getTotalRecord(0,10))
-    print(user.getUser())
