@@ -3,8 +3,12 @@ import requests
 
 class ApiConnect:
 
+    """
+    Module to handle URL Header & ID
+    """
+
     def __init__(self):
-        self._apiKey = "RGAPI-b882744d-f589-408c-8d91-075ccb78db7f"
+        self._apiKey = ""
 
 
     def getHeader (self):
