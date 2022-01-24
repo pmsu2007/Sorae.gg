@@ -55,6 +55,9 @@ class GameRecord(models.Model):
     total_damage = models.IntegerField()
     vision_ward = models.IntegerField()
 
+    class Meta:
+        ordering = ['-game_ID']
+
 class DetailRecord(models.Model):
     game_ID = models.ForeignKey("GameRecord", related_name="detail", on_delete=models.CASCADE,
                                 db_column="game_ID", primary_key=True)
@@ -70,17 +73,19 @@ class DetailRecord(models.Model):
     spell1 = models.IntegerField()
     spell2 = models.IntegerField()
 
+    class Meta:
+        ordering = ['-game_ID']
 
 
 
 class UpdateDB:
     """
-    DB 데이터에 대한 CRUD 구현
-    - 객체 생성
+    Implements CRUD about DB data
+    - create Object
     DB = UpdateDB('userName')
-    - 메소드 사용
-    Riot API로 얻은 데이터를 파라미터로 넘겨 사용
-    ex)    DB.createTier(info)
+    - use method
+    UpdateDB module is used by passing the data obtained with SummonerData as parameter.
+    ex) DB.createTier(info)
     """
 
     def __init__(self, userName):
@@ -88,7 +93,7 @@ class UpdateDB:
 
     def createTier(self, info):
         """
-        Tier 테이블에 레코드 생성
+        Create record of Tier table
         """
         _modelInstance = Tier(summoner_name=User.objects.get(summoner_name=self._userName)
                               , solo_tier=info['solo']['tier'], solo_rank=info['solo']['rank']
@@ -101,7 +106,7 @@ class UpdateDB:
 
     def createGameRecord(self, info):
         """
-        GameRecord 테이블에 레코드 생성
+        Create record of GameRecord table
         """
         _modelInstance = GameRecord(game_ID=self._userName+info['matchID'], champ_level=info['champLevel'],
                                     champ_name=info['champName'], kill=info['kill'], game_mode=info['gameMode'],
@@ -113,7 +118,7 @@ class UpdateDB:
 
     def createUser(self, info):
         """
-        Summoner 테이블에 레코드 생성
+        Create record of Summoner table
         """
         _modelInstance = User(summoner_name=self._userName, summoner_level=info['summonerLevel'],
                               summoner_icon=info['summonerIcon'])
@@ -121,7 +126,7 @@ class UpdateDB:
 
     def createDetailRecord(self, info):
         """
-        DetailRecord 테이블에 레코드 생성
+        Create record of DetailRecord table
         """
         _modelInstance = DetailRecord(game_ID=GameRecord.objects.get(game_ID=self._userName+info['matchID']),
                                       primary_perk=info['perks'][0], sub_perk=info['perks'][1],
@@ -132,7 +137,7 @@ class UpdateDB:
 
     def updateTier(self, info):
         """
-        Tier 테이블의 user 레코드 수정
+        Update record of Tier table
         """
         _modelInstance = Tier.objects.all()
         _modelInstance = _modelInstance.filter(summoner_name=self._userName)
@@ -145,7 +150,7 @@ class UpdateDB:
 
     def updateUser(self, info):
         """
-        Summoner 테이블의 user 레코드 수정
+        Update record of Summoner table
         """
         _modelInstance = User.objects.all()
         _modelInstance = _modelInstance.filter(summoner_name=self._userName)
@@ -154,7 +159,7 @@ class UpdateDB:
 
     def deleteGameRecord(self, summonerName):
         """
-        GameRecord 테이블의 모든 레코드 제거
+        Delete all record of GameRecord table & DetailRecord table
         """
         _modelInstance = GameRecord.objects.all()
         _modelInstance = _modelInstance.filter(summoner_name=summonerName)
