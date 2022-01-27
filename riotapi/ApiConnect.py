@@ -4,8 +4,7 @@ import requests
 class ApiConnect:
 
     def __init__(self):
-        self._apiKey = "RGAPI-b882744d-f589-408c-8d91-075ccb78db7f"
-
+        self._apiKey = "RGAPI-8ca696ce-f9cb-4e77-a482-4f0be3004f62"
 
     def getHeader (self):
         headers = {
