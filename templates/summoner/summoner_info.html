@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% if userName %}
-{% block title %} 소환사 : {{ userName }} {% endblock title %}
+{% block title %}
+{% if user.name %}
+ 소환사 : {{ user.name }}
+{% else %}
+ 소환사 정보 없음
 {% endif %} 
+{% endblock title %}
 
 {% block css_link %}
 <link rel="stylesheet" href="{% static 'css/main.css' %}">
@@ -33,6 +37,18 @@
 
     <!--소환사 정보 Start-->
 
+    <!-- 레벨 및 아이콘-->
+    <div class="summoner-info mt-4">
+        <p class="text-center">
+            <span class="summonerName fs-1">{{ user.name }}</span>
+        </p>
+        <div class="icon-frame mt-3 text-center">
+            <!--summoner icon-->
+            <img class="summonerIcon rounded-circle" src="http://ddragon.leagueoflegends.com/cdn/12.2.1/img/profileicon/{{user.summonerIcon}}.png">
+        </div>
+        
+        <p class="summonerLevel bg-dark rounded-pill text-center py-1" style="color: white;">{{user.summonerLevel}}</p>
+    </div>
 
     <!-- solo-rank info / free-rank info -->
     <!--solo rank-->
