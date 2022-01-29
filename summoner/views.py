@@ -39,7 +39,6 @@ def renew(request):
     # renew profile
 
     summonerName = json.loads(request.body).get('userName')
-    print(summonerName)
     summoner = SummonerAPI(summonerName)
     summonerName = summoner.getName()
 
@@ -67,12 +66,12 @@ class SummonerView(APIView):
     def get(self, request):
 
         # URL : sorae.gg/api?userName
-        summonerName = request.GET['userName']
-        summoner = SummonerAPI(summonerName)
+        inputName = request.GET['userName']
+        summoner = SummonerAPI(inputName)
         summonerName = summoner.getName()
 
         if not summoner.isValid() :
-            return render(request, 'summoner/summoner_info.html', {'userName':summonerName})
+            return render(request, 'summoner/summoner_info.html', {'userName':inputName})
         
         # DB 조회
         # alternative : get_object_or_404(User, summoner_name=summonerNmae)

@@ -22,6 +22,7 @@ class ApiConnect:
 
     def getEncryptID(self, summonerName):
         encodingSummonerName = parse.quote(summonerName) # 공백을 %20으로 인코딩
+        print(encodingSummonerName)
         URL = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + encodingSummonerName
         response = requests.get(URL, headers=self.getHeader())
         data = response.json()
