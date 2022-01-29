@@ -13,6 +13,12 @@ html, body {
     height: 20%;
 }
 
+.renewBtn {
+    float: left;
+    width: 105px;
+    height: 40px;
+}
+
 .summoner-search-box {
     width: 25%;
     margin-left: 70%;
@@ -21,7 +27,6 @@ html, body {
 @media screen and (max-width : 768px) {
     .summoner-search-box {
         margin: auto auto;
-        width: 60%;
      }
 }
 

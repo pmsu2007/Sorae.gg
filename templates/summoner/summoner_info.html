@@ -20,7 +20,13 @@
 
     <!-- search box -->
     <div class="serach-box">
-        <form class="search-form" action = "/api/" method="get" autocomplete="off">
+        <button type="button" class="renewBtn btn btn-primary">
+            <span class ="renewText">프로필 갱신</span>
+            <div class="spinner-border" style="display: none;" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+        </button>
+        <form class="search-form" action = "/summoner/" method="get" autocomplete="off">
             {% csrf_token %}
             <div class="input-group input-group-sm mb-3 summoner-search-box">
                 <span class="input-group-text" id="inputGroup-sizing-default">소환사명</span>
@@ -84,7 +90,7 @@
             </div>
             <!--free rank-->
             <div class="rank-box free-rank">
-                {% if tier.free.rank|length > 0 %} <!-- if summoner is ranked -->
+                {% if tier.free_rank|length > 0 %} <!-- if summoner is ranked -->
                 <p class="text-center my-2 fs-5">자유 5:5 랭크</p>
                 <p class="text-center my-2 fs-3 tier-name">
                     <span class="freeRank">{{ tier.free_tier }}</span>
@@ -137,4 +143,5 @@
     DJANGO_STATIC_URL = '{{STATIC_URL}}';
 </script>
 <script type="text/javascript" src="{% static 'js/summoner.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/renew.js' %}"></script>
 {% endblock script %}

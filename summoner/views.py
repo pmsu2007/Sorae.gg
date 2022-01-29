@@ -1,36 +1,66 @@
 from aifc import Error
 from tkinter.ttk import Entry
 import django
+import json
 from django.shortcuts import render
+from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import TierSerializer, UserSerializer, GameRecordSerializer
 from summoner.models import Tier, GameRecord, User, UpdateDB
 from riotapi.SummonerData import SummonerAPI
 from django.core.exceptions import ObjectDoesNotExist
+from django.views.decorators.csrf import csrf_exempt
 from config.settings import STATIC_URL
 
 def index(request):
     return render(request, 'summoner/index.html')
 
-def search(request):
-    summonerName = request.GET['userName']
+# def search(request):
+#     summonerName = request.GET['userName']
 
+#     summoner = SummonerAPI(summonerName)
+
+#     if not summoner.isValid() :
+#         return render(request, 'summoner/summoner_info.html', {'userName': summonerName,'isValid':False})
+    
+#     tier = summoner.getTier()
+
+#     record = summoner.getTotalRecord(0,10)
+
+#     user = summoner.getUser()
+
+#     info = {'userName': summonerName, 'user':user, 'tier':tier, 'record': record, 'isValid':True, 'STATIC_URL':STATIC_URL}
+
+#     return render(request,'summoner/summoner_info.html', info)
+
+@csrf_exempt
+def renew(request):
+    # renew profile
+
+    summonerName = json.loads(request.body).get('userName')
+    print(summonerName)
     summoner = SummonerAPI(summonerName)
+    summonerName = summoner.getName()
 
     if not summoner.isValid() :
-        return render(request, 'summoner/summoner_info.html', {'userName': summonerName,'isValid':False})
+        return JsonResponse({'status':400})
     
-    tier = summoner.getTier()
+    # Data 생성
+    tierData = summoner.getTier()
+    gameRecordData = summoner.getTotalRecord(0, 10)
+    userData = summoner.getUser()
 
-    record = summoner.getTotalRecord(0,10)
+    # DB 갱신
+    DB = UpdateDB(summoner)
 
-    user = summoner.getUser()
+    DB.createUser(userData)
+    DB.createTier(tierData)
+    for record in reversed(gameRecordData):
+        DB.createGameRecord(record)
+        DB.createDetailRecord(record)
 
-    info = {'userName': summonerName, 'user':user, 'tier':tier, 'record': record, 'isValid':True, 'STATIC_URL':STATIC_URL}
-
-    return render(request,'summoner/summoner_info.html', info)
-
+    return JsonResponse({'status':200})
 
 class SummonerView(APIView):
 
@@ -45,6 +75,7 @@ class SummonerView(APIView):
             return render(request, 'summoner/summoner_info.html', {'userName':summonerName})
         
         # DB 조회
+        # alternative : get_object_or_404(User, summoner_name=summonerNmae)
         try:
             userQuery = User.objects.get(summoner_name=summonerName)
         except ObjectDoesNotExist:
@@ -105,10 +136,3 @@ class MainView(APIView):
             return Response(data={'status': 200})
         else:
             return Response(data={'status': 404})
-
-
-if __name__ == "__main__":
-    user = SummonerAPI("민스님")
-    DB = UpdateDB("민스님")
-    DB.deleteGameRecord("민스님")
-    print(user.getTier())
