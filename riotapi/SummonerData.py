@@ -6,7 +6,7 @@ from riotapi.ApiConnect import ApiConnect
 class SummonerAPI:
 
     """
-    Riot API로부터 데이터를 가공하는 모듈
+    Module to process data from Riot API
     """
 
     def __init__(self, summonerName):
@@ -20,20 +20,20 @@ class SummonerAPI:
         """
 
     def isValid(self):
-        '''
+        """
         check if response is valid
         return false if invalid data(summonerName) is input
-        '''
+        """
         if 'status' in self._ID.keys():
             return False
         return True
         print(self._ID['status'])
 
     def getTier(self):
-        '''
-        솔로랭크 & 자유랭크 정보를 딕셔너리로 반환
+        """
+        User's Tier information
         :return: Tier information(dict)
-        '''
+        """
         URL = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/" + self._ID["id"]
         response = requests.get(URL, headers=self._connect.getHeader())
         data = response.json()
@@ -54,10 +54,10 @@ class SummonerAPI:
         return info
 
     def getRecord(self, matchID):
-        '''
-        한 경기 기록 정보를 딕셔너리로 반환
+        """
+        Information about one match record
         :return: GameRecord information(dict)
-        '''
+        """
         URL = "https://asia.api.riotgames.com/lol/match/v5/matches/" + matchID
         response = requests.get(URL, headers=self._connect.getHeader())
         data = response.json()
@@ -92,11 +92,11 @@ class SummonerAPI:
         return info
 
     def getTotalRecord(self, start, end):
-        '''
-        start - end 까지 모든 게임 기록
-        matchID getRecord 에 파라미터로 넘겨준다.
-        :return: GameRecord informations (list)
-        '''
+        """
+        Total game record from start to end
+        pass matchID as parameter to record
+        :return: GameRecord informations (dictionary in list)
+        """
         URL = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/" \
               + self._ID["puuid"] + "/ids?start=" + str(start) + "&count=" + str(end)
         response = requests.get(URL, headers=self._connect.getHeader())
@@ -109,7 +109,7 @@ class SummonerAPI:
 
     def getUser(self):
         """
-        소환사 정보를 딕셔너리로 반환
+        Information about User
         :return: Summoner information(dict)
         """
         encodingSummonerName = parse.quote(self._summonerName)
