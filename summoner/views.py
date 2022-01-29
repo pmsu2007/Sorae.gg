@@ -5,7 +5,8 @@ from .serializers import UserSerializer
 from summoner.models import Tier, GameRecord, User, UpdateDB
 from riotapi.SummonerData import SummonerAPI
 
-
+def index(request):
+    return render(request, 'summoner/index.html')
 
 def search(request):
     summonerName = request.GET['userName']
@@ -24,43 +25,51 @@ def search(request):
     return render(request,'summoner/summoner_info.html', info)
 
 
-class API(APIView):
+class SummonerView(APIView):
 
     def get(self, request):
-        summonerName = request.GET['userName']  # localhost:8000/summoner?userName=민스님 //userName을 파라미터로 받는다
 
-        # API
-        summonerAPI = SummonerAPI(summonerName)
-        tierData = summonerAPI.getTier()
-        gameRecordData = summonerAPI.getTotalRecord(0,10)
-        userData = summonerAPI.getUser()
-
-        # DB 저장
-        DB = UpdateDB(summonerName)
-        DB.createUser(userData)
-        DB.createTier(tierData)
-        for record in gameRecordData:
-            DB.createGameRecord(record)
-            DB.createDetailRecord(record)
+        # URL : sorae.gg/api?userName
+        summonerName = request.GET['userName']
 
         # DB 조회
+
         UserquerySet = User.objects.filter(summoner_name=summonerName)
+
 
         # serializer
         serializer = UserSerializer(UserquerySet, many=True)
         return Response(serializer.data)
 
-    def post(self, request):
-        #
-        # summonerName = JSONParser().parse(request)
-        # print(summonerName)
-        pass
+class MainView(APIView):
 
-    """
-    DB 조회
-    데이터 존재 X : 데이터 생성 -> DB 저장 -> 프론트 넘겨주기
-    데이터 존재 O : 최신화 여부 확인 -> 프론트 넘겨주기기
-    """
+    def post(self, request):
+
+        summonerName = request.data['userName']
+
+        API = SummonerAPI(summonerName)
+
+        if API.isValid():
+            # API
+            tierData = API.getTier()
+            gameRecordData = API.getTotalRecord(0, 10)
+            userData = API.getUser()
+
+            # DB 저장
+
+            DB = UpdateDB(summonerName)
+
+            DB.createUser(userData)
+            DB.createTier(tierData)
+            for record in reversed(gameRecordData):
+                DB.createGameRecord(record)
+                DB.createDetailRecord(record)
+
+            # DB.deleteGameRecord(summonerName)
+            return Response(data={'status': 200})
+        else:
+            return Response(data={'status': 404})
+
 
 if __name__ == "__main__":
     user = SummonerAPI("민스님")

@@ -3,6 +3,10 @@ import requests
 
 class ApiConnect:
 
+    """
+    Module to handle URL Header & ID
+    """
+
     def __init__(self):
         self._apiKey = ""
 
