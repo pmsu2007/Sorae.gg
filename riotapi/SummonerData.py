@@ -11,13 +11,20 @@ class SummonerAPI:
 
     def __init__(self, summonerName):
         self._connect = ApiConnect()
-        self._summonerName = summonerName
         self._ID = self._connect.getEncryptID(summonerName)
+        self._summonerName = None
+        if self.isValid():
+            self._summonerName = self.getUser()['name']
         """
         accountId : Encrypted account ID
         id : Encrypted summoner ID
         puuid : Encrypted PUUID
         """
+    def getName(self):
+        """
+        return summonerName
+        """
+        return self._summonerName
 
     def isValid(self):
         """
@@ -27,7 +34,6 @@ class SummonerAPI:
         if 'status' in self._ID.keys():
             return False
         return True
-        print(self._ID['status'])
 
     def getTier(self):
         """
@@ -61,6 +67,7 @@ class SummonerAPI:
         URL = "https://asia.api.riotgames.com/lol/match/v5/matches/" + matchID
         response = requests.get(URL, headers=self._connect.getHeader())
         data = response.json()
+
 
         info = {'playTime': 0, 'champLevel': 0, 'champName': "", 'kill': 0, 'death': 0, 'assist': 0, 'CS': 0,
                 'gameResult': "", 'matchID': "", 'perks': 0, 'items': 0, 'spells': 0,
@@ -112,8 +119,7 @@ class SummonerAPI:
         Information about User
         :return: Summoner information(dict)
         """
-        encodingSummonerName = parse.quote(self._summonerName)
-        URL = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + encodingSummonerName
+        URL = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/" + self._ID['puuid']
         response = requests.get(URL, headers=self._connect.getHeader())
         data = response.json()
 

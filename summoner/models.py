@@ -1,5 +1,7 @@
 from django.db import models
 
+from riotapi.SummonerData import SummonerAPI
+
 '''
 모델 변경사항 있을 시,
 makemigrations & migrate 해줘야 함
@@ -21,7 +23,7 @@ class Tier(models.Model):
     티어 정보에 대한 테이블
     summoner_name 으로 조회
     """
-    summoner_name = models.ForeignKey("User", related_name="tier", on_delete=models.CASCADE,
+    summoner_name = models.OneToOneField("User", related_name="tier", on_delete=models.CASCADE,
                                       db_column="summoner_name", primary_key=True)
     solo_tier = models.CharField(max_length=20)
     solo_rank = models.CharField(max_length=20)
@@ -88,8 +90,8 @@ class UpdateDB:
     ex) DB.createTier(info)
     """
 
-    def __init__(self, userName):
-        self._userName = userName
+    def __init__(self, summoner:SummonerAPI):
+        self._userName = summoner.getUser()['name']
 
     def createTier(self, info):
         """
@@ -120,7 +122,7 @@ class UpdateDB:
         """
         Create record of Summoner table
         """
-        _modelInstance = User(summoner_name=self._userName, summoner_level=info['summonerLevel'],
+        _modelInstance = User(summoner_name=info['name'], summoner_level=info['summonerLevel'],
                               summoner_icon=info['summonerIcon'])
         _modelInstance.save()
 

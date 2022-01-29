@@ -14,7 +14,6 @@ class DetailRecordSerializer(serializers.ModelSerializer):
 class GameRecordSerializer(serializers.ModelSerializer):
 
     detail = DetailRecordSerializer(many=True, read_only=True)
-
     class Meta:
         model = GameRecord
         fields = '__all__'
@@ -27,11 +26,6 @@ class TierSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-
-    record = GameRecordSerializer(many=True, read_only=True)
-    tier = TierSerializer(many=True, read_only=True)
-
     class Meta:
         model = User
         fields = '__all__'
-

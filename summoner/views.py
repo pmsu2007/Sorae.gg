@@ -1,9 +1,13 @@
+from aifc import Error
+from tkinter.ttk import Entry
+import django
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import UserSerializer
+from .serializers import TierSerializer, UserSerializer, GameRecordSerializer
 from summoner.models import Tier, GameRecord, User, UpdateDB
 from riotapi.SummonerData import SummonerAPI
+from django.core.exceptions import ObjectDoesNotExist
 from config.settings import STATIC_URL
 
 def index(request):
@@ -15,7 +19,7 @@ def search(request):
     summoner = SummonerAPI(summonerName)
 
     if not summoner.isValid() :
-        return render(request, 'summoner/summoner_info.html', {'isValid':False})
+        return render(request, 'summoner/summoner_info.html', {'userName': summonerName,'isValid':False})
     
     tier = summoner.getTier()
 
@@ -34,15 +38,44 @@ class SummonerView(APIView):
 
         # URL : sorae.gg/api?userName
         summonerName = request.GET['userName']
+        summoner = SummonerAPI(summonerName)
+        summonerName = summoner.getName()
 
+        if not summoner.isValid() :
+            return render(request, 'summoner/summoner_info.html', {'userName':summonerName})
+        
         # DB 조회
+        try:
+            userQuery = User.objects.get(summoner_name=summonerName)
+        except ObjectDoesNotExist:
+            """
+            if Data dosen't exist then create DB
+            """
+            # Data 생성
+            tierData = summoner.getTier()
+            gameRecordData = summoner.getTotalRecord(0, 10)
+            userData = summoner.getUser()
 
-        UserquerySet = User.objects.filter(summoner_name=summonerName)
+            # DB 저장
+            DB = UpdateDB(summoner)
 
+            DB.createUser(userData)
+            DB.createTier(tierData)
+            for record in reversed(gameRecordData):
+                DB.createGameRecord(record)
+                DB.createDetailRecord(record)
+          
 
         # serializer
-        serializer = UserSerializer(UserquerySet, many=True)
-        return Response(serializer.data)
+        userQuery = User.objects.get(summoner_name=summonerName)
+        tierQuery = Tier.objects.get(summoner_name=summonerName)
+        recordQuery = GameRecord.objects.filter(summoner_name=summonerName)
+        userSerialize = UserSerializer(userQuery)
+        tierSerialize = TierSerializer(tierQuery)
+        gameRecordSerialize = GameRecordSerializer(recordQuery, many=True)
+
+        return render(request, 'summoner/summoner_info.html', {'user':userSerialize.data, 'tier':tierSerialize.data, 'gameRecord':gameRecordSerialize.data\
+            ,'STATIC_URL':STATIC_URL})
 
 class MainView(APIView):
 

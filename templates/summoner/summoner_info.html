@@ -2,8 +2,8 @@
 {% load static %}
 
 {% block title %}
-{% if user.name %}
- 소환사 : {{ user.name }}
+{% if user.summoner_name %}
+ 소환사 : {{ user.summoner_name }}
 {% else %}
  소환사 정보 없음
 {% endif %} 
@@ -20,11 +20,12 @@
 
     <!-- search box -->
     <div class="serach-box">
-        <form class="search-form" action = "/summoner/" method="get" autocomplete="off">
+        <form class="search-form" action = "/api/" method="get" autocomplete="off">
             {% csrf_token %}
             <div class="input-group input-group-sm mb-3 summoner-search-box">
                 <span class="input-group-text" id="inputGroup-sizing-default">소환사명</span>
-                <input type="text" nam~class="btn btn-outline-secondary btn-sm">
+                <input type="text" name="userName" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" autocomplete="off">
+                <button type="submit" class="btn btn-outline-secondary btn-sm">
                     <img src="{% static 'images/search-icon.png' %}" class="search-icon">
                 </button>
             </div>
@@ -32,21 +33,21 @@
     </div>
     <!-- search box end -->
 
-{% if isValid %} <!-- 소환사 정보가 존재하면 -->
+{% if user.summoner_name %} <!-- 소환사 정보가 존재하면 -->
 
     <!--소환사 정보 Start-->
 
     <!-- 레벨 및 아이콘-->
     <div class="summoner-info mt-4">
         <p class="text-center">
-            <span class="summonerName fs-1">{{ user.name }}</span>
+            <span class="summonerName fs-1">{{ user.summoner_name }}</span>
         </p>
         <div class="icon-frame mt-3 text-center">
             <!--summoner icon-->
-            <img class="summonerIcon rounded-circle" src="http://ddragon.leagueoflegends.com/cdn/12.2.1/img/profileicon/{{user.summonerIcon}}.png">
+            <img class="summonerIcon rounded-circle" src="http://ddragon.leagueoflegends.com/cdn/12.2.1/img/profileicon/{{user.summoner_icon}}.png">
         </div>
         
-        <p class="summonerLevel bg-dark rounded-pill text-center py-1" style="color: white;">{{user.summonerLevel}}</p>
+        <p class="summonerLevel bg-dark rounded-pill text-center py-1" style="color: white;">{{user.summoner_level}}</p>
     </div>
 
     <!-- solo-rank info / free-rank info -->
@@ -54,20 +55,20 @@
     <div class="rank-info my-5">
         <div class="rank-wrap">
             <div class="rank-box solo-rank">
-                {% if tier.solo.rank|length > 0 %} <!--if summoner is ranked-->
+                {% if tier.solo_rank|length > 0 %} <!--if summoner is ranked-->
                 <p class="text-center my-2 fs-5">솔로랭크</p>
                 <p class="text-center my-2 fs-3 tier-name">
-                    <span class="soloRank">{{ tier.solo.tier }}</span>
-                    <span class="soloTier"> {{ tier.solo.rank }}</span><br>
-                    <span class="soloPoint" style ="font-size: 15px;"> {{tier.solo.leaguePoints}} LP</span>
+                    <span class="soloRank">{{ tier.solo_tier }}</span>
+                    <span class="soloTier"> {{ tier.solo_rank }}</span><br>
+                    <span class="soloPoint" style ="font-size: 15px;"> {{tier.solo_leaguePoints}} LP</span>
                 </p>
                 <!--image-->
                 <div class="tierImgDiv my-2 text-center">
                     <img class="tierImg soloImg" src="" alt="">
                 </div>
                 <div class="WinLose">
-                    <span class="soloWin">{{ tier.solo.wins }}승</span>
-                    <span class="soloLose">{{ tier.solo.losses}}패</span>
+                    <span class="soloWin">{{ tier.solo_wins }}승</span>
+                    <span class="soloLose">{{ tier.solo_losses}}패</span>
                     <span class="soloWinRatio">/ </span>
                 </div>
                 {% else %} <!--if summoner is unranked-->
@@ -86,17 +87,17 @@
                 {% if tier.free.rank|length > 0 %} <!-- if summoner is ranked -->
                 <p class="text-center my-2 fs-5">자유 5:5 랭크</p>
                 <p class="text-center my-2 fs-3 tier-name">
-                    <span class="freeRank">{{ tier.free.tier }}</span>
-                    <span class="freeTier"> {{ tier.free.rank }}</span><br>
-                    <span class="freePoint" style="font-size: 15px;"> {{tier.free.leaguePoints}} LP</span>
+                    <span class="freeRank">{{ tier.free_tier }}</span>
+                    <span class="freeTier"> {{ tier.free_rank }}</span><br>
+                    <span class="freePoint" style="font-size: 15px;"> {{tier.free_leaguePoints}} LP</span>
                 </p>
                 <!--image-->
                 <div class="tierImgDiv my-2 text-center">
                     <img class="tierImg freeImg" src="" alt="">
                 </div>
                 <div class="WinLose">
-                    <span class="freeWin">{{ tier.free.wins }}승</span>
-                    <span class="freeLose">{{ tier.free.losses}}패</span>
+                    <span class="freeWin">{{ tier.free_wins }}승</span>
+                    <span class="freeLose">{{ tier.free_losses}}패</span>
                     <span class="freeWinRatio">/ </span>
                 </div>
                 {% else %} <!--if summoner is unranked-->
