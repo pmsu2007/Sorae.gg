@@ -117,9 +117,8 @@ class SummonerAPI:
         response = requests.get(URL, headers=self._connect.getHeader())
         data = response.json()
 
-        info = {'summonerIcon':0, 'summonerLevel': 0}
-        if data['name'] == self._summonerName:
-            info['summonerLevel'] = data['summonerLevel']
-            info['summonerIcon'] = data['profileIconId']
+        info = {'name':data['name'], 'summonerIcon':0, 'summonerLevel': 0}
+        info['summonerLevel'] = data['summonerLevel']
+        info['summonerIcon'] = data['profileIconId']
 
         return info

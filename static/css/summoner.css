@@ -1,0 +1,90 @@
+html, body {
+	height: 100%;
+}
+
+.error-box {
+    width: 70%;
+    height:40px;
+    margin:5% auto;
+}
+
+.error-img>img {
+    width: 20%;
+    height: 20%;
+}
+
+.summoner-search-box {
+    width: 25%;
+    margin-left: 70%;
+}
+
+@media screen and (max-width : 768px) {
+    .summoner-search-box {
+        margin: auto auto;
+        width: 60%;
+     }
+}
+
+.userName {
+    font-weight: 400;
+}
+
+.icon-frame {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.summonerIcon {
+    width: 90px;
+    height: 90px;
+}
+
+.summonerLevel {
+    width: 45px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.rank-info {
+    width: 60%;
+    height: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.rank-wrap {
+    margin:auto auto;
+    height: 100%;
+}
+
+.rank-box {
+    float:left;
+    margin:0;
+    width: 50%;
+    height: 100%;
+    border-width: 1px;
+    border-radius: 10px;
+    border-color: #bfbfbf;
+    border-style: solid;
+}
+
+.tier-name {
+    font-weight: 100;
+}
+
+.WinLose {
+    color: #a0a0a0;
+    font-weight: 100;
+    text-align: center;
+}
+
+.tierImgDiv{
+    margin: auto auto;
+    width: 80%;
+    height: 45%;
+}
+
+.tierImg {
+    height: 100%;
+}

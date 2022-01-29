@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from .serializers import UserSerializer
 from summoner.models import Tier, GameRecord, User, UpdateDB
 from riotapi.SummonerData import SummonerAPI
+from config.settings import STATIC_URL
 
 def index(request):
     return render(request, 'summoner/index.html')
@@ -14,13 +15,15 @@ def search(request):
     summoner = SummonerAPI(summonerName)
 
     if not summoner.isValid() :
-        return render(request, 'summoner/summoner_info.html', {'userName':summonerName, 'isValid':False})
+        return render(request, 'summoner/summoner_info.html', {'isValid':False})
     
     tier = summoner.getTier()
 
     record = summoner.getTotalRecord(0,10)
 
-    info = {'userName': summonerName, 'tier':tier, 'record': record, 'isValid':True}
+    user = summoner.getUser()
+
+    info = {'userName': summonerName, 'user':user, 'tier':tier, 'record': record, 'isValid':True, 'STATIC_URL':STATIC_URL}
 
     return render(request,'summoner/summoner_info.html', info)
 
