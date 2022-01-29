@@ -17,6 +17,7 @@ renewBtn.addEventListener('click', function(e) {
             if (res.status == 200) {
                 // success
                 window.location.reload();
+                alert("프로필 갱신을 완료했습니다.");
             }
             else {
                 alert("프로필 갱신에 실패했습니다.")
