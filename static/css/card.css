@@ -1,0 +1,103 @@
+.record * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.record {
+    height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.swiper {
+    width: 800px;
+}
+
+.swiper-clip {
+    overflow: hidden;
+}
+
+.record-section .card .champion-img{
+    height: 140px;
+    width: 140px;
+    border-radius: 50%;
+    padding: 3px;
+    background-color:black;
+}
+
+.record-section .card .champion-img img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #f2f2f2ff;
+}
+
+.card {
+    position: relative;
+    background: #f2f2f2ff;
+    border-radius: 20px;
+}
+
+.card-win::before{
+    content:"";
+    position: absolute;
+    height: 45%;
+    width: 100%;
+    background-color:royalblue;
+    border-radius: 20px 20px 0 0;
+}
+
+.card-lose::before{
+    content:"";
+    position: absolute;
+    height: 45%;
+    width: 100%;
+    background-color:crimson;
+    border-radius: 20px 20px 0 0;
+}
+
+.card .card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px;
+    position: relative;
+    z-index: 100;
+}
+
+.card .date-type {
+    color: white;
+    font-weight: 400;
+    position: absolute;
+    top:10px;
+    left:8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card .result-time {
+    color: white;
+    font-weight: 400;
+    position: absolute;
+    top: 10px;
+    right: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card .champion-name {
+    font-size: 20px;
+    margin-top: 7px;
+}
+
+.card .game-kda {
+    margin-top: 5px;
+    font-size: 25px;
+}
