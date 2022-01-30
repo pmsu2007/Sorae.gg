@@ -16,24 +16,6 @@ from config.settings import STATIC_URL
 def index(request):
     return render(request, 'summoner/index.html')
 
-# def search(request):
-#     summonerName = request.GET['userName']
-
-#     summoner = SummonerAPI(summonerName)
-
-#     if not summoner.isValid() :
-#         return render(request, 'summoner/summoner_info.html', {'userName': summonerName,'isValid':False})
-    
-#     tier = summoner.getTier()
-
-#     record = summoner.getTotalRecord(0,10)
-
-#     user = summoner.getUser()
-
-#     info = {'userName': summonerName, 'user':user, 'tier':tier, 'record': record, 'isValid':True, 'STATIC_URL':STATIC_URL}
-
-#     return render(request,'summoner/summoner_info.html', info)
-
 @csrf_exempt
 def renew(request):
     # renew profile
@@ -104,34 +86,6 @@ class SummonerView(APIView):
         tierSerialize = TierSerializer(tierQuery)
         gameRecordSerialize = GameRecordSerializer(recordQuery, many=True)
 
-        return render(request, 'summoner/summoner_info.html', {'user':userSerialize.data, 'tier':tierSerialize.data, 'gameRecord':gameRecordSerialize.data\
-            ,'STATIC_URL':STATIC_URL})
-
-class MainView(APIView):
-
-    def post(self, request):
-
-        summonerName = request.data['userName']
-
-        API = SummonerAPI(summonerName)
-
-        if API.isValid():
-            # API
-            tierData = API.getTier()
-            gameRecordData = API.getTotalRecord(0, 10)
-            userData = API.getUser()
-
-            # DB 저장
-
-            DB = UpdateDB(summonerName)
-
-            DB.createUser(userData)
-            DB.createTier(tierData)
-            for record in reversed(gameRecordData):
-                DB.createGameRecord(record)
-                DB.createDetailRecord(record)
-
-            # DB.deleteGameRecord(summonerName)
-            return Response(data={'status': 200})
-        else:
-            return Response(data={'status': 404})
+        return render(request, 'summoner/summoner_info.html',
+                      {'user': userSerialize.data, 'tier': tierSerialize.data, 'gameRecord': gameRecordSerialize.data
+                          , 'STATIC_URL': STATIC_URL})

@@ -1,11 +1,11 @@
 from django.db import models
-
 from riotapi.SummonerData import SummonerAPI
 
 '''
 모델 변경사항 있을 시,
 makemigrations & migrate 해줘야 함
 '''
+
 
 class User(models.Model):
     """
@@ -17,14 +17,13 @@ class User(models.Model):
     summoner_icon = models.IntegerField()
 
 
-
 class Tier(models.Model):
     """
     티어 정보에 대한 테이블
     summoner_name 으로 조회
     """
     summoner_name = models.OneToOneField("User", related_name="tier", on_delete=models.CASCADE,
-                                      db_column="summoner_name", primary_key=True)
+                                         db_column="summoner_name", primary_key=True)
     solo_tier = models.CharField(max_length=20)
     solo_rank = models.CharField(max_length=20)
     solo_wins = models.IntegerField()
@@ -37,14 +36,14 @@ class Tier(models.Model):
     free_leaguePoints = models.IntegerField()
 
 
-
 class GameRecord(models.Model):
     """
     게임 정보 대한 테이블
     summoner_name 으로 조회
     """
     game_ID = models.CharField(max_length=30, primary_key=True)  # summonerName + matchID
-    summoner_name = models.ForeignKey("User", related_name="record", on_delete=models.CASCADE, db_column="summoner_name")
+    summoner_name = models.ForeignKey("User", related_name="record", on_delete=models.CASCADE,
+                                      db_column="summoner_name")
     game_mode = models.CharField(max_length=20)
     champ_level = models.IntegerField()
     champ_name = models.CharField(max_length=20)
@@ -59,6 +58,7 @@ class GameRecord(models.Model):
 
     class Meta:
         ordering = ['-game_ID']
+
 
 class DetailRecord(models.Model):
     game_ID = models.ForeignKey("GameRecord", related_name="detail", on_delete=models.CASCADE,
@@ -79,7 +79,6 @@ class DetailRecord(models.Model):
         ordering = ['-game_ID']
 
 
-
 class UpdateDB:
     """
     Implements CRUD about DB data
@@ -90,14 +89,14 @@ class UpdateDB:
     ex) DB.createTier(info)
     """
 
-    def __init__(self, summoner:SummonerAPI):
-        self._userName = summoner.getUser()['name']
+    def __init__(self, summoner: SummonerAPI):
+        self._summonerName = summoner.getName()
 
     def createTier(self, info):
         """
         Create record of Tier table
         """
-        _modelInstance = Tier(summoner_name=User.objects.get(summoner_name=self._userName)
+        _modelInstance = Tier(summoner_name=User.objects.get(summoner_name=self._summonerName)
                               , solo_tier=info['solo']['tier'], solo_rank=info['solo']['rank']
                               , solo_wins=info['solo']['wins'], solo_losses=info['solo']['losses']
                               , solo_leaguePoints=info['solo']['leaguePoints']
@@ -110,7 +109,7 @@ class UpdateDB:
         """
         Create record of GameRecord table
         """
-        _modelInstance = GameRecord(game_ID=self._userName+info['matchID'], champ_level=info['champLevel'],
+        _modelInstance = GameRecord(game_ID=self._summonerName + info['matchID'], champ_level=info['champLevel'],
                                     champ_name=info['champName'], kill=info['kill'], game_mode=info['gameMode'],
                                     death=info['death'], assist=info['assist'], CS=info['CS'],
                                     game_result=info['gameResult'], play_time=info['playTime'],
@@ -130,7 +129,7 @@ class UpdateDB:
         """
         Create record of DetailRecord table
         """
-        _modelInstance = DetailRecord(game_ID=GameRecord.objects.get(game_ID=self._userName+info['matchID']),
+        _modelInstance = DetailRecord(game_ID=GameRecord.objects.get(game_ID=self._summonerName + info['matchID']),
                                       primary_perk=info['perks'][0], sub_perk=info['perks'][1],
                                       item0=info['items'][0], item1=info['items'][1], item2=info['items'][2],
                                       item3=info['items'][3], item4=info['items'][4], item5=info['items'][5],
@@ -142,8 +141,8 @@ class UpdateDB:
         Update record of Tier table
         """
         _modelInstance = Tier.objects.all()
-        _modelInstance = _modelInstance.filter(summoner_name=self._userName)
-        _modelInstance.update(solo_tier=info['solo']['tier'], solo_rank = info['solo']['rank']
+        _modelInstance = _modelInstance.filter(summoner_name=self._summonerName)
+        _modelInstance.update(solo_tier=info['solo']['tier'], solo_rank=info['solo']['rank']
                               , solo_wins=info['solo']['wins'], solo_losses=info['solo']['losses']
                               , solo_leaguePoints=info['solo']['leaguePoints']
                               , free_tier=info['free']['tier'], free_rank=info['free']['rank']
@@ -155,9 +154,8 @@ class UpdateDB:
         Update record of Summoner table
         """
         _modelInstance = User.objects.all()
-        _modelInstance = _modelInstance.filter(summoner_name=self._userName)
+        _modelInstance = _modelInstance.filter(summoner_name=self._summonerName)
         _modelInstance.update(summoner_level=info['summonerLevel'], summoner_icon=info['summonerIcon'])
-
 
     def deleteGameRecord(self, summonerName):
         """

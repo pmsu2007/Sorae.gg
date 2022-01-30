@@ -4,22 +4,22 @@ from riotapi.ApiConnect import ApiConnect
 
 
 class SummonerAPI:
-
     """
     Module to process data from Riot API
     """
 
-    def __init__(self, summonerName):
+    def __init__(self, inputName):
         self._connect = ApiConnect()
-        self._ID = self._connect.getEncryptID(summonerName)
+        self._ID = self._connect.getEncryptID(inputName)
         self._summonerName = None
         if self.isValid():
-            self._summonerName = self.getUser()['name']
+            self._summonerName = self._ID['name']
         """
         accountId : Encrypted account ID
         id : Encrypted summoner ID
         puuid : Encrypted PUUID
         """
+
     def getName(self):
         """
         return summonerName
@@ -49,12 +49,12 @@ class SummonerAPI:
 
         for rank in data:
             if rank['queueType'] == "RANKED_SOLO_5x5":
-                    solo = {'tier': rank["tier"], 'rank': rank["rank"], 'wins': rank["wins"],
-                            'losses': rank["losses"], 'leaguePoints': rank["leaguePoints"]}
+                solo = {'tier': rank["tier"], 'rank': rank["rank"], 'wins': rank["wins"],
+                        'losses': rank["losses"], 'leaguePoints': rank["leaguePoints"]}
 
             if rank['queueType'] == "RANKED_FLEX_SR":
-                    free = {'tier': rank["tier"], 'rank': rank["rank"], 'wins': rank["wins"],
-                            'losses': rank["losses"], 'leaguePoints': rank["leaguePoints"]}
+                free = {'tier': rank["tier"], 'rank': rank["rank"], 'wins': rank["wins"],
+                        'losses': rank["losses"], 'leaguePoints': rank["leaguePoints"]}
 
         info = {'solo': solo, 'free': free}
         return info
@@ -68,34 +68,33 @@ class SummonerAPI:
         response = requests.get(URL, headers=self._connect.getHeader())
         data = response.json()
 
-
-        info = {'playTime': 0, 'champLevel': 0, 'champName': "", 'kill': 0, 'death': 0, 'assist': 0, 'CS': 0,
-                'gameResult': "", 'matchID': "", 'perks': 0, 'items': 0, 'spells': 0,
-                'gameMode': data['info']['gameMode'], 'totalDamage': 0}
+        info = {'assist': 0, 'CS': 0, 'champLevel': 0, 'champName': "", 'death': 0, 'gameResult': "",
+                'gameMode': data['info']['gameMode'],
+                'items': 0, 'kill': 0, 'matchID': "", 'playTime': 0, 'perks': 0, 'spells': 0, 'totalDamage': 0,
+                'visionWard': 0}
 
         for participant in data['info']['participants']:
             if participant["summonerName"] == self._summonerName:
-                info['matchID'] = matchID
-                info['champLevel'] = participant['champLevel']
-                info['champName'] = participant['championName']
-                info['kill'] = participant['kills']
-                info['death'] = participant['deaths']
-                info['assist'] = participant['assists']
-                info['CS'] = participant['totalMinionsKilled']
-                info['gameResult'] = participant['win']
-                info['playTime'] = participant['timePlayed']
-                info['totalDamage'] = participant['totalDamageDealtToChampions']
-                info['visionWard'] = participant['visionWardsBoughtInGame']
                 item = [participant["item0"], participant["item1"], participant["item2"], participant["item3"],
                         participant["item4"], participant["item5"], participant["item6"]]
-                info['items'] = item
                 perks = [participant['perks']['styles'][0]['selections'][0]['perk'],
                          participant['perks']['styles'][1]['style']]
-                info['perks'] = perks
                 spells = [participant['summoner1Id'], participant['summoner2Id']]
+                info['assist'] = participant['assists']
+                info['CS'] = participant['totalMinionsKilled']
+                info['champLevel'] = participant['champLevel']
+                info['champName'] = participant['championName']
+                info['death'] = participant['deaths']
+                info['gameResult'] = participant['win']
+                info['items'] = item
+                info['kill'] = participant['kills']
+                info['matchID'] = matchID
+                info['playTime'] = participant['timePlayed']
+                info['perks'] = perks
                 info['spells'] = spells
+                info['totalDamage'] = participant['totalDamageDealtToChampions']
+                info['visionWard'] = participant['visionWardsBoughtInGame']
 
-        # print(info)
         return info
 
     def getTotalRecord(self, start, end):
@@ -119,12 +118,9 @@ class SummonerAPI:
         Information about User
         :return: Summoner information(dict)
         """
-        URL = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/" + self._ID['puuid']
-        response = requests.get(URL, headers=self._connect.getHeader())
-        data = response.json()
+        info = {'name': "", 'summonerIcon': 0, 'summonerLevel': 0}
 
-        info = {'name':data['name'], 'summonerIcon':0, 'summonerLevel': 0}
-        info['summonerLevel'] = data['summonerLevel']
-        info['summonerIcon'] = data['profileIconId']
-
+        if self._summonerName is not None:
+            info = {'name': self._ID['name'], 'summonerIcon': self._ID['profileIconId'],
+                    'summonerLevel': self._ID['summonerLevel']}
         return info

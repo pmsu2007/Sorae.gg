@@ -9,7 +9,7 @@ class ApiConnect:
 
     def __init__(self):
 
-        self._apiKey = "RGAPI-4243afba-7690-49ca-a406-c57a91cb00f0"
+        self._apiKey = ""
 
     def getHeader (self):
         headers = {
@@ -22,7 +22,6 @@ class ApiConnect:
 
     def getEncryptID(self, summonerName):
         encodingSummonerName = parse.quote(summonerName) # 공백을 %20으로 인코딩
-        print(encodingSummonerName)
         URL = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + encodingSummonerName
         response = requests.get(URL, headers=self.getHeader())
         data = response.json()
