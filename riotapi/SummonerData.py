@@ -11,6 +11,7 @@ class SummonerAPI:
     def __init__(self, inputName):
         self._connect = ApiConnect()
         self._ID = self._connect.getEncryptID(inputName)
+
         self._summonerName = None
         if self.isValid():
             self._summonerName = self._ID['name']

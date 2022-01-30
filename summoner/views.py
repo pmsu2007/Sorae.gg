@@ -35,8 +35,8 @@ def renew(request):
     # DB 갱신
     DB = UpdateDB(summoner)
 
-    DB.createUser(userData)
-    DB.createTier(tierData)
+    DB.updateUser(userData)
+    DB.updateTier(tierData)
     for record in reversed(gameRecordData):
         DB.createGameRecord(record)
         DB.createDetailRecord(record)
@@ -52,7 +52,7 @@ class SummonerView(APIView):
         summoner = SummonerAPI(inputName)
         summonerName = summoner.getName()
 
-        if not summoner.isValid() :
+        if summonerName == None :
             return render(request, 'summoner/summoner_info.html', {'userName':inputName})
         
         # DB 조회

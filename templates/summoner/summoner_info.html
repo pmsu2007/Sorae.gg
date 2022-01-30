@@ -20,17 +20,19 @@
 
     <!-- search box -->
     <div class="serach-box">
+        {% if user.summoner_name %}
         <button type="button" class="renewBtn btn btn-primary">
             <span class ="renewText">프로필 갱신</span>
             <div class="spinner-border" style="display: none;" role="status">
                 <span class="visually-hidden">Loading...</span>
               </div>
         </button>
+        {% endif %}
         <form class="search-form" action = "/summoner/" method="get" autocomplete="off">
             {% csrf_token %}
             <div class="input-group input-group-sm mb-3 summoner-search-box">
                 <span class="input-group-text" id="inputGroup-sizing-default">소환사명</span>
-                <input type="text" name="userName" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" autocomplete="off">
+                <input type="text" required="required" name="userName" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" autocomplete="off">
                 <button type="submit" class="btn btn-outline-secondary btn-sm">
                     <img src="{% static 'images/search-icon.png' %}" class="search-icon">
                 </button>
