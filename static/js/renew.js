@@ -1,7 +1,7 @@
 const renewBtn = document.querySelector('.renewBtn');
 let isRenewing = false;
 renewBtn.addEventListener('click', function(e) {
-    if (isRenewing) return;
+    if (isRenewing) return; // if profile is renewing then return
     isRenewing = true;
     
     // activate loader and hide text
