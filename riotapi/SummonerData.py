@@ -1,12 +1,12 @@
 import os
 import django
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-django.setup()
-
 import requests
 from riotapi.ApiConnect import ApiConnect
 from summoner.models import UpdateDB
+import datetime
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+django.setup()
 
 
 class SummonerAPI:
@@ -20,7 +20,7 @@ class SummonerAPI:
         self._summonerName = None
         if self.isValid():
             self._summonerName = self._ID['name']
-        self._DB = UpdateDB(self._summonerName)
+            self._DB = UpdateDB(self._summonerName)
 
         """
         accountId : Encrypted account ID
@@ -53,6 +53,7 @@ class SummonerAPI:
         data = response.json()
 
         user = self.getUser()
+        user['renewTime'] = int(datetime.datetime.now().timestamp())
         solo = {'tier': "", 'rank': "", 'wins': 0, 'losses': 0, 'leaguePoints': 0, "progress": ""}
         free = {'tier': "", 'rank': "", 'wins': 0, 'losses': 0, 'leaguePoints': 0, "progress": ""}
 
@@ -154,8 +155,3 @@ class SummonerAPI:
             info = {'name': self._ID['name'], 'summonerIcon': self._ID['profileIconId'],
                     'summonerLevel': self._ID['summonerLevel']}
         return info
-
-
-if __name__ == "__main__":
-    summonerAPI = SummonerAPI("민스님")
-    print(summonerAPI.getTotalRecord(0, 5))

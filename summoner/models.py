@@ -14,6 +14,7 @@ class User(models.Model):
     summoner_name = models.CharField(max_length=20, primary_key=True)
     summoner_level = models.SmallIntegerField()
     summoner_icon = models.SmallIntegerField()
+    renew_time = models.IntegerField()
 
     # 솔로 랭크
     solo_tier = models.CharField(max_length=20)
@@ -112,7 +113,7 @@ class UpdateDB:
         Create record of Summoner table
         """
         _modelInstance = User(summoner_name=info['user']['name'], summoner_level=info['user']['summonerLevel'],
-                              summoner_icon=info['user']['summonerIcon'],
+                              summoner_icon=info['user']['summonerIcon'], renew_time=info['user']['renewTime'],
                               solo_tier=info['solo']['tier'], solo_rank=info['solo']['rank'],
                               solo_wins=info['solo']['wins'], solo_losses=info['solo']['losses'],
                               solo_leaguePoints=info['solo']['leaguePoints'],
