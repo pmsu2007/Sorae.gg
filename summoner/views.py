@@ -1,5 +1,3 @@
-from aifc import Error
-from tkinter.ttk import Entry
 import django
 import json
 from django.shortcuts import render
@@ -37,11 +35,12 @@ class SummonerView(APIView):
 
     def get(self, request):
 
-        # URL : sorae.gg/api?userName
+        # URL : sorae.gg/summoner?userName
         inputName = request.GET['userName']
         summoner = SummonerAPI(inputName)
         summonerName = summoner.getName()
 
+        # 소환사 이름이 없을때
         if summonerName == None :
             return render(request, 'summoner/summoner_info.html', {'userName':inputName})
         
@@ -55,7 +54,7 @@ class SummonerView(APIView):
             """
             # Data 생성 및 저장
             tierData = summoner.getTier()
-            gameRecordData = summoner.getTotalRecord(0, 10)
+            gameRecordData = summoner.getTotalRecord(0, 10) # 10게임 불러오기 -> 수정필요
 
         # serializer
         userQuery = User.objects.get(summoner_name=summonerName)
@@ -63,7 +62,6 @@ class SummonerView(APIView):
         userSerialize = UserSerializer(userQuery)
         gameRecordSerialize = GameRecordSerializer(recordQuery, many=True)
 
-        print(gameRecordSerialize.data)
         return render(request, 'summoner/summoner_info.html',
                       {'user': userSerialize.data, 'record': gameRecordSerialize.data
                           , 'STATIC_URL': STATIC_URL})

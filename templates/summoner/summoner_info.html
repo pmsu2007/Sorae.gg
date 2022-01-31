@@ -72,7 +72,7 @@
                 <p class="text-center my-2 fs-5">솔로랭크</p>
                 <p class="text-center my-2 fs-3 tier-name">
                     <span class="soloRank">{{ user.solo_tier }}</span>
-                    <span class="soloTier"> {{ tier.solo_rank }}</span><br>
+                    <span class="soloTier"> {{ user.solo_rank }}</span><br>
                     <span class="soloPoint" style ="font-size: 15px;"> {{user.solo_leaguePoints}} LP</span>
                 </p>
                 <!--image-->
@@ -154,7 +154,9 @@
                                 <span class="time">{{r.game_duration|sec_to_min}}분</span>
                             </div>
                             <div class="game-kda">
-                                <sapn class="kda">{{r.kill}}/{{r.death}}/{{r.assist}}</sapn>
+                                <span class="kill">{{r.kill}}</span>/<!--
+                             --><span class="death">{{r.death}}</span>/<!--
+                             --><span class="assist">{{r.assist}}</span>
                             </div>
                         </div>
                     </div>
