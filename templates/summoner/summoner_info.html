@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load summoner_filter %}
 {% load static %}
 
 {% block title %}
@@ -67,20 +68,20 @@
     <div class="rank-info my-5">
         <div class="rank-wrap">
             <div class="rank-box solo-rank">
-                {% if tier.solo_rank|length > 0 %} <!--if summoner is ranked-->
+                {% if user.solo_tier|length > 0 %} <!--if summoner is ranked-->
                 <p class="text-center my-2 fs-5">솔로랭크</p>
                 <p class="text-center my-2 fs-3 tier-name">
-                    <span class="soloRank">{{ tier.solo_tier }}</span>
+                    <span class="soloRank">{{ user.solo_tier }}</span>
                     <span class="soloTier"> {{ tier.solo_rank }}</span><br>
-                    <span class="soloPoint" style ="font-size: 15px;"> {{tier.solo_leaguePoints}} LP</span>
+                    <span class="soloPoint" style ="font-size: 15px;"> {{user.solo_leaguePoints}} LP</span>
                 </p>
                 <!--image-->
                 <div class="tierImgDiv my-2 text-center">
                     <img class="tierImg soloImg" src="" alt="">
                 </div>
                 <div class="WinLose">
-                    <span class="soloWin">{{ tier.solo_wins }}승</span>
-                    <span class="soloLose">{{ tier.solo_losses}}패</span>
+                    <span class="soloWin">{{ user.solo_wins }}승</span>
+                    <span class="soloLose">{{ user.solo_losses}}패</span>
                     <span class="soloWinRatio">/ </span>
                 </div>
                 {% else %} <!--if summoner is unranked-->
@@ -96,20 +97,20 @@
             </div>
             <!--free rank-->
             <div class="rank-box free-rank">
-                {% if tier.free_rank|length > 0 %} <!-- if summoner is ranked -->
+                {% if user.free_tier|length > 0 %} <!-- if summoner is ranked -->
                 <p class="text-center my-2 fs-5">자유 5:5 랭크</p>
                 <p class="text-center my-2 fs-3 tier-name">
-                    <span class="freeRank">{{ tier.free_tier }}</span>
-                    <span class="freeTier"> {{ tier.free_rank }}</span><br>
-                    <span class="freePoint" style="font-size: 15px;"> {{tier.free_leaguePoints}} LP</span>
+                    <span class="freeRank">{{ user.free_tier }}</span>
+                    <span class="freeTier"> {{ user.free_rank }}</span><br>
+                    <span class="freePoint" style="font-size: 15px;"> {{user.free_leaguePoints}} LP</span>
                 </p>
                 <!--image-->
                 <div class="tierImgDiv my-2 text-center">
                     <img class="tierImg freeImg" src="" alt="">
                 </div>
                 <div class="WinLose">
-                    <span class="freeWin">{{ tier.free_wins }}승</span>
-                    <span class="freeLose">{{ tier.free_losses}}패</span>
+                    <span class="freeWin">{{ user.free_wins }}승</span>
+                    <span class="freeLose">{{ user.free_losses}}패</span>
                     <span class="freeWinRatio">/ </span>
                 </div>
                 {% else %} <!--if summoner is unranked-->
@@ -135,7 +136,33 @@
             <div class="record-container swiper mySwiper">
                 <div class="record-content swiper-wrapper">
                     
-                    <!-- card1 -->
+                    {% for r in record%}
+                    <div class="card swiper-slide" data-match-id={{r.match_ID}} data-result={{r.game_result}}>
+                        <div class="card-content">
+                            <div class="champion-img">
+                                <img src="https://ddragon.leagueoflegends.com/cdn/12.2.1/img/champion/{{r.champ_name}}.png" alt="Talon">
+                            </div>
+                            <div class="champion-name">
+                                <span class="name">{{r.champ_name|eng_to_kor}}</span>
+                            </div>
+                            <div class="date-type">
+                                <span class="date">{{r.game_endtime|unix_to_date}}</span>
+                                <span class="type">{{r.queue_ID|det_game_type}}</span>
+                            </div>
+                            <div class="result-time">
+                                <span class="result">{{r.game_result|det_win_lose}}</span><br>
+                                <span class="time">{{r.game_duration|sec_to_min}}분</span>
+                            </div>
+                            <div class="game-kda">
+                                <sapn class="kda">{{r.kill}}/{{r.death}}/{{r.assist}}</sapn>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+
+                    {% comment %} 카드 형식 예시:
+
                     <div class="card card-win swiper-slide">
                         <div class="card-content">
                             <div class="champion-img">
@@ -158,151 +185,14 @@
                         </div>
                     </div>
 
-                    <!-- card2 -->
-                    <div class="card card-lose swiper-slide">
-                        <div class="card-content">
-                            <div class="champion-img">
-                                <img src="https://ddragon.leagueoflegends.com/cdn/12.2.1/img/champion/LeeSin.png" alt="Talon">
-                            </div>
-                            <div class="champion-name">
-                                <span class="name">리신</span>
-                            </div>
-                            <div class="date-type">
-                                <span class="date">1/29</span>
-                                <sapn class="type">자유랭크</sapn>
-                            </div>
-                            <div class="result-time">
-                                <span class="result">패배</span><br>
-                                <span class="time">21분</span>
-                            </div>
-                            <div class="game-kda">
-                                <sapn class="kda">3/2/3</sapn>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- card3 -->
-                    <div class="card card-lose swiper-slide">
-                        <div class="card-content">
-                            <div class="champion-img">
-                                <img src="https://ddragon.leagueoflegends.com/cdn/12.2.1/img/champion/Akali.png" alt="Talon">
-                            </div>
-                            <div class="champion-name">
-                                <span class="name">아칼리</span>
-                            </div>
-                            <div class="date-type">
-                                <span class="date">1/29</span>
-                                <span class="type">칼바람</span>
-                            </div>
-                            <div class="result-time">
-                                <span class="result">패배</span><br>
-                                <span class="time">21분</span>
-                            </div>
-                            <div class="game-kda">
-                                <sapn class="kda">1/5/3</sapn>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- card4 -->
-                    <div class="card card-win swiper-slide">
-                        <div class="card-content">
-                            <div class="champion-img">
-                                <img src="https://ddragon.leagueoflegends.com/cdn/12.2.1/img/champion/Elise.png" alt="Talon">
-                            </div>
-                            <div class="champion-name">
-                                <span class="name">엘리스</span>
-                            </div>
-                            <div class="date-type">
-                                <span class="date">1/28</span>
-                                <span class="type">솔로랭크</span>
-                            </div>
-                            <div class="result-time">
-                                <span class="result">승리</span><br>
-                                <span class="time">21분</span>
-                            </div>
-                            <div class="game-kda">
-                                <sapn class="kda">6/1/3</sapn>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- card5 -->
-                    <div class="card card-lose swiper-slide">
-                        <div class="card-content">
-                            <div class="champion-img">
-                                <img src="https://ddragon.leagueoflegends.com/cdn/12.2.1/img/champion/Graves.png" alt="Talon">
-                            </div>
-                            <div class="champion-name">
-                                <span class="name">그레이브즈</span>
-                            </div>
-                            <div class="date-type">
-                                <span class="date">1/27</span>
-                                <span class="type">솔로랭크</span>
-                            </div>
-                            <div class="result-time">
-                                <span class="result">패배</span><br>
-                                <span class="time">40분</span>
-                            </div>
-                            <div class="game-kda">
-                                <sapn class="kda">15/6/3</sapn>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- card6 -->
-                    <div class="card card-win swiper-slide">
-                        <div class="card-content">
-                            <div class="champion-img">
-                                <img src="https://ddragon.leagueoflegends.com/cdn/12.2.1/img/champion/Diana.png" alt="Talon">
-                            </div>
-                            <div class="champion-name">
-                                <span class="name">다이애나</span>
-                            </div>
-                            <div class="date-type">
-                                <span class="date">1/27</span>
-                                <span class="type">일반</span>
-                            </div>
-                            <div class="result-time">
-                                <span class="result">승리</span><br>
-                                <span class="time">31분</span>
-                            </div>
-                            <div class="game-kda">
-                                <sapn class="kda">7/3/3</sapn>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- card7 -->
-                    <div class="card card-win swiper-slide">
-                        <div class="card-content">
-                            <div class="champion-img">
-                                <img src="https://ddragon.leagueoflegends.com/cdn/12.2.1/img/champion/Poppy.png" alt="Talon">
-                            </div>
-                            <div class="champion-name">
-                                <span class="name">뽀삐</span>
-                            </div>
-                            <div class="date-type">
-                                <span class="date">1/25</span>
-                                <span class="type">자유랭크</span>
-                            </div>
-                            <div class="result-time">
-                                <span class="result">승리</span><br>
-                                <span class="time">15분</span>
-                            </div>
-                            <div class="game-kda">
-                                <sapn class="kda">5/0/3</sapn>
-                            </div>
-                        </div>
-                    </div>
-
+                    {% endcomment %}
                 </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-pagination"></div>
             </div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-pagination"></div>
-    </section>
 
+    </section>
     </div>
     <!-- game record end-->
 
@@ -331,9 +221,9 @@
 <!-- Initialize Swiper -->
 <script>
     var swiper = new Swiper(".mySwiper", {
-        slidesPerView: 3,
+        slidesPerView: 4,
         spaceBetween: 30,
-        slidesPerGroup: 3,
+        slidesPerGroup: 4,
         loop: true,
         loopFillGroupWithBlank: true,
         pagination: {
@@ -352,4 +242,5 @@
 </script>
 <script type="text/javascript" src="{% static 'js/summoner.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/renew.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/record.js' %}"></script>
 {% endblock script %}
