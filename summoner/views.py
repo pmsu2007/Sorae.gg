@@ -6,8 +6,8 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import TierSerializer, UserSerializer, GameRecordSerializer
-from summoner.models import Tier, GameRecord, User, UpdateDB
+from .serializers import UserSerializer, GameRecordSerializer
+from summoner.models import GameRecord, User, DetailRecord, UpdateDB
 from riotapi.SummonerData import SummonerAPI
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
@@ -80,12 +80,27 @@ class SummonerView(APIView):
 
         # serializer
         userQuery = User.objects.get(summoner_name=summonerName)
-        tierQuery = Tier.objects.get(summoner_name=summonerName)
         recordQuery = GameRecord.objects.filter(summoner_name=summonerName)
         userSerialize = UserSerializer(userQuery)
-        tierSerialize = TierSerializer(tierQuery)
         gameRecordSerialize = GameRecordSerializer(recordQuery, many=True)
 
         return render(request, 'summoner/summoner_info.html',
-                      {'user': userSerialize.data, 'tier': tierSerialize.data, 'gameRecord': gameRecordSerialize.data
+                      {'user': userSerialize.data, 'gameRecord': gameRecordSerialize.data
                           , 'STATIC_URL': STATIC_URL})
+
+class MainView(APIView):
+
+    def post(self, request):
+
+        inputName = request.POST.get("userName")
+
+        API = SummonerAPI(inputName)
+        summonerName = API.getName()
+
+        if API.isValid():
+
+            API.getTier()
+            API.getTotalRecord(0, 10)
+            return Response(data={'status': 200})
+        else:
+            return Response(data={'status': 404})
