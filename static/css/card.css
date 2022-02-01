@@ -16,10 +16,6 @@
     width: 1000px;
 }
 
-.swiper-clip {
-    overflow: hidden;
-}
-
 .record-section .card .champion-img{
     height: 140px;
     width: 140px;

@@ -56,7 +56,21 @@ def det_game_type(val):
 
 @register.filter
 def unix_to_date(val):
+    val += 3600 * 1000 * 9
     date = datetime.fromtimestamp(int(val)/1000)
     month = date.month
     day = date.day
     return str(month) + '/' + str(day)
+
+@register.filter
+def unix_to_full_date(val):
+    val += 3600 * 1000 * 9
+    date = datetime.fromtimestamp(int(val)/1000)
+    year = date.year
+    month = date.month
+    day = date.day
+    hour = date.hour
+    minute = date.minute
+
+    return str(year) + '년 ' + str(month) + '월 ' + str(day) + '일 ' + str(hour) + '시 ' \
+        + str(minute) + '분'

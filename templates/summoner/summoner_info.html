@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="{% static 'css/main.css' %}">
 <link rel="stylesheet" href="{% static 'css/summoner.css' %}">
 <link rel="stylesheet" href="{% static 'css/card.css' %}">
+<link rel="stylesheet" href="{% static 'css/tooltip.css' %}">
 {% endblock css_link %}
 
 
@@ -136,7 +137,7 @@
             <div class="record-container swiper mySwiper">
                 <div class="record-content swiper-wrapper">
                     
-                    {% for r in record%}
+                    {% for r in record %}
                     <div class="card swiper-slide" data-match-id={{r.match_ID}} data-result={{r.game_result}}>
                         <div class="card-content">
                             <div class="champion-img">
@@ -148,6 +149,9 @@
                             <div class="date-type">
                                 <span class="date">{{r.game_endtime|unix_to_date}}</span>
                                 <span class="type">{{r.queue_ID|det_game_type}}</span>
+                                <div class="tooltip-div">
+                                    <span class="time-tooltip tooltip-above">{{r.game_endtime|unix_to_full_date}}</span>
+                                </div>
                             </div>
                             <div class="result-time">
                                 <span class="result">{{r.game_result|det_win_lose}}</span><br>
