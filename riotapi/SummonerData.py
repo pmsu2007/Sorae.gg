@@ -92,7 +92,7 @@ class SummonerAPI:
         response = requests.get(URL, headers=self._connect.getHeader())
         data = response.json()
 
-        info = {'gameDuration': data['info']['gameDuration'], 'gameEndTime': data['info']['gameEndTimestamp'],
+        info = {'gameDuration': data['info']['gameDuration'], 'gameStartTime': data['info']['gameStartTimestamp'],
                 'queueID': data['info']['queueId']}
 
         for participant in data['info']['participants']:
@@ -138,7 +138,7 @@ class SummonerAPI:
         matchList = response.json()
 
         recordList = []
-        for matchID in matchList:
+        for matchID in reversed(matchList):
             recordList.append(self.getRecord(matchID))
         return recordList
 
@@ -156,5 +156,5 @@ class SummonerAPI:
 
 
 if __name__ == "__main__":
-    summonerAPI = SummonerAPI("민스님")
+    summonerAPI = SummonerAPI("rqew")
     print(summonerAPI.getTotalRecord(0, 5))

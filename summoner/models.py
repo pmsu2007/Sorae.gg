@@ -51,7 +51,7 @@ class GameRecord(models.Model):
 
     game_result = models.BooleanField()
     game_duration = models.IntegerField()
-    game_endtime = models.IntegerField()
+    game_starttime = models.IntegerField()
 
     class Meta:
         ordering = ['-game_ID']
@@ -134,7 +134,7 @@ class UpdateDB:
                                     champ_name=info['champName'], champ_ID=info['champID'],
                                     kill=info['kill'], death=info['death'], assist=info['assist'],
                                     game_result=info['gameResult'], game_duration=info['gameDuration'],
-                                    game_endtime=info['gameEndTime'])
+                                    game_starttime=info['gameStartTime'])
         _modelInstance.save()
 
     def createDetailRecord(self, info):
