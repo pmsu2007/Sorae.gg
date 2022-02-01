@@ -52,10 +52,10 @@ class GameRecord(models.Model):
     game_result = models.BooleanField()
     game_duration = models.IntegerField()
     game_starttime = models.IntegerField()
+    game_endtime = models.IntegerField()
 
     class Meta:
-        ordering = ['-game_ID']
-
+        ordering = ['-game_endtime']
 
 class DetailRecord(models.Model):
     """
@@ -89,9 +89,6 @@ class DetailRecord(models.Model):
 
     spell1 = models.IntegerField()
     spell2 = models.IntegerField()
-
-    class Meta:
-        ordering = ['-game_ID']
 
 
 class UpdateDB:
@@ -134,7 +131,7 @@ class UpdateDB:
                                     champ_name=info['champName'], champ_ID=info['champID'],
                                     kill=info['kill'], death=info['death'], assist=info['assist'],
                                     game_result=info['gameResult'], game_duration=info['gameDuration'],
-                                    game_starttime=info['gameStartTime'])
+                                    game_starttime=info['gameStartTime'], game_endtime=info['gameEndTime'])
         _modelInstance.save()
 
     def createDetailRecord(self, info):

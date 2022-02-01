@@ -93,7 +93,7 @@ class SummonerAPI:
         data = response.json()
 
         info = {'gameDuration': data['info']['gameDuration'], 'gameStartTime': data['info']['gameStartTimestamp'],
-                'queueID': data['info']['queueId']}
+                'gameEndTime': data['info']['gameEndTimestamp'], 'queueID': data['info']['queueId']}
 
         for participant in data['info']['participants']:
             item = [participant["item0"], participant["item1"], participant["item2"], participant["item3"],
@@ -156,5 +156,5 @@ class SummonerAPI:
 
 
 if __name__ == "__main__":
-    summonerAPI = SummonerAPI("rqew")
+    summonerAPI = SummonerAPI("아루투로 비달")
     print(summonerAPI.getTotalRecord(0, 5))
