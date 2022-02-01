@@ -56,7 +56,6 @@ def det_game_type(val):
 
 @register.filter
 def unix_to_date(val):
-    val += 3600 * 1000 * 9
     date = datetime.fromtimestamp(int(val)/1000)
     month = date.month
     day = date.day
@@ -64,7 +63,6 @@ def unix_to_date(val):
 
 @register.filter
 def unix_to_full_date(val):
-    val += 3600 * 1000 * 9
     date = datetime.fromtimestamp(int(val)/1000)
     year = date.year
     month = date.month
