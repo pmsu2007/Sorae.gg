@@ -27,7 +27,7 @@ def renew(request):
     
     # Data 갱신
     tierData = summoner.getTier()
-    gameRecordData = summoner.getTotalRecord(0, 10)
+    gameRecordData = summoner.getTotalRecord(0, 20)
 
     return JsonResponse({'status':200})
 
@@ -54,14 +54,14 @@ class SummonerView(APIView):
             """
             # Data 생성 및 저장
             tierData = summoner.getTier()
-            gameRecordData = summoner.getTotalRecord(0, 10) # 10게임 불러오기 -> 수정필요
+            gameRecordData = summoner.getTotalRecord(0, 20) # 20 게임 불러오기
 
         # serializer
         userQuery = User.objects.get(summoner_name=summonerName)
         recordQuery = GameRecord.objects.filter(summoner_name=summonerName)
         userSerialize = UserSerializer(userQuery)
         gameRecordSerialize = GameRecordSerializer(recordQuery, many=True)
-
+        
         return render(request, 'summoner/summoner_info.html',
                       {'user': userSerialize.data, 'record': gameRecordSerialize.data
                           , 'STATIC_URL': STATIC_URL})

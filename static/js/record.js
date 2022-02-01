@@ -9,3 +9,9 @@ const cards = document.querySelectorAll('.card');
         card.classList.add('card-lose');
     }
 })
+
+// tooltip initial
+
+$(function () {
+    $(".tooltip-div").tooltip();
+});

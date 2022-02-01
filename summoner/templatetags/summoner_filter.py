@@ -74,3 +74,15 @@ def unix_to_full_date(val):
 
     return str(year) + '년 ' + str(month) + '월 ' + str(day) + '일 ' + str(hour) + '시 ' \
         + str(minute) + '분'
+
+@register.filter
+def cur_progress(val):
+    res = ''
+    for i in val:
+        if i == 'W':
+            res += ' O'
+        elif i == 'L':
+            res += ' X'
+        else:
+            res += ' ?'
+    return res

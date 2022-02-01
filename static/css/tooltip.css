@@ -1,5 +1,4 @@
 .tooltip-div {
-    display: block;
     overflow: visible;
 }
 
@@ -27,17 +26,31 @@
     border-width: 5px;
 }
 
-.tooltip-div .tooltip-above {
+.tooltip-div .tooltip-top {
+    position: absolute;
     width: 120px;
     bottom: 150%;
     left: 50%;
     margin-left: -60px;
   }
   
-  .tooltip-div .tooltip-above::after {
+  .tooltip-div .tooltip-top::after {
+    position: absolute;
     top: 100%;
     left: 50%;
     margin-left: -5px;
     border-color: black transparent transparent transparent;
+  }
+
+  .tooltip-div .tooltip-right {
+    top: -5px;
+    left: 105%;
+  }
+  
+  .tooltip-div .tooltip-right::after {
+    top: 50%;
+    right: 100%;
+    margin-top: -5px;
+    border-color: transparent black transparent transparent;
   }
   

@@ -17,7 +17,6 @@
 <link rel="stylesheet" href="{% static 'css/main.css' %}">
 <link rel="stylesheet" href="{% static 'css/summoner.css' %}">
 <link rel="stylesheet" href="{% static 'css/card.css' %}">
-<link rel="stylesheet" href="{% static 'css/tooltip.css' %}">
 {% endblock css_link %}
 
 
@@ -74,7 +73,8 @@
                 <p class="text-center my-2 fs-3 tier-name">
                     <span class="soloRank">{{ user.solo_tier }}</span>
                     <span class="soloTier"> {{ user.solo_rank }}</span><br>
-                    <span class="soloPoint" style ="font-size: 15px;"> {{user.solo_leaguePoints}} LP</span>
+                    <span class="soloPoint" style ="font-size: 15px;"> {{user.solo_leaguePoints}} LP</span><br>
+                    <span class="soloProgress" style ="font-size: 20px;">{{user.solo_progress|cur_progress}}</span>
                 </p>
                 <!--image-->
                 <div class="tierImgDiv my-2 text-center">
@@ -104,6 +104,7 @@
                     <span class="freeRank">{{ user.free_tier }}</span>
                     <span class="freeTier"> {{ user.free_rank }}</span><br>
                     <span class="freePoint" style="font-size: 15px;"> {{user.free_leaguePoints}} LP</span>
+                    <span class="freeProgress" style ="font-size: 20px;">{{user.free_progress|cur_progress}}</span>
                 </p>
                 <!--image-->
                 <div class="tierImgDiv my-2 text-center">
@@ -146,12 +147,9 @@
                             <div class="champion-name">
                                 <span class="name">{{r.champ_name|eng_to_kor}}</span>
                             </div>
-                            <div class="date-type">
+                            <div class="date-type tooltip-div" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-container="body" title="{{r.game_endtime|unix_to_full_date}}">
                                 <span class="date">{{r.game_endtime|unix_to_date}}</span>
                                 <span class="type">{{r.queue_ID|det_game_type}}</span>
-                                <div class="tooltip-div">
-                                    <span class="time-tooltip tooltip-above">{{r.game_endtime|unix_to_full_date}}</span>
-                                </div>
                             </div>
                             <div class="result-time">
                                 <span class="result">{{r.game_result|det_win_lose}}</span><br>

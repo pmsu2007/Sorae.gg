@@ -16,6 +16,8 @@ class SummonerAPI:
 
     def __init__(self, inputName):
         self._connect = ApiConnect()
+        if len(inputName) == 2:
+            inputName = inputName[0] + ' ' + inputName[1]
         self._ID = self._connect.getEncryptID(inputName)
 
         self._summonerName = None
@@ -92,8 +94,20 @@ class SummonerAPI:
         response = requests.get(URL, headers=self._connect.getHeader())
         data = response.json()
 
-        info = {'gameDuration': data['info']['gameDuration'], 'gameStartTime': data['info']['gameStartTimestamp'],
+        if 'gameEndTimestamp' in data['info'].keys():
+            '''
+            2021/10/5 이후
+            '''
+            info = {'gameDuration': data['info']['gameDuration'], 'gameStartTime': data['info']['gameStartTimestamp'],
                 'gameEndTime': data['info']['gameEndTimestamp'], 'queueID': data['info']['queueId']}
+
+        else:
+            '''
+            2021/10/5 이전
+            '''
+            info = {'gameDuration': data['info']['gameDuration'] / 1000, 'gameStartTime': data['info']['gameStartTimestamp'],
+                'gameEndTime': data['info']['gameStartTimestamp'] + data['info']['gameDuration'] * 1000\
+                    , 'queueID': data['info']['queueId']}
 
         for participant in data['info']['participants']:
             item = [participant["item0"], participant["item1"], participant["item2"], participant["item3"],
