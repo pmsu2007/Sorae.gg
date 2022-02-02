@@ -58,7 +58,7 @@ class SummonerView(APIView):
 
         # serializer
         userQuery = User.objects.get(summoner_name=summonerName)
-        recordQuery = GameRecord.objects.filter(summoner_name=summonerName)
+        recordQuery = GameRecord.objects.filter(summoner_name=summonerName)[:20]
         userSerialize = UserSerializer(userQuery)
         gameRecordSerialize = GameRecordSerializer(recordQuery, many=True)
         
