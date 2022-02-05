@@ -10,6 +10,8 @@ from riotapi.SummonerData import SummonerAPI
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
 from config.settings import STATIC_URL
+from datetime import datetime
+import time
 
 
 def index(request):
@@ -66,10 +68,12 @@ class SummonerView(APIView):
 
             if summonerName == None :
                 return JsonResponse({'status':400})
-            
+
+            userQuery = User.objects.get(summoner_name=summonerName)
+            curTime = int(time.mktime(datetime.now().timetuple()) * 1000)
             # Data 갱신
             tierData = summoner.getTier()
-            gameRecordData = summoner.getTotalRecord(0, 20)
+            gameRecordData = summoner.getRecordUsingTime(userQuery.renew_time, curTime)
 
             return JsonResponse({'status':200})
         except Exception:

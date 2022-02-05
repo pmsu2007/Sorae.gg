@@ -51,7 +51,7 @@ class GameRecord(models.Model):
     assist = models.SmallIntegerField()
 
     game_result = models.BooleanField()
-    game_duration = models.IntegerField()
+    game_duration = models.SmallIntegerField()
     game_start = models.DateTimeField()
     game_end = models.DateTimeField()
 
