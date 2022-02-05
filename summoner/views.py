@@ -58,26 +58,27 @@ class SummonerView(View):
         '''
         renew summoner's info
         '''
-        try:
-            summonerName = json.loads(request.body).get('userName')
-            summoner = SummonerAPI(summonerName)
-            summonerName = summoner.getName()
+        # try:
+        summonerName = json.loads(request.body).get('userName')
+        summoner = SummonerAPI(summonerName)
+        summonerName = summoner.getName()
 
-            if summonerName == None :
-                return JsonResponse({'status':400})
-
-            userQuery = User.objects.get(summoner_name=summonerName)
-            curTime = int(time.mktime(datetime.now().timetuple()) * 1000)
-            lastRenewTime = int(time.mktime(userQuery.renew_time.timetuple()) * 1000)
-            print(lastRenewTime)
-            print(curTime)
-            # Data 갱신
-            tierData = summoner.getTier()
-            gameRecordData = summoner.getRecordUsingTime(lastRenewTime, curTime)
-
-            return JsonResponse({'status':200})
-        except Exception:
+        if summonerName == None :
             return JsonResponse({'status':400})
+
+        userQuery = User.objects.get(summoner_name=summonerName)
+        curTime = int(time.mktime(datetime.now().timetuple()))
+        lastRecordQuery = GameRecord.objects.filter(summoner_name=summonerName)[0]
+        lastMatchTime = int(time.mktime(lastRecordQuery.game_end.timetuple()))
+        # print(datetime.fromtimestamp(curTime/1000))
+        # print(datetime.fromtimestamp(lastMatchTime/1000))
+        # Data 갱신
+        tierData = summoner.getTier()
+        gameRecordData = summoner.getRecordUsingTime(lastMatchTime, curTime)
+
+        return JsonResponse({'status':200})
+        # except Exception:
+        #     return JsonResponse({'status':400})
         
 
 
