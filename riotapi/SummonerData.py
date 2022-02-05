@@ -160,6 +160,22 @@ class SummonerAPI:
             recordList.append(self.getRecord(matchID))
         return recordList
 
+    def getRecordUsingTime(self, start, end):
+        """
+           Total game record from startTime to endTime (timestamp)
+           pass matchID as parameter to record
+           :return: GameRecord informations (dictionary in list)
+           """
+        URL = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/" \
+              + self._ID["puuid"] + "/ids?startTime=" + str(start) + "&endTime=" + str(end)
+        response = requests.get(URL, headers=self._connect.getHeader())
+        matchList = response.json()
+
+        recordList = []
+        for matchID in reversed(matchList):
+            recordList.append(self.getRecord(matchID))
+        return recordList
+
     def getUser(self):
         """
         Information about User
@@ -176,4 +192,4 @@ class SummonerAPI:
 if __name__ == "__main__":
     summonerAPI = SummonerAPI("민스님")
     print(summonerAPI.getTier())
-    SummonerAPI.getTotalRecord(0, 20)
+    print(summonerAPI.getRecordUsingTime(1643478361913,1644054179000))
