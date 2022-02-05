@@ -34,7 +34,6 @@
         </button>
         {% endif %}
         <form class="search-form" action = "/summoner/" method="get" autocomplete="off">
-            {% csrf_token %}
             <div class="input-group input-group-sm mb-3 summoner-search-box">
                 <span class="input-group-text" id="inputGroup-sizing-default">소환사명</span>
                 <input type="text" required="required" name="userName" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" autocomplete="off">
