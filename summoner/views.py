@@ -18,10 +18,6 @@ import time
 def index(request):
     return render(request, 'summoner/index.html')
 
-# @csrf_exempt
-# def renew(request):
-#     # renew profile
-
 
 class SummonerView(View):
 
@@ -72,31 +68,18 @@ class SummonerView(View):
 
             userQuery = User.objects.get(summoner_name=summonerName)
             curTime = int(time.mktime(datetime.now().timetuple()) * 1000)
+            lastRenewTime = int(time.mktime(userQuery.renew_time.timetuple()) * 1000)
+            print(lastRenewTime)
+            print(curTime)
             # Data 갱신
             tierData = summoner.getTier()
-            gameRecordData = summoner.getRecordUsingTime(userQuery.renew_time, curTime)
+            gameRecordData = summoner.getRecordUsingTime(lastRenewTime, curTime)
 
             return JsonResponse({'status':200})
         except Exception:
             return JsonResponse({'status':400})
         
 
-class MainView(APIView):
-
-    def post(self, request):
-
-        inputName = request.POST.get("userName")
-
-        API = SummonerAPI(inputName)
-        summonerName = API.getName()
-
-        if API.isValid():
-
-            API.getTier()
-            API.getTotalRecord(0, 10)
-            return Response(data={'status': 200})
-        else:
-            return Response(data={'status': 404})
 
 class DetailView(APIView):
 
