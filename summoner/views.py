@@ -11,6 +11,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
 from config.settings import STATIC_URL
 from datetime import datetime
+from django.views import View
 
 
 def index(request):
@@ -21,7 +22,7 @@ def index(request):
 #     # renew profile
 
 
-class SummonerView(APIView):
+class SummonerView(View):
 
     def get(self, request):
 
