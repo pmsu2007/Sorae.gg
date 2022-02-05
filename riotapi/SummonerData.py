@@ -1,6 +1,6 @@
 import os
 import django
-
+import time
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
@@ -99,19 +99,20 @@ class SummonerAPI:
             '''
             2021/10/5 이후
             '''
-            info = {'gameDuration': data['info']['gameDuration'],
+            info = {'gameDuration': int(data['info']['gameDuration']),
                     'gameStartTime': datetime.fromtimestamp(int(data['info']['gameStartTimestamp'] / 1000)),
-                    'gameEndTime': datetime.fromtimestamp(int(data['info']['gameEndTimestamp'] / 1000)),
+                    'gameEndTime': datetime.fromtimestamp(int(data['info']['gameStartTimestamp'] / 1000 \
+                        + data['info']['gameDuration'])),
                     'queueID': data['info']['queueId']}
 
         else:
             '''
             2021/10/5 이전
             '''
-            info = {'gameDuration': data['info']['gameDuration'] / 1000,
+            info = {'gameDuration': int(data['info']['gameDuration'] / 1000),
                     'gameStartTime': datetime.fromtimestamp(int(data['info']['gameStartTimestamp'] / 1000)),
-                    'gameEndTime': datetime.fromtimestamp(int(data['info']['gameStartTimestamp'] / 1000) \
-                                                          + data['info']['gameDuration'] * 1000),
+                    'gameEndTime': datetime.fromtimestamp(int(data['info']['gameStartTimestamp'] / 1000 \
+                                                          + data['info']['gameDuration'] / 1000)),
                     'queueID': data['info']['queueId']}
 
         for participant in data['info']['participants']:
@@ -151,10 +152,13 @@ class SummonerAPI:
         pass matchID as parameter to record
         :return: GameRecord informations (dictionary in list)
         """
+        start_time = time.process_time()
         URL = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/" \
               + self._ID["puuid"] + "/ids?start=" + str(start) + "&count=" + str(end)
         response = requests.get(URL, headers=self._connect.getHeader())
         matchList = response.json()
+        end_time = time.process_time()
+        print(f"time elapsed : {int(round((end_time - start_time) * 1000))}ms")
 
         recordList = []
         for matchID in reversed(matchList):
@@ -167,10 +171,13 @@ class SummonerAPI:
            pass matchID as parameter to record
            :return: GameRecord informations (dictionary in list)
            """
+        start_time = time.process_time()
         URL = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/" \
               + self._ID["puuid"] + "/ids?startTime=" + str(start) + "&endTime=" + str(end)
         response = requests.get(URL, headers=self._connect.getHeader())
         matchList = response.json()
+        end_time = time.process_time()
+        print(f"time elapsed : {int(round((end_time - start_time) * 1000))}ms")
 
         recordList = []
         for matchID in reversed(matchList):
