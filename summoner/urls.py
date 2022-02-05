@@ -8,7 +8,6 @@ app_name = 'summoner'
 urlpatterns = [
     path('', views.index, name='index'),  # sorae.gg/
     path('summoner/', SummonerView.as_view(), name='search'),  # sorae.gg/summoner/?userName=
-    path('renew/', views.renew, name='renew'),  # refresh
     path('validation/', MainView.as_view()), # sorae.gg/api/
     path('detail/', DetailView.as_view()), # sorae.gg/detail/
 ]

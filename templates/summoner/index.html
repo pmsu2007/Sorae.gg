@@ -21,8 +21,7 @@
     </div>
 
     <div class="serach-box">
-        <form class="search-form" action = "/summoner/" method="get" autocomplete="off">
-            {% csrf_token %}
+        <form class="search-form" action = "{% url 'summoner:search' %}" method="get" autocomplete="off">
             <!-- <input type="text" name="userName" class="search-text" placeholder="소환사명을 입력해주세요" autocomplete="off"> -->
             <div class="input-group mb-3 search-text">
                 <span class="input-group-text" id="inputGroup-sizing-default">소환사명</span>

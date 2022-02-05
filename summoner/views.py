@@ -16,22 +16,10 @@ from datetime import datetime
 def index(request):
     return render(request, 'summoner/index.html')
 
-@csrf_exempt
-def renew(request):
-    # renew profile
+# @csrf_exempt
+# def renew(request):
+#     # renew profile
 
-    summonerName = json.loads(request.body).get('userName')
-    summoner = SummonerAPI(summonerName)
-    summonerName = summoner.getName()
-
-    if summonerName == None :
-        return JsonResponse({'status':400})
-    
-    # Data 갱신
-    tierData = summoner.getTier()
-    gameRecordData = summoner.getTotalRecord(0, 20)
-
-    return JsonResponse({'status':200})
 
 class SummonerView(APIView):
 
@@ -56,17 +44,38 @@ class SummonerView(APIView):
             """
             # Data 생성 및 저장
             tierData = summoner.getTier()
-            gameRecordData = summoner.getTotalRecord(0, 20) # 20 게임 불러오기
+            gameRecordData = summoner.getTotalRecord(0, 20) 
 
         # serializer
         userQuery = User.objects.get(summoner_name=summonerName)
-        recordQuery = GameRecord.objects.filter(summoner_name=summonerName)[:20]
+        recordQuery = GameRecord.objects.filter(summoner_name=summonerName)[:20] # 20 게임 불러오기
         userSerialize = UserSerializer(userQuery)
         gameRecordSerialize = GameRecordSerializer(recordQuery, many=True)
         
         return render(request, 'summoner/summoner_info.html',
                       {'user': userSerialize.data, 'record': gameRecordSerialize.data
                           , 'STATIC_URL': STATIC_URL})
+    
+    def post(self, request):
+        '''
+        renew summoner's info
+        '''
+        try:
+            summonerName = json.loads(request.body).get('userName')
+            summoner = SummonerAPI(summonerName)
+            summonerName = summoner.getName()
+
+            if summonerName == None :
+                return JsonResponse({'status':400})
+            
+            # Data 갱신
+            tierData = summoner.getTier()
+            gameRecordData = summoner.getTotalRecord(0, 20)
+
+            return JsonResponse({'status':200})
+        except Exception:
+            return JsonResponse({'status':400})
+        
 
 class MainView(APIView):
 

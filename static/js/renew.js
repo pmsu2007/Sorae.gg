@@ -16,8 +16,9 @@ renewBtn.addEventListener('click', function(e) {
             const res = JSON.parse(xhr.responseText);
             if (res.status == 200) {
                 // success
-                window.location.reload();
+                // window.location.reload();
                 alert("프로필 갱신을 완료했습니다.");
+                window.location.reload();
             }
             else {
                 alert("프로필 갱신에 실패했습니다.")
@@ -32,7 +33,7 @@ renewBtn.addEventListener('click', function(e) {
     }
 
     // data transfer
-    xhr.open('POST', '/renew/');
+    xhr.open('POST', './');
     xhr.setRequestHeader('Content-type', 'application/json');
     const summonerName = document.querySelector('.summonerName').textContent;
     const data = {'userName': summonerName};
