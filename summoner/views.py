@@ -10,6 +10,8 @@ from riotapi.SummonerData import SummonerAPI
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
 from config.settings import STATIC_URL
+from datetime import datetime
+
 
 def index(request):
     return render(request, 'summoner/index.html')

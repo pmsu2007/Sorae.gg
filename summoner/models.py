@@ -14,6 +14,7 @@ class User(models.Model):
     summoner_name = models.CharField(max_length=20, primary_key=True)
     summoner_level = models.SmallIntegerField()
     summoner_icon = models.SmallIntegerField()
+    renew_time = models.DateTimeField(auto_now=True)
 
     # 솔로 랭크
     solo_tier = models.CharField(max_length=20)
@@ -51,11 +52,11 @@ class GameRecord(models.Model):
 
     game_result = models.BooleanField()
     game_duration = models.IntegerField()
-    game_starttime = models.IntegerField()
-    game_endtime = models.IntegerField()
+    game_start = models.DateTimeField()
+    game_end = models.DateTimeField()
 
     class Meta:
-        ordering = ['-game_endtime']
+        ordering = ['-game_end']
 
 class DetailRecord(models.Model):
     """
@@ -131,7 +132,7 @@ class UpdateDB:
                                     champ_name=info['champName'], champ_ID=info['champID'],
                                     kill=info['kill'], death=info['death'], assist=info['assist'],
                                     game_result=info['gameResult'], game_duration=info['gameDuration'],
-                                    game_starttime=info['gameStartTime'], game_endtime=info['gameEndTime'])
+                                    game_start=info['gameStartTime'], game_end=info['gameEndTime'])
         _modelInstance.save()
 
     def createDetailRecord(self, info):

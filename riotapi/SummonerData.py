@@ -7,6 +7,7 @@ django.setup()
 import requests
 from riotapi.ApiConnect import ApiConnect
 from summoner.models import UpdateDB
+from datetime import datetime
 
 
 class SummonerAPI:
@@ -98,16 +99,20 @@ class SummonerAPI:
             '''
             2021/10/5 이후
             '''
-            info = {'gameDuration': data['info']['gameDuration'], 'gameStartTime': data['info']['gameStartTimestamp'],
-                'gameEndTime': data['info']['gameEndTimestamp'], 'queueID': data['info']['queueId']}
+            info = {'gameDuration': data['info']['gameDuration'],
+                    'gameStartTime': datetime.fromtimestamp(int(data['info']['gameStartTimestamp'] / 1000)),
+                    'gameEndTime': datetime.fromtimestamp(int(data['info']['gameEndTimestamp'] / 1000)),
+                    'queueID': data['info']['queueId']}
 
         else:
             '''
             2021/10/5 이전
             '''
-            info = {'gameDuration': data['info']['gameDuration'] / 1000, 'gameStartTime': data['info']['gameStartTimestamp'],
-                'gameEndTime': data['info']['gameStartTimestamp'] + data['info']['gameDuration'] * 1000\
-                    , 'queueID': data['info']['queueId']}
+            info = {'gameDuration': data['info']['gameDuration'] / 1000,
+                    'gameStartTime': datetime.fromtimestamp(int(data['info']['gameStartTimestamp'] / 1000)),
+                    'gameEndTime': datetime.fromtimestamp(int(data['info']['gameStartTimestamp'] / 1000) \
+                                                          + data['info']['gameDuration'] * 1000),
+                    'queueID': data['info']['queueId']}
 
         for participant in data['info']['participants']:
             item = [participant["item0"], participant["item1"], participant["item2"], participant["item3"],

@@ -147,8 +147,8 @@
                             <div class="champion-name">
                                 <span class="name">{{r.champ_name|eng_to_kor}}</span>
                             </div>
-                            <div class="date-type tooltip-div" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-container="body" title="{{r.game_endtime|unix_to_full_date}}">
-                                <span class="date">{{r.game_endtime|unix_to_date}}</span>
+                            <div class="date-type tooltip-div" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-container="body" title="{{r.game_end|unix_to_full_date}}">
+                                <span class="date">{{r.game_end|unix_to_date}}</span>
                                 <span class="type">{{r.queue_ID|det_game_type}}</span>
                             </div>
                             <div class="result-time">
