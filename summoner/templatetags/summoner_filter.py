@@ -68,14 +68,14 @@ def det_game_type(val):
 
 @register.filter
 def unix_to_date(val):
-    date = datetime.strptime(val, "%Y-%m-%dT%H:%M:%S%z")
+    date = datetime.strptime(val, "%Y-%m-%dT%H:%M:%S")
     month = date.month
     day = date.day
     return str(month) + '/' + str(day)
 
 @register.filter
 def unix_to_full_date(val):
-    date = datetime.strptime(val, "%Y-%m-%dT%H:%M:%S%z")
+    date = datetime.strptime(val, "%Y-%m-%dT%H:%M:%S")
     year = date.year
     month = date.month
     day = date.day

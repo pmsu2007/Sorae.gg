@@ -10,7 +10,6 @@ from riotapi.SummonerData import SummonerAPI
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
 from config.settings import STATIC_URL
-from datetime import datetime
 
 
 def index(request):
@@ -38,16 +37,16 @@ class SummonerView(APIView):
         # alternative : get_object_or_404(User, summoner_name=summonerNmae)
         try:
             userQuery = User.objects.get(summoner_name=summonerName)
+            # gameRecordData = summoner.getTotalRecord(0, 20)
         except ObjectDoesNotExist:
             """
             if Data dosen't exist then create DB
             """
             # Data 생성 및 저장
             tierData = summoner.getTier()
-            gameRecordData = summoner.getTotalRecord(0, 20) 
-
+            gameRecordData = summoner.getTotalRecord(0, 20)
+            userQuery = User.objects.get(summoner_name=summonerName)
         # serializer
-        userQuery = User.objects.get(summoner_name=summonerName)
         recordQuery = GameRecord.objects.filter(summoner_name=summonerName)[:20] # 20 게임 불러오기
         userSerialize = UserSerializer(userQuery)
         gameRecordSerialize = GameRecordSerializer(recordQuery, many=True)

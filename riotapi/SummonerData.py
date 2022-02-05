@@ -9,7 +9,6 @@ from riotapi.ApiConnect import ApiConnect
 from summoner.models import UpdateDB
 from datetime import datetime
 
-
 class SummonerAPI:
     """
     Module to process data from Riot API
@@ -175,5 +174,6 @@ class SummonerAPI:
 
 
 if __name__ == "__main__":
-    summonerAPI = SummonerAPI("아루투로 비달")
-    print(summonerAPI.getTotalRecord(0, 5))
+    summonerAPI = SummonerAPI("민스님")
+    print(summonerAPI.getTier())
+    SummonerAPI.getTotalRecord(0, 20)
