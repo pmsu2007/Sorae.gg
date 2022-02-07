@@ -83,13 +83,11 @@ class SummonerView(View):
 
 class DetailView(View):
 
-    def post(self, request):
-
-        # data = json.loads(request.body)
+    def get(self, request):
 
         # Postman
-        summonerName = request.POST['userName']
-        matchID = request.POST['matchID']
+        summonerName = request.GET['userName']
+        matchID = request.GET['matchID']
         # API
         summoner = SummonerAPI(summonerName)
         # DB 조회
@@ -105,3 +103,10 @@ class DetailView(View):
         detailRecordSerialize = DetailRecordSerializer(detailQuery, many=True)
 
         return JsonResponse(detailRecordSerialize.data, status=200, safe=False)
+
+class RenewView(View):
+
+    def get(self, request):
+        pass
+
+
