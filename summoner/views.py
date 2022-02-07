@@ -8,7 +8,7 @@ from .serializers import UserSerializer, GameRecordSerializer, DetailRecordSeria
 from summoner.models import GameRecord, User, DetailRecord, UpdateDB
 from riotapi.SummonerData import SummonerAPI
 from django.core.exceptions import ObjectDoesNotExist
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from config.settings import STATIC_URL
 from datetime import datetime
 from django.views import View
@@ -29,9 +29,9 @@ class SummonerView(View):
         summonerName = summoner.getName()
 
         # 소환사 이름이 없을때
-        if summonerName == None :
-            return render(request, 'summoner/summoner_info.html', {'userName':inputName})
-        
+        if summonerName == None:
+            return render(request, 'summoner/summoner_info.html', {'userName': inputName})
+
         # DB 조회
         # alternative : get_object_or_404(User, summoner_name=summonerNmae)
         try:
@@ -46,14 +46,14 @@ class SummonerView(View):
             gameRecordData = summoner.getTotalRecord(0, 20)
             userQuery = User.objects.get(summoner_name=summonerName)
         # serializer
-        recordQuery = GameRecord.objects.filter(summoner_name=summonerName)[:20] # 20 게임 불러오기
+        recordQuery = GameRecord.objects.filter(summoner_name=summonerName)[:20]  # 20 게임 불러오기
         userSerialize = UserSerializer(userQuery)
         gameRecordSerialize = GameRecordSerializer(recordQuery, many=True)
-        
+
         return render(request, 'summoner/summoner_info.html',
                       {'user': userSerialize.data, 'record': gameRecordSerialize.data
                           , 'STATIC_URL': STATIC_URL})
-    
+
     def post(self, request):
         '''
         renew summoner's info
@@ -63,8 +63,8 @@ class SummonerView(View):
         summoner = SummonerAPI(summonerName)
         summonerName = summoner.getName()
 
-        if summonerName == None :
-            return JsonResponse({'status':400})
+        if summonerName == None:
+            return JsonResponse({'status': 400})
 
         userQuery = User.objects.get(summoner_name=summonerName)
         curTime = int(time.mktime(datetime.now().timetuple()))
@@ -76,30 +76,32 @@ class SummonerView(View):
         tierData = summoner.getTier()
         gameRecordData = summoner.getRecordUsingTime(lastMatchTime, curTime)
 
-        return JsonResponse({'status':200})
+        return JsonResponse({'status': 200})
         # except Exception:
         #     return JsonResponse({'status':400})
-        
 
 
-class DetailView(APIView):
+class DetailView(View):
 
     def post(self, request):
 
-        matchID = request.POST.get("matchID")
-        summonerName = request.POST.get("userName")
-        summoner = SummonerAPI(summonerName)
+        # data = json.loads(request.body)
 
+        # Postman
+        summonerName = request.POST['userName']
+        matchID = request.POST['matchID']
+        # API
+        summoner = SummonerAPI(summonerName)
         # DB 조회
         try:
             # GameRecord에 동일한 matchID가 있다면 생성할 필요 없음
             recordQuery = GameRecord.objects.get(match_ID=matchID)
         except ObjectDoesNotExist:
             # Data 생성 및 저장
-            summoner.getRecord(matchID)
+            detailData = summoner.getRecord(matchID)
 
         # serializer
         detailQuery = DetailRecord.objects.filter(match_ID=matchID)
-        detailRecordSerializer = DetailRecordSerializer(detailQuery, many=True)
+        detailRecordSerialize = DetailRecordSerializer(detailQuery, many=True)
 
-        return Response(detailRecordSerializer.data)
+        return JsonResponse(detailRecordSerialize.data, status=200, safe=False)
