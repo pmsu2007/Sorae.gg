@@ -28,41 +28,37 @@ const blueTeam = document.querySelector('blue-team');
 const redTeamTable = document.querySelector('.red-team tbody'); // 5개의 tr
 const blueTeamTable = document.querySelector('.blue-team tbody'); // 5개의 tr
 
-const makeRow = function(data) {
-    let row = document.querySelector('.sample-row').cloneNode(true);
+// const makeRow = function(data) {
+//     let row = document.querySelector('.sample-row').cloneNode(true);
 
-    const champImg = row.querySelector('.champ');
-    champImg.src = CHAMP_URL + data['champ_name'];
+//     const champImg = row.querySelector('.champ');
+//     champImg.src = CHAMP_URL + data['champ_name'];
 
-    const champLevel = row.querySelector('.champ-info .level');
-    champLevel.textContent = data['champ_level'];
+//     const champLevel = row.querySelector('.champ-info .level');
+//     champLevel.textContent = data['champ_level'];
 
-    const spellBox = row.querySelector('.spell-box');
-    spellBox.children[0].src = SPELL_URL + SPELL_DICT[data['spell1']] + '.png';
-    spellBox.children[1].src = SPELL_URL + SPELL_DICT[data['spell2']] + '.png';
+//     const spellBox = row.querySelector('.spell-box');
+//     spellBox.children[0].src = SPELL_URL + SPELL_DICT[data['spell1']] + '.png';
+//     spellBox.children[1].src = SPELL_URL + SPELL_DICT[data['spell2']] + '.png';
 
-    const runeBox = row.querySelector('.rune-box');
-    runeBox.children[0].src;
+//     const runeBox = row.querySelector('.rune-box');
+//     runeBox.children[0].src;
 
-    const summonerName = row.querySelector('.summoner-name');
-    summonerName.firstElementChild.href="./?usrName="+data['summoner_name'];
-    summonerName.firstElementChild.textContent = data['summoner_name'];
-}
+//     const summonerName = row.querySelector('.summoner-name');
+//     summonerName.firstElementChild.href="./?usrName="+data['summoner_name'];
+//     summonerName.firstElementChild.textContent = data['summoner_name'];
+// }
 const getDetail = function(matchID) {
-    url = '//url' + '?matchID=' +  matchID
+    url = '/detail/' + '?matchID=' +  matchID
 
     fetch(url)
-    .then(JSON.parse)
+    .then(res => res.json())
     .then(
-        data => {
-            redTeamTable.innerHTML = '';
-            blueTeamTable.innerHTML = '';
-            for (let i = 0; i < data.length/2; i++) { // red team
-                redTeamTable.appendChild(makeRow(data[i]));
-            }
+        json => {
+            console.log(json.data);
+            detailContainer.innerHTML = json.data;
         }
     )
-    .catch(alert('전적을 불러오기에 실패했습니다.'))
 }
 
 records.addEventListener('click', function (e) {
@@ -71,7 +67,7 @@ records.addEventListener('click', function (e) {
     if (!records.contains(card)) return;
 
 
-    // getDetail(card.dataset['matchId']);
+    getDetail(card.dataset['matchId']);
     
 });
 

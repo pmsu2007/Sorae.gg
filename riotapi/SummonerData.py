@@ -1,6 +1,7 @@
 import os
 import django
 import time
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
@@ -8,6 +9,7 @@ import requests
 from riotapi.ApiConnect import ApiConnect
 from summoner.models import UpdateDB
 from datetime import datetime
+
 
 class SummonerAPI:
     """
@@ -19,7 +21,6 @@ class SummonerAPI:
         if len(inputName) == 2:
             inputName = inputName[0] + ' ' + inputName[1]
         self._ID = self._connect.getEncryptID(inputName)
-        # print(self._ID['puuid'])
 
         self._summonerName = None
         if self.isValid():
@@ -95,14 +96,20 @@ class SummonerAPI:
         response = requests.get(URL, headers=self._connect.getHeader())
         data = response.json()
 
+        # 2021-09-01 AM 00:00:00 GMT +09:00
+        MONTH = 1630422000
+
+        # if data['info']['gameStartTimestamp'] - MONTH < 0:
+        #     return None
+
         if 'gameEndTimestamp' in data['info'].keys():
             '''
             2021/10/5 이후
             '''
             info = {'gameDuration': int(data['info']['gameDuration']),
                     'gameStartTime': datetime.fromtimestamp(int(data['info']['gameStartTimestamp'] / 1000)),
-                    'gameEndTime': datetime.fromtimestamp(int(data['info']['gameStartTimestamp'] / 1000 \
-                        + data['info']['gameDuration'])),
+                    'gameEndTime': datetime.fromtimestamp(int(data['info']['gameStartTimestamp'] / 1000
+                                                              + data['info']['gameDuration'])),
                     'queueID': data['info']['queueId']}
 
         else:
@@ -111,8 +118,8 @@ class SummonerAPI:
             '''
             info = {'gameDuration': int(data['info']['gameDuration'] / 1000),
                     'gameStartTime': datetime.fromtimestamp(int(data['info']['gameStartTimestamp'] / 1000)),
-                    'gameEndTime': datetime.fromtimestamp(int(data['info']['gameStartTimestamp'] / 1000 \
-                                                          + data['info']['gameDuration'] / 1000)),
+                    'gameEndTime': datetime.fromtimestamp(int(data['info']['gameStartTimestamp'] / 1000
+                                                              + data['info']['gameDuration'] / 1000)),
                     'queueID': data['info']['queueId']}
 
         for participant in data['info']['participants']:
@@ -122,10 +129,12 @@ class SummonerAPI:
                      participant['perks']['styles'][1]['style']]
             spells = [participant['summoner1Id'], participant['summoner2Id']]
             info['assist'] = participant['assists']
+            info['baron'] = participant['baronKills']
             info['champLevel'] = participant['champLevel']
             info['champName'] = participant['championName']
             info['champID'] = participant['championId']
             info['death'] = participant['deaths']
+            info['dragon'] = participant['dragonKills']
             info['gameResult'] = participant['win']
             info['items'] = item
             info['jungleKill'] = participant['neutralMinionsKilled']
@@ -138,9 +147,12 @@ class SummonerAPI:
             info['spells'] = spells
             info['teamID'] = participant['teamId']
             info['totalDamage'] = participant['totalDamageDealtToChampions']
+            info['turret'] = participant['turretKills']
             info['visionScore'] = participant['visionScore']
 
+            # save DetailRecord
             self._DB.createDetailRecord(info)
+            # save GameRecord
             if participant['summonerName'] == self._summonerName:
                 self._DB.createGameRecord(info)
 
@@ -152,16 +164,19 @@ class SummonerAPI:
         pass matchID as parameter to record
         :return: GameRecord informations (dictionary in list)
         """
-        start_time = time.process_time()
+        # start_time = time.process_time()
         URL = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/" \
               + self._ID["puuid"] + "/ids?start=" + str(start) + "&count=" + str(end)
         response = requests.get(URL, headers=self._connect.getHeader())
         matchList = response.json()
-        end_time = time.process_time()
-
+        # end_time = time.process_time()
+        # print(f"time elapsed : {int(round((end_time - start_time) * 1000))}ms")
         recordList = []
         for matchID in reversed(matchList):
-            recordList.append(self.getRecord(matchID))
+            try:
+                recordList.append(self.getRecord(matchID))
+            except KeyError:
+                pass
         return recordList
 
     def getRecordUsingTime(self, start, end):
@@ -170,16 +185,20 @@ class SummonerAPI:
            pass matchID as parameter to record
            :return: GameRecord informations (dictionary in list)
            """
-        start_time = time.process_time()
+        # start_time = time.process_time()
         URL = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/" \
               + self._ID["puuid"] + "/ids?startTime=" + str(start) + "&endTime=" + str(end)
         response = requests.get(URL, headers=self._connect.getHeader())
         matchList = response.json()
-        end_time = time.process_time()
+        # end_time = time.process_time()
+        # print(f"time elapsed : {int(round((end_time - start_time) * 1000))}ms")
 
         recordList = []
         for matchID in reversed(matchList):
-            recordList.append(self.getRecord(matchID))
+            try:
+                recordList.append(self.getRecord(matchID))
+            except KeyError:
+                pass
         return recordList
 
     def getUser(self):
@@ -194,8 +213,12 @@ class SummonerAPI:
                     'summonerLevel': self._ID['summonerLevel']}
         return info
 
+    def getRenew(self):
+        """
+        Information about Renew
+        """
+        self._DB.createRenew(self._summonerName)
 
 if __name__ == "__main__":
     summonerAPI = SummonerAPI("민스님")
-    print(summonerAPI.getTier())
-    print(summonerAPI.getRecordUsingTime(1643478361913,1644054179000))
+    summonerAPI.getTotalRecord(0,10)

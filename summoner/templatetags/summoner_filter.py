@@ -96,3 +96,7 @@ def cur_progress(val):
         else:
             res += ' ?'
     return res
+
+@register.filter
+def eval_cs(val, jungle):
+    return int(val) + int(jungle)
