@@ -30,7 +30,8 @@ renewBtn.addEventListener('click', function(e) {
     xhr.onload = function(e) {
         isRenewing = false;
         if(xhr.status === 200) {
-            const res = JSON.parse(xhr.responseText);
+            const res = JSON.parse(xhr.response);
+            
             if (res.status == 200) {
                 // success
                 // window.location.reload();

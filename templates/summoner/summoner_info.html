@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="{% static 'css/main.css' %}">
 <link rel="stylesheet" href="{% static 'css/summoner.css' %}">
 <link rel="stylesheet" href="{% static 'css/card.css' %}">
+<link rel="stylesheet" href="{% static 'css/detail.css' %}">
 {% endblock css_link %}
 
 
@@ -33,7 +34,7 @@
               </div>
         </button>
         {% endif %}
-        <form class="search-form" action = "/summoner/" method="get" autocomplete="off">
+        <form class="search-form" action = "{% url 'summoner:search' %}" method="get" autocomplete="off">
             <div class="input-group input-group-sm mb-3 summoner-search-box">
                 <span class="input-group-text" id="inputGroup-sizing-default">소환사명</span>
                 <input type="text" required="required" name="userName" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" autocomplete="off">
@@ -198,6 +199,213 @@
     </section>
     </div>
     <!-- game record end-->
+
+    <!-- detail record start-->
+    <div class="detail-container mb-3">
+        <div class="detail-record">
+            <div class="team-container my-3">
+                <div class="red-team team-info">
+                    <div class="team-name fs-1 mx-auto">레드팀</div>
+                    <div class="game-result fs-1 mx-auto my-3" style="color: royalblue;">WIN</div>
+                    
+                    <div class="detail-table-wrap">
+                        <table class="table detail-table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" scope="col" style="width:110px;">챔피언</th>
+                                    <th class="text-center" scope="col" style="width:7%;">소환사</th>
+                                    <th class="text-center" scope="col">Score</th>
+                                    <th class="text-center" scope="col">KDA</th>
+                                    <th class="text-center" scope="col">딜량</th>
+                                    <th class="text-center" scope="col">시야점수</th>
+                                    <th class="text-center" scope="col">CS</th>
+                                    <th class="text-center" scope="col">아이템</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- one row start -->
+                                <tr class="row-sample" style="display: none;">
+                                    <td class="champ-info">
+                                        <div class="img-level d-inline">
+                                            <img class="champ rounded-circle" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/champion/Gragas.png">
+                                            <div class="level rounded-circle">
+                                                10
+                                            </div>
+                                        </div>
+                                        <div class="d-inline-flex justify-content-between align-top">
+                                            <div class="d-flex flex-column spell-box">
+                                                <img class="spell rounded" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/spell/SummonerTeleport.png">
+                                                <img class="spell rounded" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/spell/SummonerFlash.png">
+                                            </div>
+                                            <div class="d-flex flex-column m1-1 rune-box">
+                                                <img class="rune rounded" src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png">
+                                                <img class="rune rounded" src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/7202_Sorcery.png">
+                                            </div>
+                                            
+                                        </div>
+                                    </td>
+                                    <td class="summoner-name align-top text-center">
+                                        <a class="name" href="./?userName=rqew" target="_blank">rqew</span>
+                                    </td>
+                                    <td class="score align-top">
+                                        <div class="d-flex flex-column justify-content-between">
+                                            <p class="score-text text-center">7.0</span>
+                                            <p class="score-rank text-center mt-2">1등</span>
+                                        </div>
+                                    </td>
+                                    <td class="KDA align-top">
+                                        <div class="d-flex flex-column justify-content-between">
+                                            <p class="kda-num text-center kdaOver3">3.50:1</p>
+                                            <div class="kda-detail mt-2 text-center">
+                                                <span class="kda">3/0/1</span>
+                                                <span class="kill-part">(50%)</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="damgae align-top">
+                                        <div class="d-flex flex-column justify-content-between">
+                                            <p class="damage-chart text-center">35,000</span>
+                                            <p class="damage-rank text-center mt-2">3등</span>
+                                        </div>
+                                    </td>
+                                    <td class="vision-score align-top">
+                                        <div class="d-flex flex-column justify-content-between">
+                                            <p class="score text-center">21</p>
+                                            <p class="score-per-min mt-2 text-center">1.2 vision/분</p>
+                                        </div>
+                                    </td>
+                                    <td class="CS align-top">
+                                        <div class="d-flex flex-column justify-content-between">
+                                            <p class="cs-num text-center">130</p>
+                                            <p class="cs-per-min mt-2 text-center">7.2 cs/분</p>
+                                        </div>
+                                    </td>
+                                    <td class="items align-top text-center">
+                                         <div class="d-inline-flex flex-column" style="min-width: 66px">
+                                            <div class="itemRow1 d-flex">
+                                                <img class="item rounded m-item" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/3070.png">
+                                                <img class="item rounded m-item" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/3071.png">
+                                                <img class="item rounded m-item" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/3072.png">
+                                            </div>
+                                            <div class="itemRow2 d-flex">
+                                                <img class="item rounded m-item" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/3068.png">
+                                                <img class="item rounded m-item" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/3074.png">
+                                                <img class="item rounded m-item" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/3075.png">
+                                            </div>
+                                        </div>   
+                                    </td>
+                                </tr>
+                                <!-- one row end -->
+                                
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <div class="team-container my-3">
+                <div class="blue-team team-info">
+                    <div class="team-name fs-1 mx-auto">블루팀</div>
+                    <div class="game-result fs-1 mx-auto my-3" style="color: crimson;">LOSE</div>
+                    
+                    <div class="detail-table-wrap">
+                        <table class="table detail-table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" scope="col" style="width:110px;">챔피언</th>
+                                    <th class="text-center" scope="col" style="width:7%;">소환사</th>
+                                    <th class="text-center" scope="col">Score</th>
+                                    <th class="text-center" scope="col">KDA</th>
+                                    <th class="text-center" scope="col">딜량</th>
+                                    <th class="text-center" scope="col">시야점수</th>
+                                    <th class="text-center" scope="col">CS</th>
+                                    <th class="text-center" scope="col">아이템</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- one row start -->
+                                <tr>
+                                    <td class="champ-info">
+                                        <div class="img-level d-inline">
+                                            <img class="champ rounded-circle" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/champion/Gragas.png">
+                                            <div class="level rounded-circle">
+                                                10
+                                            </div>
+                                        </div>
+                                        <div class="d-inline-flex justify-content-between align-top">
+                                            <div class="d-flex flex-column spell-box">
+                                                <img class="spell rounded" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/spell/SummonerTeleport.png">
+                                                <img class="spell rounded" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/spell/SummonerFlash.png">
+                                            </div>
+                                            <div class="d-flex flex-column m1-1 rune-box">
+                                                <img class="rune rounded" src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png">
+                                                <img class="rune rounded" src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/7202_Sorcery.png">
+                                            </div>
+                                            
+                                        </div>
+                                    </td>
+                                    <td class="summoner-name align-top text-center">
+                                        <a class="name" href="./?userName=rqew" target="_blank">rqew</span>
+                                    </td>
+                                    <td class="score align-top">
+                                        <div class="d-flex flex-column justify-content-between">
+                                            <p class="score-text text-center">7.0</span>
+                                            <p class="score-rank text-center mt-2">1등</span>
+                                        </div>
+                                    </td>
+                                    <td class="KDA align-top">
+                                        <div class="d-flex flex-column justify-content-between">
+                                            <p class="kda-num text-center kdaOver3">3.50:1</p>
+                                            <div class="kda-detail mt-2 text-center">
+                                                <span class="kda">3/0/1</span>
+                                                <span class="kill-part">(50%)</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="damgae align-top">
+                                        <div class="d-flex flex-column justify-content-between">
+                                            <p class="damage-chart text-center">35,000</span>
+                                            <p class="damage-rank text-center mt-2">3등</span>
+                                        </div>
+                                    </td>
+                                    <td class="vision-score align-top">
+                                        <div class="d-flex flex-column justify-content-between">
+                                            <p class="score text-center">21</p>
+                                            <p class="score-per-min mt-2 text-center">1.2 vision/분</p>
+                                        </div>
+                                    </td>
+                                    <td class="CS align-top">
+                                        <div class="d-flex flex-column justify-content-between">
+                                            <p class="cs-num text-center">130</p>
+                                            <p class="cs-per-min mt-2 text-center">7.2 cs/분</p>
+                                        </div>
+                                    </td>
+                                    <td class="items align-top text-center">
+                                         <div class="d-inline-flex flex-column" style="min-width: 66px">
+                                            <div class="itemRow1 d-flex">
+                                                <img class="item rounded m-item" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/3070.png">
+                                                <img class="item rounded m-item" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/3071.png">
+                                                <img class="item rounded m-item" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/3072.png">
+                                            </div>
+                                            <div class="itemRow2 d-flex">
+                                                <img class="item rounded m-item" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/3068.png">
+                                                <img class="item rounded m-item" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/3074.png">
+                                                <img class="item rounded m-item" src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/3075.png">
+                                            </div>
+                                        </div>   
+                                    </td>
+                                </tr>
+                                <!-- one row end -->
+                                
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- detail record end-->
 
     <!--소환사 정보 End-->
 

@@ -158,7 +158,6 @@ class SummonerAPI:
         response = requests.get(URL, headers=self._connect.getHeader())
         matchList = response.json()
         end_time = time.process_time()
-        print(f"time elapsed : {int(round((end_time - start_time) * 1000))}ms")
 
         recordList = []
         for matchID in reversed(matchList):
@@ -177,7 +176,6 @@ class SummonerAPI:
         response = requests.get(URL, headers=self._connect.getHeader())
         matchList = response.json()
         end_time = time.process_time()
-        print(f"time elapsed : {int(round((end_time - start_time) * 1000))}ms")
 
         recordList = []
         for matchID in reversed(matchList):

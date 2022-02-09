@@ -9,7 +9,7 @@ class ApiConnect:
 
     def __init__(self):
 
-        self._apiKey = ""
+        self._apiKey = "RGAPI-ed181eb0-93ae-4c01-a41b-ae84745b4d7e"
 
     def getHeader (self):
         headers = {

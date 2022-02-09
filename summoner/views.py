@@ -84,7 +84,7 @@ class SummonerView(View):
 
 class DetailView(APIView):
 
-    def post(self, request):
+    def get(self, request):
 
         matchID = request.POST.get("matchID")
         summonerName = request.POST.get("userName")
