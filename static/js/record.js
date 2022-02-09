@@ -54,8 +54,7 @@ fetch(STATIC_URL + 'js/summoner.json')
 fetch(STATIC_URL + 'js/runesReforged.json')
 .then (response => response.json())
 .then(
-    data => {RUNE_DATA = data,
-        console.log(data)}
+    data => RUNE_DATA = data
 )
 
 
@@ -285,7 +284,7 @@ const getDetail = function(matchID, matchTime) {
     )
     .catch(
         function(error) {
-            console.log(error);
+            alert('세부전적 불러오기에 실패했습니다.')
         }
     )
     
