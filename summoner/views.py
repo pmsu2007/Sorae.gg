@@ -100,7 +100,6 @@ class DetailView(View):
             blue_team = data[:5]
             red_team = data[5:]
             res = loader.render_to_string('summoner/record_detail.html', {'blue':blue_team, 'red':red_team})
-            print(res)
             # return render(None, 'summoner/record_detail.html', {'blue':blue_team, 'red':red_team})
             return JsonResponse({'data':res})
 
