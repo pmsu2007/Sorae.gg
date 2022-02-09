@@ -96,7 +96,12 @@ class SummonerAPI:
         URL = "https://asia.api.riotgames.com/lol/match/v5/matches/" + matchID
         response = requests.get(URL, headers=self._connect.getHeader())
         data = response.json()
-        print(data)
+
+        # 2021-09-01 AM 00:00:00 GMT +09:00
+        MONTH = 1630422000
+
+        # if data['info']['gameStartTimestamp'] - MONTH < 0:
+        #     return None
 
         if 'gameEndTimestamp' in data['info'].keys():
             '''
@@ -125,10 +130,12 @@ class SummonerAPI:
                      participant['perks']['styles'][1]['style']]
             spells = [participant['summoner1Id'], participant['summoner2Id']]
             info['assist'] = participant['assists']
+            info['baron'] = participant['baronKills']
             info['champLevel'] = participant['champLevel']
             info['champName'] = participant['championName']
             info['champID'] = participant['championId']
             info['death'] = participant['deaths']
+            info['dragon'] = participant['dragonKills']
             info['gameResult'] = participant['win']
             info['items'] = item
             info['jungleKill'] = participant['neutralMinionsKilled']
@@ -141,9 +148,12 @@ class SummonerAPI:
             info['spells'] = spells
             info['teamID'] = participant['teamId']
             info['totalDamage'] = participant['totalDamageDealtToChampions']
+            info['turret'] = participant['turretKills']
             info['visionScore'] = participant['visionScore']
 
+            # save DetailRecord
             self._DB.createDetailRecord(info)
+            # save GameRecord
             if participant['summonerName'] == self._summonerName:
                 self._DB.createGameRecord(info)
 
@@ -162,7 +172,6 @@ class SummonerAPI:
         matchList = response.json()
         # end_time = time.process_time()
         # print(f"time elapsed : {int(round((end_time - start_time) * 1000))}ms")
-
         recordList = []
         for matchID in reversed(matchList):
             try:
@@ -205,7 +214,12 @@ class SummonerAPI:
                     'summonerLevel': self._ID['summonerLevel']}
         return info
 
+    def getRenew(self):
+        """
+        Information about Renew
+        """
+        self._DB.createRenew(self._summonerName)
 
 if __name__ == "__main__":
-    summonerAPI = SummonerAPI("메 시")
-    summonerAPI.getTotalRecord(0,20)
+    summonerAPI = SummonerAPI("민스님")
+    summonerAPI.getTotalRecord(0,10)

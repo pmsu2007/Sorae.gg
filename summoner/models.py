@@ -1,5 +1,5 @@
 from django.db import models
-
+from unixtimestampfield.fields import UnixTimeStampField
 '''
 모델 변경사항 있을 시,
 makemigrations & migrate 해줘야 함
@@ -14,7 +14,6 @@ class User(models.Model):
     summoner_name = models.CharField(max_length=20, primary_key=True)
     summoner_level = models.SmallIntegerField()
     summoner_icon = models.SmallIntegerField()
-    renew_time = models.DateTimeField(auto_now=True)
 
     # 솔로 랭크
     solo_tier = models.CharField(max_length=20)
@@ -67,6 +66,7 @@ class DetailRecord(models.Model):
     match_ID = models.CharField(max_length=13)
     summoner_name = models.CharField(max_length=20)
     team_ID = models.SmallIntegerField()                         # (100: 블루, 200: 레드)
+    game_result = models.BooleanField()
 
     minion_kill = models.SmallIntegerField()
     jungle_kill = models.IntegerField()
@@ -90,6 +90,20 @@ class DetailRecord(models.Model):
 
     spell1 = models.IntegerField()
     spell2 = models.IntegerField()
+
+    kill = models.SmallIntegerField()
+    death = models.SmallIntegerField()
+    assist = models.SmallIntegerField()
+
+    baron = models.SmallIntegerField()
+    dragon = models.SmallIntegerField()
+    turret = models.SmallIntegerField()
+
+
+class Renew(models.Model):
+    summoner_name = models.CharField(max_length=20, primary_key=True)
+    create_time = models.DateTimeField(auto_now_add=True)
+    renew_time = UnixTimeStampField(default=0)
 
 
 class UpdateDB:
@@ -141,7 +155,7 @@ class UpdateDB:
         """
         _modelInstance = DetailRecord(game_ID=info['summonerName'] + info['matchID'],
                                       match_ID=info['matchID'], team_ID=info['teamID'],
-                                      summoner_name=info['summonerName'],
+                                      game_result=info['gameResult'], summoner_name=info['summonerName'],
                                       minion_kill=info['minionKill'], jungle_kill=info['jungleKill'],
                                       champ_name=info['champName'], champ_ID=info['champID'],
                                       champ_level=info['champLevel'],
@@ -150,17 +164,16 @@ class UpdateDB:
                                       item0=info['items'][0], item1=info['items'][1], item2=info['items'][2],
                                       item3=info['items'][3], item4=info['items'][4], item5=info['items'][5],
                                       item6=info['items'][6],
-                                      spell1=info['spells'][0], spell2=info['spells'][1])
+                                      spell1=info['spells'][0], spell2=info['spells'][1],
+                                      kill=info['kill'], death=info['death'], assist=info['assist'],
+                                      baron=info['baron'], dragon=info['dragon'], turret=info['turret'])
         _modelInstance.save()
 
-    def updateUser(self, info):
+    def createRenew(self, info):
         """
-        Update record of Summoner table
+        Create record of Renew table
         """
-        _modelInstance = User.objects.all()
-        _modelInstance = _modelInstance.get(summoner_name=self._summonerName)
-        _modelInstance.summoner_level=info['summonerLevel']
-        _modelInstance.summoner_icon=info['summonerIcon']
+        _modelInstance = Renew(summoner_name=info)
         _modelInstance.save()
 
     def deleteGameRecord(self, summonerName):
