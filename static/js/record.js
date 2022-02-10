@@ -315,7 +315,7 @@ const getDetail = function(matchID, matchTime) {
             blackCrown.style.display = 'inline';
             blackCrown.dataset.tippyContent += '팀내 최다 킬관여<br>'
             let idx = 1;
-            while (true) {
+            while (idx < kdaInfos.length) {
                 let curKP = parseInt(kdaInfos[idx].querySelector('.kill-participation').textContent.slice(1, -2));
                 if (maxKP !== curKP) break;
                 blackCrown = kdaInfos[idx].querySelector('.black-crown');
@@ -338,7 +338,7 @@ const getDetail = function(matchID, matchTime) {
             blackCrown.style.display = 'inline';
             blackCrown.dataset.tippyContent += '팀내 최다 킬관여<br>'
             idx = 1;
-            while (true) {
+            while (idx < kdaInfos.length) {
                 let curKP = parseInt(kdaInfos[idx].querySelector('.kill-participation').textContent.slice(1, -2));
                 if (maxKP !== curKP) break;
                 blackCrown = kdaInfos[idx].querySelector('.black-crown');
@@ -362,7 +362,7 @@ const getDetail = function(matchID, matchTime) {
             blackCrown.style.display = 'inline';
             blackCrown.dataset.tippyContent += '팀내 최다 딜량<br>';
             idx = 1;
-            while (true) {
+            while (idx < damageInfos.length) {
                 let curDamage = parseInt(damageInfos[idx].firstElementChild.dataset.val);
                 if (maxDamage !== curDamage) break;
                 blackCrown = damageInfos[idx].querySelector('.black-crown');
@@ -384,7 +384,7 @@ const getDetail = function(matchID, matchTime) {
             blackCrown.style.display = 'inline';
             blackCrown.dataset.tippyContent += '팀내 최다 딜량<br>';
             idx = 1;
-            while (true) {
+            while (idx < damageInfos.length) {
                 let curDamage = parseInt(damageInfos[idx].firstElementChild.dataset.val);
                 if (maxDamage !== curDamage) break;
                 blackCrown = damageInfos[idx].querySelector('.black-crown');
@@ -408,7 +408,7 @@ const getDetail = function(matchID, matchTime) {
             blackCrown.style.display = 'inline';
             blackCrown.dataset.tippyContent += '팀내 최다 시야점수<br>';
             idx = 1;
-            while (true) {
+            while (idx < visionInfos.length) {
                 let curVS = parseInt(visionInfos[idx].firstElementChild.textContent);
                 if (maxVS !== curVS) break;
                 blackCrown = visionInfos[idx].querySelector('.black-crown');
@@ -430,7 +430,7 @@ const getDetail = function(matchID, matchTime) {
             blackCrown.style.display = 'inline';
             blackCrown.dataset.tippyContent += '팀내 최다 시야점수<br>';
             idx = 1;
-            while (true) {
+            while (idx < visionInfos.length) {
                 let curVS = parseInt(visionInfos[idx].firstElementChild.textContent);
                 if (maxVS !== curVS) break;
                 blackCrown = visionInfos[idx].querySelector('.black-crown');
@@ -454,7 +454,7 @@ const getDetail = function(matchID, matchTime) {
             blackCrown.style.display = 'inline';
             blackCrown.dataset.tippyContent += '팀내 최다 CS<br>';
             idx = 1;
-            while (true) {
+            while (idx < csInfos.length) {
                 let curCS = parseInt(csInfos[idx].firstElementChild.textContent);
                 if (maxCS !== curCS) break;
                 blackCrown = csInfos[idx].querySelector('.black-crown');
@@ -476,7 +476,7 @@ const getDetail = function(matchID, matchTime) {
             blackCrown.style.display = 'inline';
             blackCrown.dataset.tippyContent += '팀내 최다 CS<br>';
             idx = 1;
-            while (true) {
+            while (idx < csInfos.length) {
                 let curCS = parseInt(csInfos[idx].firstElementChild.textContent);
                 if (maxCS !== curCS) break;
                 blackCrown = csInfos[idx].querySelector('.black-crown');
