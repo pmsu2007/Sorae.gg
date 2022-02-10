@@ -1,0 +1,258 @@
+{% load summoner_filter %}
+
+<div class="detail-record">
+            <div class="team-container my-3">
+                <div class="blue-team team-info">
+                    <div class="team-name fs-1 mx-auto">블루팀</div>
+                    <div class="game-result fs-1 mx-auto my-3">패배</div>
+                    
+                    <div class="detail-table-wrap">
+                        <table class="table detail-table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" scope="col" style="width:110px;">챔피언</th>
+                                    <th class="text-center" scope="col" style="width:7%;">소환사</th>
+                                    <th class="text-center" scope="col">Score</th>
+                                    <th class="text-center" scope="col">KDA/킬관여율</th>
+                                    <th class="text-center" scope="col">딜량</th>
+                                    <th class="text-center" scope="col">시야점수</th>
+                                    <th class="text-center" scope="col">CS</th>
+                                    <th class="text-center" scope="col">아이템</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- one row start -->
+                                {% for p in blue %}
+                                <tr>
+                                    <td class="champ-info">
+                                        <div class="img-level d-inline">
+                                            <img class="champ rounded-circle tooltip-div" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-container="body" title="{{p.champ_name|eng_to_kor}}" src="" alt={{p.champ_name}}>
+                                            <div class="level rounded-circle">
+                                                {{p.champ_level}}
+                                            </div>
+                                        </div>
+                                        <div class="d-inline-flex justify-content-between align-top">
+                                            <div class="d-flex flex-column spell-box">
+                                                <img class="spell rounded" data-id={{p.spell1}} src="">
+                                                <img class="spell rounded" data-id={{p.spell2}} src="">
+                                            </div>
+                                            <div class="d-flex flex-column m1-1 rune-box">
+                                                <img class="rune p-rune rounded" data-id="{{p.primary_rune}}" src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png">
+                                                <img class="rune s-rune rounded" data-id="{{p.sub_rune}}" src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/7202_Sorcery.png">
+                                            </div>
+                                            
+                                        </div>
+                                    </td>
+                                    <td class="summoner-name align-top">
+                                        <a class="name" href="./?userName={{p.summoner_name}}" target="_blank">{{p.summoner_name}}</span>
+                                    </td>
+                                    <td class="score align-top">
+                                        <div class="d-flex flex-column justify-content-between">
+                                            <p class="score-text text-center">7.0</span>
+                                            <p class="score-rank text-center mt-2">1등</span>
+                                        </div>
+                                    </td>
+                                    <td class="KDA align-top">
+                                        <div class="d-flex flex-column justify-content-between">
+                                            <p class="kda-num text-center"></p>
+                                            <div class="kda-detail mt-2 text-center">
+                                                <span class="kda">{{p.kill}}/{{p.death}}/{{p.assist}}</span>
+                                                <span class="kill-participation"></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="damgae align-top">
+                                        <div class="damage-info d-flex flex-column justify-content-between">
+                                            <p class="damage-chart text-center" data-val={{p.total_damage}}>{{p.total_damage|format_num}}</span>
+                                            <p class="damage-rank text-center mt-2"></span>
+                                        </div>
+                                    </td>
+                                    <td class="vision-score align-top">
+                                        <div class="vision-info d-flex flex-column justify-content-between">
+                                            <p class="score text-center">{{p.vision_score}}</p>
+                                            <p class="score-per-min mt-2 text-center"></p>
+                                        </div>
+                                    </td>
+                                    <td class="CS align-top">
+                                        <div class="cs-info d-flex flex-column justify-content-between">
+                                            <p class="cs-num text-center">{{p.minion_kill|eval_cs:p.jungle_kill}}</p>
+                                            <p class="cs-per-min mt-2 text-center"></p>
+                                        </div>
+                                    </td>
+                                    <td class="items align-top text-center">
+                                         <div class="d-inline-flex flex-column" style="min-width: 66px">
+                                            <div class="itemRow1 d-flex">
+                                                {% if p.item0 != 0 %}
+                                                <img class="item rounded m-item" data-id={{p.item0}} src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/{{p.item0}}.png">
+                                                {% else %}
+                                                <div class="no-item m-item"></div>
+                                                {% endif %}
+                                                {% if p.item1 != 0 %}
+                                                <img class="item rounded m-item" data-id={{p.item1}} src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/{{p.item1}}.png">
+                                                {% else %}
+                                                <div class="no-item m-item"></div>
+                                                {% endif %}
+                                                {% if p.item2 != 0 %}
+                                                <img class="item rounded m-item" data-id={{p.item2}} src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/{{p.item2}}.png">
+                                                {% else %}
+                                                <div class="no-item m-item"></div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="itemRow2 d-flex">
+                                                {% if p.item3 != 0 %}
+                                                <img class="item rounded m-item" data-id={{p.item3}} src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/{{p.item3}}.png">
+                                                {% else %}
+                                                <div class="no-item m-item"></div>
+                                                {% endif %}
+                                                {% if p.item4 != 0 %}
+                                                <img class="item rounded m-item" data-id={{p.item4}} src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/{{p.item4}}.png">
+                                                {% else %}
+                                                <div class="no-item m-item"></div>
+                                                {% endif %}
+                                                {% if p.item5 != 0 %}
+                                                <img class="item rounded m-item" data-id={{p.item5}} src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/{{p.item5}}.png">
+                                                {% else %}
+                                                <div class="no-item m-item"></div>
+                                                {% endif %}
+                                            </div>
+                                        </div>   
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                <!-- one row end -->
+                                
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <div class="team-container my-3">
+                <div class="red-team team-info">
+                    <div class="team-name fs-1 mx-auto">레드팀</div>
+                    <div class="game-result fs-1 mx-auto my-3">승리</div>
+                    
+                    <div class="detail-table-wrap">
+                        <table class="table detail-table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" scope="col" style="width:110px;">챔피언</th>
+                                    <th class="text-center" scope="col" style="width:7%;">소환사</th>
+                                    <th class="text-center" scope="col">Score</th>
+                                    <th class="text-center" scope="col">KDA/킬관여율</th>
+                                    <th class="text-center" scope="col">딜량</th>
+                                    <th class="text-center" scope="col">시야점수</th>
+                                    <th class="text-center" scope="col">CS</th>
+                                    <th class="text-center" scope="col">아이템</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- one row start -->
+                                {% for p in red %}
+                                <tr>
+                                    <td class="champ-info">
+                                        <div class="img-level d-inline">
+                                            <img class="champ rounded-circle tooltip-div" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-container="body" title="{{p.champ_name|eng_to_kor}}" src="" alt={{p.champ_name}}>
+                                            <div class="level rounded-circle">
+                                                {{p.champ_level}}
+                                            </div>
+                                        </div>
+                                        <div class="d-inline-flex justify-content-between align-top">
+                                            <div class="d-flex flex-column spell-box">
+                                                <img class="spell rounded" data-id={{p.spell1}} src="">
+                                                <img class="spell rounded" data-id={{p.spell2}} src="">
+                                            </div>
+                                            <div class="d-flex flex-column m1-1 rune-box">
+                                                <img class="rune p-rune rounded" data-id={{p.primary_rune}} src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png">
+                                                <img class="rune s-rune rounded" data-id={{p.sub_rune}} src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/7202_Sorcery.png">
+                                            </div>
+                                            
+                                        </div>
+                                    </td>
+                                    <td class="summoner-name align-top">
+                                        <a class="name" href="./?userName={{p.summoner_name}}" target="_blank">{{p.summoner_name}}</span>
+                                    </td>
+                                    <td class="score align-top">
+                                        <div class="d-flex flex-column justify-content-between">
+                                            <p class="score-text text-center">7.0</span>
+                                            <p class="score-rank text-center mt-2">1등</span>
+                                        </div>
+                                    </td>
+                                    <td class="KDA align-top">
+                                        <div class="d-flex flex-column justify-content-between">
+                                            <p class="kda-num text-center"></p>
+                                            <div class="kda-detail mt-2 text-center">
+                                                <span class="kda">{{p.kill}}/{{p.death}}/{{p.assist}}</span>
+                                                <span class="kill-participation"></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="damgae align-top">
+                                        <div class="damage-info d-flex flex-column justify-content-between">
+                                            <p class="damage-chart text-center" data-val={{p.total_damage}}>{{p.total_damage|format_num}}</span>
+                                            <p class="damage-rank text-center mt-2"></span>
+                                        </div>
+                                    </td>
+                                    <td class="vision-score align-top">
+                                        <div class="vision-info d-flex flex-column justify-content-between">
+                                            <p class="score text-center">{{p.vision_score}}</p>
+                                            <p class="score-per-min mt-2 text-center">
+                                                <span class="val"></span> 
+                                                <span></span>
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td class="CS align-top">
+                                        <div class="cs-info d-flex flex-column justify-content-between">
+                                            <p class="cs-num text-center">{{p.minion_kill|eval_cs:p.jungle_kill}}</p>
+                                            <p class="cs-per-min mt-2 text-center"></p>
+                                        </div>
+                                    </td>
+                                    <td class="items align-top text-center">
+                                         <div class="d-inline-flex flex-column" style="min-width: 66px">
+                                            <div class="itemRow1 d-flex">
+                                                {% if p.item0 != 0 %}
+                                                <img class="item rounded m-item" data-id={{p.item0}} src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/{{p.item0}}.png">
+                                                {% else %}
+                                                <div class="no-item m-item"></div>
+                                                {% endif %}
+                                                {% if p.item1 != 0 %}
+                                                <img class="item rounded m-item" data-id={{p.item1}} src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/{{p.item1}}.png">
+                                                {% else %}
+                                                <div class="no-item m-item"></div>
+                                                {% endif %}
+                                                {% if p.item2 != 0 %}
+                                                <img class="item rounded m-item" data-id={{p.item2}} src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/{{p.item2}}.png">
+                                                {% else %}
+                                                <div class="no-item m-item"></div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="itemRow2 d-flex">
+                                                {% if p.item3 != 0 %}
+                                                <img class="item rounded m-item"  data-id={{p.item3}} src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/{{p.item3}}.png">
+                                                {% else %}
+                                                <div class="no-item m-item"></div>
+                                                {% endif %}
+                                                {% if p.item4 != 0 %}
+                                                <img class="item rounded m-item"  data-id={{p.item4}} src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/{{p.item4}}.png">
+                                                {% else %}
+                                                <div class="no-item m-item"></div>
+                                                {% endif %}
+                                                {% if p.item5 != 0 %}
+                                                <img class="item rounded m-item"  data-id={{p.item5}} src="https://ddragon.leagueoflegends.com/cdn/12.3.1/img/item/{{p.item5}}.png">
+                                                {% else %}
+                                                <div class="no-item m-item"></div>
+                                                {% endif %}
+                                            </div>
+                                        </div>   
+                                    </td>
+                                </tr>
+                                <!-- one row end -->
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>

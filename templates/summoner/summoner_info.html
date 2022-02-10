@@ -17,6 +17,8 @@
 <link rel="stylesheet" href="{% static 'css/main.css' %}">
 <link rel="stylesheet" href="{% static 'css/summoner.css' %}">
 <link rel="stylesheet" href="{% static 'css/card.css' %}">
+<link rel="stylesheet" href="{% static 'css/detail.css' %}">
+<link rel="stylesheet" href="{% static 'css/view.css' %}">
 {% endblock css_link %}
 
 
@@ -33,7 +35,7 @@
               </div>
         </button>
         {% endif %}
-        <form class="search-form" action = "/summoner/" method="get" autocomplete="off">
+        <form class="search-form" action = "{% url 'summoner:search' %}" method="get" autocomplete="off">
             <div class="input-group input-group-sm mb-3 summoner-search-box">
                 <span class="input-group-text" id="inputGroup-sizing-default">소환사명</span>
                 <input type="text" required="required" name="userName" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" autocomplete="off">
@@ -138,10 +140,10 @@
                 <div class="record-content swiper-wrapper">
                     
                     {% for r in record %}
-                    <div class="card swiper-slide" data-match-id={{r.match_ID}} data-result={{r.game_result}}>
+                    <div class="card swiper-slide" data-match-id={{r.match_ID}} data-match-time={{r.game_duration}} data-result={{r.game_result}}>
                         <div class="card-content">
                             <div class="champion-img">
-                                <img src="https://ddragon.leagueoflegends.com/cdn/12.2.1/img/champion/{{r.champ_name}}.png" alt="Talon">
+                                <img src="" alt={{r.champ_name}}>
                             </div>
                             <div class="champion-name">
                                 <span class="name">{{r.champ_name|eng_to_kor}}</span>
@@ -199,6 +201,12 @@
     </div>
     <!-- game record end-->
 
+    <!-- detail record start-->
+    <div class="detail-container mb-3">
+        
+    </div>
+    <!-- detail record end-->
+
     <!--소환사 정보 End-->
 
 {% else %} <!--소환사 이름이 존재 X(Error)-->
@@ -241,7 +249,7 @@
     </script>
 
 <script type="text/javascript">
-    DJANGO_STATIC_URL = '{{STATIC_URL}}';
+    STATIC_URL = '{{STATIC_URL}}';
 </script>
 <script type="text/javascript" src="{% static 'js/summoner.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/renew.js' %}"></script>

@@ -5,7 +5,7 @@
 }
 
 .record {
-    height: 60vh;
+    height: 50vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -36,6 +36,12 @@
     position: relative;
     background: #f2f2f2ff;
     border-radius: 20px;
+    transition: 0.15s;
+}
+
+.card:hover {
+    border-color: rgba(65, 105, 225, 0.514);
+    border-width: 5px;
 }
 
 .card-win::before{

@@ -20,7 +20,7 @@ ratioElem.textContent += soloWinRatio.toString() + '%';
 // set image
 let tierImg = document.querySelector('.soloImg');
 const tier = document.querySelector('.soloRank').textContent.toLowerCase();
-tierImg.setAttribute('src', DJANGO_STATIC_URL + 'images/ranked-emblems/' + tier + '.png');
+tierImg.setAttribute('src', STATIC_URL + 'images/ranked-emblems/' + tier + '.png');
 tierImg.setAttribute('alt', tier);
 }
 
@@ -38,6 +38,11 @@ ratioElem.textContent += freeWinRatio.toString() + '%';
 // set image
 let tierImg = document.querySelector('.freeImg');
 const tier = document.querySelector('.freeRank').textContent.toLowerCase();
-tierImg.setAttribute('src', DJANGO_STATIC_URL + 'images/ranked-emblems/' + tier + '.png');
+tierImg.setAttribute('src', STATIC_URL + 'images/ranked-emblems/' + tier + '.png');
 tierImg.setAttribute('alt', tier);
 }
+
+const championImgs = document.querySelectorAll('.champion-img img');
+championImgs.forEach(img => {
+    img.src = STATIC_URL + 'images/champion/' + img.alt +'.png';
+})

@@ -1,7 +1,8 @@
+from urllib import response
 import django
 import json
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from .serializers import UserSerializer, GameRecordSerializer, DetailRecordSerializer
 from summoner.models import GameRecord, User, DetailRecord, Renew, UpdateDB
 from riotapi.SummonerData import SummonerAPI
@@ -9,6 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from config.settings import STATIC_URL
 from datetime import datetime
 from django.views import View
+from django.template import loader
 import time
 
 
@@ -94,7 +96,12 @@ class DetailView(View):
         try:
             detailQuery = DetailRecord.objects.filter(match_ID=matchID)
             detailRecordSerialize = DetailRecordSerializer(detailQuery, many=True)
-            return JsonResponse(detailRecordSerialize.data, status=200, safe=False)
+            data = detailRecordSerialize.data
+            blue_team = data[:5]
+            red_team = data[5:]
+            res = loader.render_to_string('summoner/record_detail.html', {'blue':blue_team, 'red':red_team})
+            # return render(None, 'summoner/record_detail.html', {'blue':blue_team, 'red':red_team})
+            return JsonResponse({'data':res})
 
         except ObjectDoesNotExist:
             return JsonResponse({'message': "Not Found Match ID"}, status=404)

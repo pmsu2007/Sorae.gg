@@ -21,7 +21,6 @@ class SummonerAPI:
         if len(inputName) == 2:
             inputName = inputName[0] + ' ' + inputName[1]
         self._ID = self._connect.getEncryptID(inputName)
-        print(self._ID['puuid'])
 
         self._summonerName = None
         if self.isValid():
