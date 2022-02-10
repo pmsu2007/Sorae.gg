@@ -97,9 +97,11 @@ class SummonerAPI:
         data = response.json()
 
         # 2021-09-01 AM 00:00:00 GMT +09:00
-        MONTH = 1630422000
+        CUR_TIME = int(time.mktime(datetime.now().timetuple()))
+        ONE_MONTH = 2592000
 
-        if data['info']['gameStartTimestamp'] - MONTH < 0:
+        # if data is more than 90days before, then do not save
+        if data['info']['gameStartTimestamp'] / 1000 < CUR_TIME - ONE_MONTH * 3:
              return None
 
         if 'gameEndTimestamp' in data['info'].keys():
