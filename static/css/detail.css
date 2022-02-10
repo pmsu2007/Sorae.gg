@@ -1,6 +1,13 @@
 .detail-container {
     margin: auto auto;
     width: 80%;
+    display: none;
+    font-weight: 300;
+}
+
+.game-duration {
+    font-size: 30px;
+    font-weight: 200;
 }
 
 .detail-record {
@@ -86,7 +93,7 @@
 
 .detail-table .KDA {
     font-size: 15px;
-    font-weight: 500;
+
 }
 
 
@@ -96,14 +103,6 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-}
-
-.detail-table .score-per-min {
-    font-weight: 500;
-}
-
-.detail-table .cs-per-min {
-    font-weight: 500;
 }
 
 .detail-table .items {

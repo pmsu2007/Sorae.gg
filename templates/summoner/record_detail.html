@@ -1,10 +1,15 @@
 {% load summoner_filter %}
+{% load static %}
+
+<div class="game-duration mx-auto my-3">
+            
+</div>
 
 <div class="detail-record">
             <div class="team-container my-3">
                 <div class="blue-team team-info">
                     <div class="team-name fs-1 mx-auto">블루팀</div>
-                    <div class="game-result fs-1 mx-auto my-3">패배</div>
+                    <div class="game-result fs-1 mx-auto my-3">{{blue.0.game_result|det_win_lose}}</div>
                     
                     <div class="detail-table-wrap">
                         <table class="table detail-table">
@@ -37,8 +42,8 @@
                                                 <img class="spell rounded" data-id={{p.spell2}} src="">
                                             </div>
                                             <div class="d-flex flex-column m1-1 rune-box">
-                                                <img class="rune p-rune rounded" data-id="{{p.primary_rune}}" src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png">
-                                                <img class="rune s-rune rounded" data-id="{{p.sub_rune}}" src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/7202_Sorcery.png">
+                                                <img class="rune p-rune rounded" data-id={{p.primary_rune}} src="">
+                                                <img class="rune s-rune rounded" data-id={{p.sub_rune}} data-rune1={{p.sub_rune_one}} data-rune2={{p.sub_rune_two}} src="">
                                             </div>
                                             
                                         </div>
@@ -53,30 +58,48 @@
                                         </div>
                                     </td>
                                     <td class="KDA align-top">
-                                        <div class="d-flex flex-column justify-content-between">
-                                            <p class="kda-num text-center"></p>
+                                        <div class="kda-info d-flex flex-column justify-content-between">
+                                            <p class="kda-num text-center">
+                                            </p>
                                             <div class="kda-detail mt-2 text-center">
                                                 <span class="kda">{{p.kill}}/{{p.death}}/{{p.assist}}</span>
                                                 <span class="kill-participation"></span>
                                             </div>
+                                            <div class="text-center crowns">
+                                                <img class="black-crown" src="{% static 'images/black_crown.png' %}" alt="black-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
+                                                <img class="blue-crown" src="{% static 'images/blue_crown.png' %}" alt="blue-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
+                                            </div>
                                         </div>
+
                                     </td>
                                     <td class="damgae align-top">
                                         <div class="damage-info d-flex flex-column justify-content-between">
                                             <p class="damage-chart text-center" data-val={{p.total_damage}}>{{p.total_damage|format_num}}</span>
                                             <p class="damage-rank text-center mt-2"></span>
+                                            <div class="text-center crowns">
+                                                <img class="black-crown" src="{% static 'images/black_crown.png' %}" alt="black-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
+                                                <img class="blue-crown" src="{% static 'images/blue_crown.png' %}" alt="blue-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
+                                            </div>
                                         </div>
                                     </td>
                                     <td class="vision-score align-top">
                                         <div class="vision-info d-flex flex-column justify-content-between">
                                             <p class="score text-center">{{p.vision_score}}</p>
                                             <p class="score-per-min mt-2 text-center"></p>
+                                            <div class="text-center crowns">
+                                                <img class="black-crown" src="{% static 'images/black_crown.png' %}" alt="black-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
+                                                <img class="blue-crown" src="{% static 'images/blue_crown.png' %}" alt="blue-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
+                                            </div>
                                         </div>
                                     </td>
                                     <td class="CS align-top">
                                         <div class="cs-info d-flex flex-column justify-content-between">
                                             <p class="cs-num text-center">{{p.minion_kill|eval_cs:p.jungle_kill}}</p>
                                             <p class="cs-per-min mt-2 text-center"></p>
+                                            <div class="text-center crowns">
+                                                <img class="black-crown" src="{% static 'images/black_crown.png' %}" alt="black-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
+                                                <img class="blue-crown" src="{% static 'images/blue_crown.png' %}" alt="blue-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
+                                            </div>
                                         </div>
                                     </td>
                                     <td class="items align-top text-center">
@@ -130,7 +153,7 @@
             <div class="team-container my-3">
                 <div class="red-team team-info">
                     <div class="team-name fs-1 mx-auto">레드팀</div>
-                    <div class="game-result fs-1 mx-auto my-3">승리</div>
+                    <div class="game-result fs-1 mx-auto my-3">{{red.0.game_result|det_win_lose}}</div>
                     
                     <div class="detail-table-wrap">
                         <table class="table detail-table">
@@ -163,8 +186,8 @@
                                                 <img class="spell rounded" data-id={{p.spell2}} src="">
                                             </div>
                                             <div class="d-flex flex-column m1-1 rune-box">
-                                                <img class="rune p-rune rounded" data-id={{p.primary_rune}} src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png">
-                                                <img class="rune s-rune rounded" data-id={{p.sub_rune}} src="https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/7202_Sorcery.png">
+                                                <img class="rune p-rune rounded" data-id={{p.primary_rune}} src="">
+                                                <img class="rune s-rune rounded" data-id={{p.sub_rune}} data-rune1={{p.sub_rune_one}} data-rune2={{p.sub_rune_two}} src="">
                                             </div>
                                             
                                         </div>
@@ -179,11 +202,16 @@
                                         </div>
                                     </td>
                                     <td class="KDA align-top">
-                                        <div class="d-flex flex-column justify-content-between">
-                                            <p class="kda-num text-center"></p>
+                                        <div class="kda-info d-flex flex-column justify-content-between">
+                                            <p class="kda-num text-center">
+                                            </p>
                                             <div class="kda-detail mt-2 text-center">
                                                 <span class="kda">{{p.kill}}/{{p.death}}/{{p.assist}}</span>
                                                 <span class="kill-participation"></span>
+                                            </div>
+                                            <div class="text-center crowns">
+                                                <img class="black-crown" src="{% static 'images/black_crown.png' %}" alt="black-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
+                                                <img class="blue-crown" src="{% static 'images/blue_crown.png' %}" alt="blue-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
                                             </div>
                                         </div>
                                     </td>
@@ -191,6 +219,10 @@
                                         <div class="damage-info d-flex flex-column justify-content-between">
                                             <p class="damage-chart text-center" data-val={{p.total_damage}}>{{p.total_damage|format_num}}</span>
                                             <p class="damage-rank text-center mt-2"></span>
+                                            <div class="text-center crowns">
+                                                <img class="black-crown" src="{% static 'images/black_crown.png' %}" alt="black-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
+                                                <img class="blue-crown" src="{% static 'images/blue_crown.png' %}" alt="blue-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
+                                            </div>
                                         </div>
                                     </td>
                                     <td class="vision-score align-top">
@@ -200,12 +232,20 @@
                                                 <span class="val"></span> 
                                                 <span></span>
                                             </p>
+                                            <div class="text-center crowns">
+                                                <img class="black-crown" src="{% static 'images/black_crown.png' %}" alt="black-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
+                                                <img class="blue-crown" src="{% static 'images/blue_crown.png' %}" alt="blue-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
+                                            </div>
                                         </div>
                                     </td>
                                     <td class="CS align-top">
                                         <div class="cs-info d-flex flex-column justify-content-between">
                                             <p class="cs-num text-center">{{p.minion_kill|eval_cs:p.jungle_kill}}</p>
                                             <p class="cs-per-min mt-2 text-center"></p>
+                                            <div class="text-center crowns">
+                                                <img class="black-crown" src="{% static 'images/black_crown.png' %}" alt="black-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
+                                                <img class="blue-crown" src="{% static 'images/blue_crown.png' %}" alt="blue-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
+                                            </div>
                                         </div>
                                     </td>
                                     <td class="items align-top text-center">

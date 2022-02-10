@@ -80,7 +80,7 @@ class DetailRecord(models.Model):
     primary_rune = models.SmallIntegerField()
     sub_rune = models.SmallIntegerField()
     sub_rune_one = models.SmallIntegerField()
-    sum_rune_two = models.SmallIntegerField()
+    sub_rune_two = models.SmallIntegerField()
 
     item0 = models.SmallIntegerField()
     item1 = models.SmallIntegerField()

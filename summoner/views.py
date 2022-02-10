@@ -68,12 +68,16 @@ class SummonerView(View):
                 return JsonResponse({'status': 400})
 
             curTime = int(time.mktime(datetime.now().timetuple()))
-            lastRecordQuery = GameRecord.objects.filter(summoner_name=summonerName)[0]
-            lastMatchTime = int(time.mktime(lastRecordQuery.game_end.timetuple()))
+            try:            
+                lastRecordQuery = GameRecord.objects.filter(summoner_name=summonerName)[0]
+                lastMatchTime = int(time.mktime(lastRecordQuery.game_end.timetuple()))
 
-            # Data 갱신
-            tierData = summoner.getTier()
-            gameRecordData = summoner.getRecordUsingTime(lastMatchTime, curTime)
+                # Data 갱신
+                tierData = summoner.getTier()
+                gameRecordData = summoner.getRecordUsingTime(lastMatchTime, curTime)
+            except GameRecord.DoesNotExist:
+                tierData = summoner.getTier()
+                gameRecordData = summoner.getRecord(0, 20)
 
             # 전적 시간 갱신
             renewQuery = Renew.objects.get(summoner_name=summonerName)

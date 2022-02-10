@@ -232,8 +232,6 @@ class SummonerAPI:
         info['blue'] = blueTeam
         info['red'] = redTeam
 
-        pp.pprint(info)
-
         return info
 
 

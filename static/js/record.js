@@ -58,13 +58,19 @@ fetch(STATIC_URL + 'js/runesReforged.json')
 )
 
 
-
 const cards = document.querySelectorAll('.card');
 const detailContainer = document.querySelector('.detail-container');
 const records = document.querySelector('.record');
 
-const redTeamTable = document.querySelector('.red-team tbody'); // 5개의 tr
-const blueTeamTable = document.querySelector('.blue-team tbody'); // 5개의 tr
+
+[...cards].forEach(card => {
+    if (card.dataset.result == 'True') {
+        card.classList.add('card-win');
+    } else {
+        card.classList.add('card-lose');
+    }
+});
+
 
 const getDetail = function(matchID, matchTime) {
     url = '/detail/' + '?matchID=' +  matchID
@@ -80,6 +86,11 @@ const getDetail = function(matchID, matchTime) {
     )
     .then (
         () => {
+            detailContainer.dataset.matchId = matchID;
+            const gameDuration = detailContainer.querySelector('.game-duration');
+            let durMin = parseInt(MATCH_MIN);
+            let durSec = matchTime - durMin * 60;
+            gameDuration.textContent = durMin + '분 ' + durSec + '초';
             detailContainer.querySelectorAll('.game-result').forEach( elem => {
                 if (elem.textContent === "승리") elem.style.color = "royalblue";
                 else elem.style.color = "crimson";
@@ -101,7 +112,9 @@ const getDetail = function(matchID, matchTime) {
             spells.forEach(spell => {
                 const spellName = SPELL_DICT[spell.dataset.id];
                 spell.src = SPELL_URL + spellName  + '.png';
-                spell.dataset.tippyContent = SPELL_DATA['data'][spellName]['name'] + '<br><br>'
+                // spell tooltip
+                spell.dataset.tippyContent = '<tooltipName>' + SPELL_DATA['data'][spellName]['name'] + '</tooltipName>' 
+                + '<br><br>'
                 + SPELL_DATA['data'][spellName]['description'];
             })
         }
@@ -109,10 +122,32 @@ const getDetail = function(matchID, matchTime) {
     .then (
         // rune manipulation
         () => {
+            // sub rune setting
             const subRunes = detailContainer.querySelectorAll('.s-rune');
             subRunes.forEach(rune => {
                 rune.src = STATIC_URL + 'images/' + RUNE_DATA[RUNE_DICT[rune.dataset.id]].icon;
+                rune.dataset.tippyContent = '<tooltipName>' + RUNE_DATA[RUNE_DICT[rune.dataset.id]].name + '</tooltipName>' + '<br><br>';
+                // sub rune1, sub rune2 tooltip setting
+                const slots = RUNE_DATA[RUNE_DICT[rune.dataset.id]].slots;
+                let rune1Complete = false;
+                let rune2Complete = false;
+                slots.forEach(slot => {
+                    slot.runes.forEach(r => {
+                        if (r.id == rune.dataset.rune1) {
+                            rune.dataset.tippyContent += '<tooltipName>' + r.name + '</tooltipName>'
+                            + '<br>' + r.shortDesc + '<br><br>';
+                            rune1Complete = true;
+                        } else if (r.id == rune.dataset.rune2) {
+                            rune.dataset.tippyContent += '<tooltipName>' + r.name + '</tooltipName>'
+                            + '<br>' + r.shortDesc +'<br><br>';
+                            rune2Complete = true;
+                        }
+                        if (rune1Complete && rune2Complete) return false;
+                    })
+                    if (rune1Complete && rune2Complete) return false;
+                })
             })
+            // primary rune setting
             const primaryRunes = detailContainer.querySelectorAll('.p-rune');
             primaryRunes.forEach(rune => {
                 for (let i = 0; i < 5; i++) {
@@ -120,7 +155,9 @@ const getDetail = function(matchID, matchTime) {
                 slot.forEach(r => {
                     if (r.id == rune.dataset.id) {
                         rune.src = STATIC_URL + 'images/' + r.icon;
-                        rune.dataset.tippyContent = r.name + '<br>' + r.shortDesc;
+                        // primary rune tooltip
+                        rune.dataset.tippyContent = '<tooltipName>' + r.name + '</tooltipName>'
+                        + '<br><br>' + r.shortDesc + r.longDesc;
                         return false;
                     }
                 })
@@ -253,10 +290,200 @@ const getDetail = function(matchID, matchTime) {
         () => {
             itemImgs = detailContainer.querySelectorAll('.items img');
             itemImgs.forEach(item => {
-                item.dataset.tippyContent = ITEM_DATA['data'][item.dataset.id]['name'] + '<br><br>'
-                + ITEM_DATA['data'][item.dataset.id]['description'] + '<br>'
-                +ITEM_DATA['data'][item.dataset.id]['plaintext']
+                item.dataset.tippyContent = '<tooltipName>' + ITEM_DATA['data'][item.dataset.id]['name'] + '</tooltipName>'
+                +'<br><br>'
+                + ITEM_DATA['data'][item.dataset.id]['description']
+                + ITEM_DATA['data'][item.dataset.id]['plaintext']
             })
+        }
+    )
+    .then (
+        // 팀내 왕관 씌우기 kda, 딜량, 시야점수
+        () => {
+            // 킬관여 왕관
+            // blue team
+            const blueTeam = detailContainer.querySelector('.blue-team');
+            let kdaInfos = blueTeam.querySelectorAll('.kda-info');
+            kdaInfos = [...kdaInfos];
+            kdaInfos.sort((a, b) => {
+                let aKP = parseInt(a.querySelector('.kill-participation').textContent.slice(1, -2));  
+                let bKP = parseInt(b.querySelector('.kill-participation').textContent.slice(1, -2));
+                return bKP - aKP;
+            })
+            let maxKP =  parseInt(kdaInfos[0].querySelector('.kill-participation').textContent.slice(1, -2));
+            let blackCrown = kdaInfos[0].querySelector('.black-crown');
+            blackCrown.style.display = 'inline';
+            blackCrown.dataset.tippyContent += '팀내 최다 킬관여<br>'
+            let idx = 1;
+            while (true) {
+                let curKP = parseInt(kdaInfos[idx].querySelector('.kill-participation').textContent.slice(1, -2));
+                if (maxKP !== curKP) break;
+                blackCrown = kdaInfos[idx].querySelector('.black-crown');
+                blackCrown.style.display = 'inline';
+                blackCrown.dataset.tippyContent += '팀내 최다 킬관여<br>'
+                idx++;
+            }
+
+            // red team
+            const redTeam = detailContainer.querySelector('.red-team');
+            kdaInfos = redTeam.querySelectorAll('.kda-info');
+            kdaInfos = [...kdaInfos];
+            kdaInfos.sort((a, b) => {
+                let aKP = parseInt(a.querySelector('.kill-participation').textContent.slice(1, -2));  
+                let bKP = parseInt(b.querySelector('.kill-participation').textContent.slice(1, -2));
+                return bKP - aKP;
+            })
+            maxKP =  parseInt(kdaInfos[0].querySelector('.kill-participation').textContent.slice(1, -2));
+            blackCrown = kdaInfos[0].querySelector('.black-crown');
+            blackCrown.style.display = 'inline';
+            blackCrown.dataset.tippyContent += '팀내 최다 킬관여<br>'
+            idx = 1;
+            while (true) {
+                let curKP = parseInt(kdaInfos[idx].querySelector('.kill-participation').textContent.slice(1, -2));
+                if (maxKP !== curKP) break;
+                blackCrown = kdaInfos[idx].querySelector('.black-crown');
+                blackCrown.style.display = 'inline';
+                blackCrown.dataset.tippyContent += '팀내 최다 킬관여<br>'
+                idx++;
+            }
+
+            // 딜량 왕관
+
+            // blue team
+            let damageInfos = blueTeam.querySelectorAll('.damage-info');
+            damageInfos = [...damageInfos];
+            damageInfos.sort((a, b) => {
+                let aDamage = parseInt(a.firstElementChild.dataset.val);  
+                let bDamage = parseInt(b.firstElementChild.dataset.val); 
+                return bDamage - aDamage;
+            })
+            let maxDamage = parseInt(damageInfos[0].firstElementChild.dataset.val);
+            blackCrown = damageInfos[0].querySelector('.black-crown');
+            blackCrown.style.display = 'inline';
+            blackCrown.dataset.tippyContent += '팀내 최다 딜량<br>';
+            idx = 1;
+            while (true) {
+                let curDamage = parseInt(damageInfos[idx].firstElementChild.dataset.val);
+                if (maxDamage !== curDamage) break;
+                blackCrown = damageInfos[idx].querySelector('.black-crown');
+                blackCrown.style.display = 'inline';
+                blackCrown.dataset.tippyContent += '팀내 최다 딜량<br>';
+                idx++;
+            }
+
+            // red team
+            damageInfos = redTeam.querySelectorAll('.damage-info');
+            damageInfos = [...damageInfos];
+            damageInfos.sort((a, b) => {
+                let aDamage = parseInt(a.firstElementChild.dataset.val);  
+                let bDamage = parseInt(b.firstElementChild.dataset.val); 
+                return bDamage - aDamage;
+            })
+            maxDamage = parseInt(damageInfos[0].firstElementChild.dataset.val);
+            blackCrown = damageInfos[0].querySelector('.black-crown');
+            blackCrown.style.display = 'inline';
+            blackCrown.dataset.tippyContent += '팀내 최다 딜량<br>';
+            idx = 1;
+            while (true) {
+                let curDamage = parseInt(damageInfos[idx].firstElementChild.dataset.val);
+                if (maxDamage !== curDamage) break;
+                blackCrown = damageInfos[idx].querySelector('.black-crown');
+                blackCrown.style.display = 'inline';
+                blackCrown.dataset.tippyContent += '팀내 최다 딜량<br>';
+                idx++;
+            }
+
+            // 시야 점수 왕관
+
+            // blue team
+            let visionInfos = blueTeam.querySelectorAll('.vision-info');
+            visionInfos = [...visionInfos];
+            visionInfos.sort((a, b) => {
+                let aVS = parseInt(a.firstElementChild.textContent);
+                let bVS = parseInt(b.firstElementChild.textContent);
+                return bVS - aVS;
+            })
+            let maxVS = parseInt(visionInfos[0].firstElementChild.textContent);
+            blackCrown = visionInfos[0].querySelector('.black-crown');
+            blackCrown.style.display = 'inline';
+            blackCrown.dataset.tippyContent += '팀내 최다 시야점수<br>';
+            idx = 1;
+            while (true) {
+                let curVS = parseInt(visionInfos[idx].firstElementChild.textContent);
+                if (maxVS !== curVS) break;
+                blackCrown = visionInfos[idx].querySelector('.black-crown');
+                blackCrown.style.display = 'inline';
+                blackCrown.dataset.tippyContent += '팀내 최다 시야점수<br>';
+                idx++;
+            }
+
+            // red team
+            visionInfos = redTeam.querySelectorAll('.vision-info');
+            visionInfos = [...visionInfos];
+            visionInfos.sort((a, b) => {
+                let aVS = parseInt(a.firstElementChild.textContent);
+                let bVS = parseInt(b.firstElementChild.textContent);
+                return bVS - aVS;
+            })
+            maxVS = parseInt(visionInfos[0].firstElementChild.textContent);
+            blackCrown = visionInfos[0].querySelector('.black-crown');
+            blackCrown.style.display = 'inline';
+            blackCrown.dataset.tippyContent += '팀내 최다 시야점수<br>';
+            idx = 1;
+            while (true) {
+                let curVS = parseInt(visionInfos[idx].firstElementChild.textContent);
+                if (maxVS !== curVS) break;
+                blackCrown = visionInfos[idx].querySelector('.black-crown');
+                blackCrown.style.display = 'inline';
+                blackCrown.dataset.tippyContent += '팀내 최다 시야점수<br>';
+                idx++;
+            }
+
+            // CS 왕관
+
+            // blue team
+            let csInfos = blueTeam.querySelectorAll('.cs-info');
+            csInfos = [...csInfos];
+            csInfos.sort((a, b) =>  {
+                let aCS = parseInt(a.firstElementChild.textContent);
+                let bCS = parseInt(b.firstElementChild.textContent);
+                return bCS - aCS;
+            })
+            let maxCS = parseInt(csInfos[0].firstElementChild.textContent);
+            blackCrown = csInfos[0].querySelector('.black-crown');
+            blackCrown.style.display = 'inline';
+            blackCrown.dataset.tippyContent += '팀내 최다 CS<br>';
+            idx = 1;
+            while (true) {
+                let curCS = parseInt(csInfos[idx].firstElementChild.textContent);
+                if (maxCS !== curCS) break;
+                blackCrown = csInfos[idx].querySelector('.black-crown');
+                blackCrown.style.display = 'inline';
+                blackCrown.dataset.tippyContent += '팀내 최다 CS<br>';
+                idx++;
+            }
+
+            // red team
+            csInfos = redTeam.querySelectorAll('.cs-info');
+            csInfos = [...csInfos];
+            csInfos.sort((a, b) =>  {
+                let aCS = parseInt(a.firstElementChild.textContent);
+                let bCS = parseInt(b.firstElementChild.textContent);
+                return bCS - aCS;
+            })
+            maxCS = parseInt(csInfos[0].firstElementChild.textContent);
+            blackCrown = csInfos[0].querySelector('.black-crown');
+            blackCrown.style.display = 'inline';
+            blackCrown.dataset.tippyContent += '팀내 최다 CS<br>';
+            idx = 1;
+            while (true) {
+                let curCS = parseInt(csInfos[idx].firstElementChild.textContent);
+                if (maxCS !== curCS) break;
+                blackCrown = csInfos[idx].querySelector('.black-crown');
+                blackCrown.style.display = 'inline';
+                blackCrown.dataset.tippyContent += '팀내 최다 CS<br>';
+                idx++;
+            }
         }
     )
     .then (
@@ -285,35 +512,35 @@ const getDetail = function(matchID, matchTime) {
     .catch(
         function(error) {
             alert('세부전적 불러오기에 실패했습니다.')
+            console.log(error);
         }
     )
     
 
-    
-
-    // manipulate KDA
 
 }
 
-// const calDetail = function()
+
 
 records.addEventListener('click', function (e) {
     let card = e.target.closest('.card');
     if (!card) return;
     if (!records.contains(card)) return;
 
+    if (card.dataset.matchId == detailContainer.dataset.matchId &&
+        detailContainer.style.display == 'block') {
+        detailContainer.style.display = 'none';
+        return;
+    } else if (detailContainer.style.display == 'block') {
+        detailContainer.display == 'block';
+    } else {
+        detailContainer.style.display = 'block';
+    }
 
     getDetail(card.dataset['matchId'], card.dataset['matchTime']);
     
 });
 
-[...cards].forEach(card => {
-    if (card.dataset.result == 'True') {
-        card.classList.add('card-win');
-    } else {
-        card.classList.add('card-lose');
-    }
-})
 
 // tooltip initial
 

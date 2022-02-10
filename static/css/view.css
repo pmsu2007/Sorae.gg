@@ -194,3 +194,33 @@
       color: #aaaaaa; }
       .rg-box-tooltip .info .cost .gold {
         color: #d8ad00; }
+
+
+tooltipName {
+  color: #b8960f;
+  font-weight:bolder;
+}
+
+stats {
+  color:cornsilk;
+}
+
+physicalDamage, magicDamage {
+   color:burlywood;
+ }
+
+keywordMajor {
+  font-weight: bold;
+}
+
+scaleHealth {
+  color:#099b09;
+}
+
+shield {
+  color:darkorange;
+}
+
+lifeSteal {
+  color: crimson;
+}
