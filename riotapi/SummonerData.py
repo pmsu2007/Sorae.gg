@@ -9,7 +9,7 @@ import requests
 from riotapi.ApiConnect import ApiConnect
 from summoner.models import UpdateDB
 from datetime import datetime
-
+import pprint as pp
 
 class SummonerAPI:
     """
@@ -26,7 +26,7 @@ class SummonerAPI:
         if self.isValid():
             self._summonerName = self._ID['name']
             self._DB = UpdateDB(self._summonerName)
-
+        print(self._ID)
         """
         accountId : Encrypted account ID
         id : Encrypted summoner ID
@@ -99,8 +99,8 @@ class SummonerAPI:
         # 2021-09-01 AM 00:00:00 GMT +09:00
         MONTH = 1630422000
 
-        # if data['info']['gameStartTimestamp'] - MONTH < 0:
-        #     return None
+        if data['info']['gameStartTimestamp'] - MONTH < 0:
+             return None
 
         if 'gameEndTimestamp' in data['info'].keys():
             '''
@@ -126,7 +126,9 @@ class SummonerAPI:
             item = [participant["item0"], participant["item1"], participant["item2"], participant["item3"],
                     participant["item4"], participant["item5"], participant["item6"]]
             runes = [participant['perks']['styles'][0]['selections'][0]['perk'],
-                     participant['perks']['styles'][1]['style']]
+                     participant['perks']['styles'][1]['style'],
+                     participant['perks']['styles'][1]['selections'][0]['perk'],
+                     participant['perks']['styles'][1]['selections'][1]['perk']]
             spells = [participant['summoner1Id'], participant['summoner2Id']]
             info['assist'] = participant['assists']
             info['baron'] = participant['baronKills']
@@ -201,13 +203,46 @@ class SummonerAPI:
                 pass
         return recordList
 
+    def getInGame(self):
+
+        URL = "https://kr.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/" + self._ID['id']
+        response = requests.get(URL, headers=self._connect.getHeader())
+        data = response.json()
+
+        blueTeam = []
+        redTeam = []
+
+        if 'status' in data.keys():
+            return KeyError
+
+        info = {'queueID': data['gameQueueConfigId'], 'gameStartTime': data['gameStartTime'],
+                'ban': data['bannedChampions']}
+
+        for participant in data['participants']:
+
+            temp = {'spell': [participant['spell1Id'], participant['spell2Id']],
+                    'perk': [participant['perks']['perkIds'][0], participant['perks']['perkSubStyle']],
+                    'champID': participant['championId'], 'summonerName': participant['summonerName']}
+
+            if participant['teamId'] == 100:
+                blueTeam.append(temp)
+            else:
+                redTeam.append(temp)
+
+        info['blue'] = blueTeam
+        info['red'] = redTeam
+
+        pp.pprint(info)
+
+        return info
+
+
     def getUser(self):
         """
         Information about User
         :return: Summoner information(dict)
         """
         info = {'name': "", 'summonerIcon': 0, 'summonerLevel': 0}
-
         if self._summonerName is not None:
             info = {'name': self._ID['name'], 'summonerIcon': self._ID['profileIconId'],
                     'summonerLevel': self._ID['summonerLevel']}
@@ -221,4 +256,4 @@ class SummonerAPI:
 
 if __name__ == "__main__":
     summonerAPI = SummonerAPI("민스님")
-    summonerAPI.getTotalRecord(0,10)
+    summonerAPI.getIngame()

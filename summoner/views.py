@@ -83,7 +83,7 @@ class SummonerView(View):
             return JsonResponse({'status': 200})
 
         except Exception:
-            return JsonResponse({'status':400})
+            return JsonResponse({'status': 400})
 
 
 class DetailView(View):
@@ -99,19 +99,20 @@ class DetailView(View):
             data = detailRecordSerialize.data
             blue_team = data[:5]
             red_team = data[5:]
-            res = loader.render_to_string('summoner/record_detail.html', {'blue':blue_team, 'red':red_team})
+            res = loader.render_to_string('summoner/record_detail.html', {'blue': blue_team, 'red': red_team})
             # return render(None, 'summoner/record_detail.html', {'blue':blue_team, 'red':red_team})
-            return JsonResponse({'data':res})
+            return JsonResponse({'data': res})
 
         except ObjectDoesNotExist:
-            return JsonResponse({'message': "Not Found Match ID"}, status=404)
+            return JsonResponse({'message': "Match ID Not Found"}, status=404)
+
 
 class RenewView(View):
 
     def get(self, request):
         inputName = request.GET['userName']
 
-        #API
+        # API
         summoner = SummonerAPI(inputName)
         summonerName = summoner.getName()
 
@@ -120,4 +121,22 @@ class RenewView(View):
             renewQuery = Renew.objects.get(summoner_name=summonerName)
             return JsonResponse(int(renewQuery.renew_time), status=200, safe=False)
         except ObjectDoesNotExist:
-            return JsonResponse({'message': "Not Found Summoner"}, status=404)
+            return JsonResponse({'message': "Summoner Not Found"}, status=404)
+
+
+class InGameView(View):
+
+    def get(self, request):
+        inputName = request.GET['userName']
+
+        # API
+        summoner = SummonerAPI(inputName)
+
+        try:
+            '''
+            Detail View 형식으로 변경 ?
+            '''
+            inGameData = summoner.getInGame()
+            return JsonResponse(inGameData, status=200, safe=False)
+        except KeyError:
+            return JsonResponse({'message': "Data Not Found"}, status=404)

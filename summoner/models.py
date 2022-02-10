@@ -79,6 +79,8 @@ class DetailRecord(models.Model):
 
     primary_rune = models.SmallIntegerField()
     sub_rune = models.SmallIntegerField()
+    sub_rune_one = models.SmallIntegerField()
+    sum_rune_two = models.SmallIntegerField()
 
     item0 = models.SmallIntegerField()
     item1 = models.SmallIntegerField()
@@ -161,6 +163,7 @@ class UpdateDB:
                                       champ_level=info['champLevel'],
                                       total_damage=info['totalDamage'], vision_score=info['visionScore'],
                                       primary_rune=info['runes'][0], sub_rune=info['runes'][1],
+                                      sub_rune_one=info['runes'][2], sub_rune_two=info['runes'][3],
                                       item0=info['items'][0], item1=info['items'][1], item2=info['items'][2],
                                       item3=info['items'][3], item4=info['items'][4], item5=info['items'][5],
                                       item6=info['items'][6],
