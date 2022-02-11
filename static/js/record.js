@@ -142,7 +142,10 @@ const getDetail = function(matchID, matchTime) {
                             + '<br>' + r.shortDesc +'<br><br>';
                             rune2Complete = true;
                         }
-                        if (rune1Complete && rune2Complete) return false;
+                        if (rune1Complete && rune2Complete){
+                            rune.dataset.tippyContent = rune.dataset.tippyContent.slice(0, -4);
+                            return false;
+                        }
                     })
                     if (rune1Complete && rune2Complete) return false;
                 })
