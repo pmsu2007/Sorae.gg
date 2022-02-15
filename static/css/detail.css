@@ -113,7 +113,31 @@
     display: none;
 }
 
+.detail-table .damage-info .empty-fill {
+    width: 70px;
+    height: 10px;
+    margin: 3px auto;
+    border: 1px solid rgb(205, 210, 210);
+    background-color: rgb(242, 242, 242);
+    border-radius: 5px;
+}
 
+.detail-table .damage-info .empty-fill .fill {
+    height: 100%;
+    background-color: #292826;
+    border-radius: 5px;
+}
+
+.summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.summary .team {
+    display: flex;
+    
+}
 
 .highlight5 {
     color: #879292;

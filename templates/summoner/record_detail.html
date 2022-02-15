@@ -76,6 +76,9 @@
                                         <div class="damage-info d-flex flex-column justify-content-between">
                                             <p class="damage-chart text-center" data-val={{p.total_damage}}>{{p.total_damage|format_num}}</span>
                                             <p class="damage-rank text-center mt-2"></span>
+                                            <div class="empty-fill">
+                                                <div class="fill"></div>
+                                            </div>
                                             <div class="text-center crowns">
                                                 <img class="black-crown" src="{% static 'images/black_crown.png' %}" alt="black-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
                                                 <img class="blue-crown" src="{% static 'images/blue_crown.png' %}" alt="blue-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
@@ -150,6 +153,39 @@
 
                 </div>
             </div>
+            <div class="summary">
+                <div class="team blue-summary">
+                    <div class="object turret">
+                        <div>turret</div>
+                        <span class="val"></span>
+                    </div>
+                    <div class="object dragon">
+                        <div>dragon</div>
+                        <span class="val"></span>
+                    </div>
+                    <div class="object baron">
+                        <div>baron</div>
+                        <span class="val"></span>
+                    </div>
+                </div>
+                <div class="garph">
+                    
+                </div>
+                <div class="team red-summary">
+                    <div class="object turret">
+                        <div>turret</div>
+                        <span class="val"></span>
+                    </div>
+                    <div class="object dragon">
+                        <div>dragon</div>
+                        <span class="val"></span>
+                    </div>
+                    <div class="object baron">
+                        <div>baron</div>
+                        <span class="val"></span>
+                    </div>
+                </div>
+            </div>
             <div class="team-container my-3">
                 <div class="red-team team-info">
                     <div class="team-name fs-1 mx-auto">레드팀</div>
@@ -219,6 +255,9 @@
                                         <div class="damage-info d-flex flex-column justify-content-between">
                                             <p class="damage-chart text-center" data-val={{p.total_damage}}>{{p.total_damage|format_num}}</span>
                                             <p class="damage-rank text-center mt-2"></span>
+                                            <div class="empty-fill">
+                                                <div class="fill"></div>
+                                            </div>
                                             <div class="text-center crowns">
                                                 <img class="black-crown" src="{% static 'images/black_crown.png' %}" alt="black-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
                                                 <img class="blue-crown" src="{% static 'images/blue_crown.png' %}" alt="blue-crown" data-tippy-content="" width="20px" height="20px" style="display:none;">
@@ -295,4 +334,4 @@
 
                 </div>
             </div>
-        </div>
+</div>

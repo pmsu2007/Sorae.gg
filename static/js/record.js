@@ -182,13 +182,16 @@ const getDetail = function(matchID, matchTime) {
                 let kda = elem.nextElementSibling.firstElementChild.textContent.split('/');
                 blueTotalKill += parseInt(kda[0]);
                 let kdaNum = (parseInt(kda[0]) + parseInt(kda[2])) / parseInt(kda[1]);
-                if (kdaNum !== Infinity) {
+                if (kdaNum !== Infinity && !isNaN(kdaNum)) {
                 kdaNum = kdaNum.toFixed(2);
                 elem.textContent = kdaNum + ':1';
                 if (kdaNum >= 5) elem.classList.add('highlight2');
                 else if (kdaNum >= 4) elem.classList.add('highlight3');
                 else if (kdaNum >= 3) elem.classList.add('highlight4');
                 else if (kdaNum < 2) elem.classList.add('highlight5'); 
+                } else if (isNaN(kdaNum)) {
+                    elem.textContent = '0.00:1';
+                    elem.classList.add('highlight5');
                 } else {
                     elem.textContent = 'Perfect';
                     elem.classList.add('highlight1');
@@ -198,13 +201,16 @@ const getDetail = function(matchID, matchTime) {
                 let kda = elem.nextElementSibling.firstElementChild.textContent.split('/');
                 redTotalKill += parseInt(kda[0]);
                 let kdaNum = (parseInt(kda[0]) + parseInt(kda[2])) / parseInt(kda[1]);
-                if (kdaNum !== Infinity) {
+                if (kdaNum !== Infinity && !isNaN(kdaNum)) {
                     kdaNum = kdaNum.toFixed(2);
                     elem.textContent = kdaNum + ':1';
                     if (kdaNum >= 5) elem.classList.add('highlight2');
                     else if (kdaNum >= 4) elem.classList.add('highlight3');
                     else if (kdaNum >= 3) elem.classList.add('highlight4');
                     else elem.classList.add('highlight5'); 
+                    } else if (isNaN(kdaNum)) {
+                        elem.textContent = '0.00:1';
+                        elem.classList.add('highlight5');
                     } else {
                         elem.textContent = 'Perfect';
                         elem.classList.add('highlight1');
@@ -242,13 +248,21 @@ const getDetail = function(matchID, matchTime) {
                 return bDamage - aDamage;
             })
             let counter = 1;
+            let maximumDamage = parseInt(damages[0].firstElementChild.dataset.val);
             damages.forEach(elem => {
+                // 등수 표시 및 그래프
                 elem.firstElementChild.nextElementSibling.textContent = counter + '등';
                 counter++;
+                let damageRatio = parseInt(parseInt(elem.firstElementChild.dataset.val) / maximumDamage * 100);
+                const fill = elem.querySelector('.fill');
+                fill.style.width = damageRatio.toString() + '%';
+                
             })
             for (let i = 1; i <= 3; i++) {
+                // 1 ~ 3등 강조
                 damages[i - 1].classList.add('highlight' + i);
             }
+
         }
     )
     .then (

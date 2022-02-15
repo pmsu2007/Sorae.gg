@@ -96,7 +96,6 @@ class SummonerAPI:
         response = requests.get(URL, headers=self._connect.getHeader())
         data = response.json()
 
-        # 2021-09-01 AM 00:00:00 GMT +09:00
         CUR_TIME = int(time.mktime(datetime.now().timetuple()))
         ONE_MONTH = 2592000
 
