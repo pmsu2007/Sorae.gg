@@ -75,6 +75,11 @@ class DetailRecord(models.Model):
     champ_ID = models.SmallIntegerField()
     champ_level = models.SmallIntegerField()
     total_damage = models.IntegerField()
+    total_damage_object = models.IntegerField()
+    total_damage_taken = models.IntegerField()
+    total_heal = models.IntegerField()
+    total_shield = models.IntegerField()
+    total_CC = models.IntegerField()
     vision_score = models.SmallIntegerField()
 
     primary_rune = models.SmallIntegerField()
@@ -100,6 +105,13 @@ class DetailRecord(models.Model):
     baron = models.SmallIntegerField()
     dragon = models.SmallIntegerField()
     turret = models.SmallIntegerField()
+
+    gold_earned = models.IntegerField()
+    gold_spent = models.IntegerField()
+
+    
+
+    
 
 
 class Renew(models.Model):
@@ -169,7 +181,11 @@ class UpdateDB:
                                       item6=info['items'][6],
                                       spell1=info['spells'][0], spell2=info['spells'][1],
                                       kill=info['kill'], death=info['death'], assist=info['assist'],
-                                      baron=info['baron'], dragon=info['dragon'], turret=info['turret'])
+                                      baron=info['baron'], dragon=info['dragon'], turret=info['turret'], 
+                                      total_damage_object=info['totalObjectDamage'], total_damage_taken=info['totalDamageTaken'],
+                                      total_heal=info['totalHeals'], total_shield=info['totalShield'],
+                                      total_CC=info['totalCC'], gold_earned=info['goldEarned'],
+                                      gold_spent=info['goldSpent'])
         _modelInstance.save()
 
     def createRenew(self, info):
