@@ -140,6 +140,8 @@ class SummonerAPI:
             info['death'] = participant['deaths']
             info['dragon'] = participant['dragonKills']
             info['gameResult'] = participant['win']
+            info['goldEarned'] = participant['goldEarned']
+            info['goldSpent'] = participant['goldSpent']
             info['items'] = item
             info['jungleKill'] = participant['neutralMinionsKilled']
             info['kill'] = participant['kills']
@@ -150,7 +152,12 @@ class SummonerAPI:
             info['summonerName'] = participant['summonerName']
             info['spells'] = spells
             info['teamID'] = participant['teamId']
+            info['totalCC'] = participant['timeCCingOthers']
             info['totalDamage'] = participant['totalDamageDealtToChampions']
+            info['totalDamageTaken'] = participant['totalDamageTaken']
+            info['totalHeals'] = participant['totalHealsOnTeammates']
+            info['totalObjectDamage'] = participant['damageDealtToObjectives']
+            info['totalShield'] = participant['totalDamageShieldedOnTeammates']
             info['turret'] = participant['turretKills']
             info['visionScore'] = participant['visionScore']
 
