@@ -20,7 +20,7 @@
         </ul>
     </div>
 
-    <form action="{% url 'pybo:answer_create' question.id %}" method="post">
+    <form action="{% url 'community:answer_create' question.id %}" method="post">
         {% csrf_token %}
         <textarea name="content" id="content" rows="15"></textarea>
         <input type="submit" value="답변등록">
