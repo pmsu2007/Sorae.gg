@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% if question_list %}
+        <ul>
+        {% for question in question_list %}
+            <li><a href="{% url 'community:detail' question.id %}">{{ question.subject }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>질문이 없습니다.</p>
+    {% endif %}
+</body>
+</html>
