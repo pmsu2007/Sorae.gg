@@ -1,0 +1,16 @@
+textarea {
+    width:100%;
+}
+
+input[type=submit] {
+    margin-top: 10px;
+}
+
+#comment-wrap {
+    border-style: solid;
+    box-sizing: border-box;
+}
+
+#comment-wrap > ul {
+    box-sizing: border-box;
+}

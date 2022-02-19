@@ -1,6 +1,6 @@
 from django.contrib import admin
-from community.models import Question, Answer
+from community.models import Post, Comment
 # Register your models here.
 
-admin.site.register(Question)
-admin.site.register(Answer)
+admin.site.register(Post)
+admin.site.register(Comment)

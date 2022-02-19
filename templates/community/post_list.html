@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load summoner_filter %}
+
+{% block css_link %}
+<link rel="stylesheet" href="{% static 'community/css/post_list.css' %}">
+{% endblock css_link %}
+
+
+{% block content %}
+
+
+<div class="content-wrap">
+    <!-- side bar start-->
+    <div class="sidebar">
+        <div class="sidebar-content-wrap">
+            <div class="sidebar-header">
+                <div class="sidebar-button">
+                    <div class="sidebar-button-item">
+                        <a href="#" class="button">로그인</a>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-content">
+                <div class="sidebar-menu">
+                    <ul class="sidebar-menu-list">
+                        <li class="sidebar-menu-item">
+                            <a href="#">개발자 소식</a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="#">자유 게시판</a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="#">버그 및 건의</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- side bar end-->
+    <!-- content start -->
+    <div class="post-list-wrap">
+        <!-- post header start -->
+        <div class="post-header">
+            <div class="post-search-wrap">
+                <form action id = "post-search">
+                    <select name="target" class="form-select-sm post-search-select">
+                        <option value="subject">
+                            제목
+                        </option>
+                        <option value="user_name">
+                            작성자
+                        </option>
+                    </select>
+                    <input type="text" name="query" class="form-control-sm post-search-input" placeholder="검색">
+                    <button class="post-search-button">
+                        <img src="{% static 'community/images/search-icon.png'%}" class="search-image" alt="검색">
+                    </button>
+                </form>
+            </div>
+            <div class="post-editor-wrap">
+                <form action id="post-editor">
+                    <button class="post-editor-button">
+                        <img src="{% static 'community/images/pencil.png'%}" width="28" >
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- post header end-->
+        <!-- post content start -->
+        {% if post_list %}
+            <div class="post-list-container">
+                {% for post in post_list %}
+                <div class="post-item-container">
+                    <div class="post-item-vote">
+                        <img src="{% static 'community/images/vote-icon.png'%}" width="14" >
+                        <span>{{post.vote}}</span>
+                    </div>
+                    <div class="post-item-content">
+                        <a href="{% url 'community:detail' post.id %}">
+                            <span class="post-title">{{ post.subject }}</span>
+                            <em>[{{ post.comment_set.count }}]</em>
+                        </a>
+                    </div>
+                    <div class="post-item-date">
+                        <span>{{ post.create_date }}</span>
+                    </div>
+                    <div class="post-item-user">
+                        <span>{{ post.user_name }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <!-- post content end -->
+    </div>
+    <!-- content end -->
+</div>
+{% endblock content %}

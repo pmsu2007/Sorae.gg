@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css_link %}
+<link rel="stylesheet" href="{% static 'community/css/post_editor.css' %}">
+{% endblock css_link %}
+
+{% block content %}
+<div class="container">
+    <h5 class="my-3 border-bottom pb-2">질문등록</h5>
+    <form action="{% url 'community:post_create' %}" method="post" class="post-form my-3">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">등록</button>
+    </form>
+</div>
+{% endblock content %}

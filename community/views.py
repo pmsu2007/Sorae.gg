@@ -1,42 +1,38 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.utils import timezone
-from .models import Question, Answer
-
+from community.models import Post, Comment
+from community.forms import PostForm
 
 def index(request):
-    question_list = Question.objects.order_by('-create_date')
-    context = { 'question_list': question_list }
-    return render(request, 'community/question_list.html', context)
+    post_list = Post.objects.order_by('-create_date')
+    context = {'post_list': post_list}
+    return render(request, 'community/post_list.html', context)
 
 
-def detail(request, question_id):
+def detail(request, post_id):
     """
     detail 내용 출력
     """
-    question = Question.objects.get(id=question_id)
-    context = {'question': question}
-    return render(request, 'community/question_detail.html', context)
+    post = Post.objects.get(id=post_id)
+    context = {'post': post}
+    return render(request, 'community/post_detail.html', context)
 
 
-def answer_create(request, question_id):
+def comment_create(request, post_id):
 
-    question = get_object_or_404(Question, pk=question_id)
-    answer = Answer(question=question, content=request.POST.get('content'), create_date=timezone.now())
-    answer.save()
-    return redirect('pybo:detail', question_id=question.id)
-
-
-class IndexView(generic.ListView):
-    """
-    pybo 목록 출력
-    """
-    def get_queryset(self):
-        return Question.objects.order_by('-create_date')
+    post = get_object_or_404(Post, pk=post_id)
+    comment = Comment(post=post, content=request.POST.get('content'), create_date=timezone.now())
+    comment.save()
+    return redirect('community:detail', post_id=post.id)
 
 
-class DetailView(generic.DetailView):
-    """
-    pybo 내용 출력
-    """
-    model = Question
+def post_create(request):
+    post = Post(subject=request.POST.get('subject'), content=request.POST.get('content'), create_date=timezone.now())
+    post.save()
+    return redirect('community:index')
+
+
+def editor(request):
+    form = PostForm()
+    return render(request, 'community/post_editor.html', {'form': form})

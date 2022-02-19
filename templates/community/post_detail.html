@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css_link %}
+<link rel="stylesheet" href="{% static 'community/css/post_detail.css' %}">
+{% endblock css_link %}
+
+
+{% block content %}
+<h1>{{ post.subject }}</h1>
+
+<div>
+{{ post.content }}
+</div>
+
+<form action="{% url 'community:comment_create' post.id %}" method="post">
+    {% csrf_token %}
+    <textarea name="content" id="content" rows="15"></textarea>
+    <input type="submit" value="답변등록">
+</form>
+
+<h5>{{ post.comment_set.count }}개의 답변이 있습니다.</h5>
+
+<div id="comment-wrap">
+    <ul class="list-group">
+        {% for comment in post.comment_set.all %}
+            <li class="list-group-item">{{ comment.content }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock content %}
