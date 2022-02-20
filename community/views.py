@@ -3,10 +3,22 @@ from django.views import generic
 from django.utils import timezone
 from community.models import Post, Comment
 from community.forms import PostForm
+from django.core.paginator import Paginator
 
-def index(request):
-    post_list = Post.objects.order_by('-create_date')
-    context = {'post_list': post_list}
+
+
+def list(request):
+
+    page = request.GET.get('page', '1')
+
+    # 조회
+    postList = Post.objects.order_by('-create_date')
+
+    # 페이징 처리
+    paginator = Paginator(postList, 15) # 페이지당 10개의 Post 출력
+    pageObj = paginator.get_page(page)
+
+    context = {'post_list': pageObj}
     return render(request, 'community/post_list.html', context)
 
 

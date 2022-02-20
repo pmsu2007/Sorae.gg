@@ -9,42 +9,16 @@
 
 {% block content %}
 
-
 <div class="content-wrap">
-    <!-- side bar start-->
-    <div class="sidebar">
-        <div class="sidebar-content-wrap">
-            <div class="sidebar-header">
-                <div class="sidebar-button">
-                    <div class="sidebar-button-item">
-                        <a href="#" class="button">로그인</a>
-                    </div>
-                </div>
-            </div>
-            <div class="sidebar-content">
-                <div class="sidebar-menu">
-                    <ul class="sidebar-menu-list">
-                        <li class="sidebar-menu-item">
-                            <a href="#">개발자 소식</a>
-                        </li>
-                        <li class="sidebar-menu-item">
-                            <a href="#">자유 게시판</a>
-                        </li>
-                        <li class="sidebar-menu-item">
-                            <a href="#">버그 및 건의</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- side bar end-->
+    <!-- side bar -->
+    {% include "sidebar.html" %}
     <!-- content start -->
     <div class="post-list-wrap">
         <!-- post header start -->
         <div class="post-header">
             <div class="post-search-wrap">
                 <form action id = "post-search">
+                    {% csrf_token %}
                     <select name="target" class="form-select-sm post-search-select">
                         <option value="subject">
                             제목
@@ -60,7 +34,8 @@
                 </form>
             </div>
             <div class="post-editor-wrap">
-                <form action id="post-editor">
+                <form action="{% url 'community:editor' %}" method="post" id="post-editor">
+                    {% csrf_token %}
                     <button class="post-editor-button">
                         <img src="{% static 'community/images/pencil.png'%}" width="28" >
                     </button>
@@ -94,6 +69,46 @@
             </div>
         {% endif %}
         <!-- post content end -->
+        <!-- post page start -->
+        <div class="post-paging">
+            <ul class="pagination justify-content-center">
+                <!-- previous page -->
+                {% if post_list.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ post_list.previous_page_number }}">이전</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+                </li>
+                {% endif %}
+                <!-- page list -->
+                {% for page_number in post_list.paginator.page_range %}
+                    {% if page_number >= post_list.number|add:-5 and page_number <= post_list.number|add:5 %}
+                        {% if page_number == question_list.number %}
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                        </li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                <!-- next page -->
+                {% if post_list.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ post_list.next_page_number }}">다음</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+         <!-- post page end -->
     </div>
     <!-- content end -->
 </div>
