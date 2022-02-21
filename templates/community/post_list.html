@@ -55,7 +55,9 @@
                     <div class="post-item-content">
                         <a href="{% url 'community:detail' post.id %}">
                             <span class="post-title">{{ post.subject }}</span>
-                            <em>[{{ post.comment_set.count }}]</em>
+                            {% if post.comment_set.count > 0 %}
+                            <span class="comment-count">[{{ post.comment_set.count }}]</span>
+                            {% endif %}
                         </a>
                     </div>
                     <div class="post-item-date">

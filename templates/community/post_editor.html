@@ -9,7 +9,7 @@
 <div class="content-wrap">
     {% include "sidebar.html" %}
     <!-- editor start -->
-    <form action="{% url 'community:post_create' %}" method="post" name="post" class="post-form my-3">
+    <form action="{% url 'community:post_create' %}" method="post" class="post-form my-3">
         {% csrf_token %}
         <div class="editor">
             <div class="editor-header">

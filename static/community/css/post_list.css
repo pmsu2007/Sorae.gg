@@ -115,6 +115,10 @@
     color: #000000;
 }
 
+.comment-count {
+    color: #46cfa7;
+}
+
 .post-item-date {
     flex-basis: 30%;
     display:flex;
