@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css_link %}
+<link rel="stylesheet" href="{% static 'community/css/post_detail.css' %}">
+{% endblock css_link %}
+
+
+{% block content %}
+<div class="content-wrap">
+    {% include "sidebar.html" %}
+    <!-- content start -->
+    <div class="post-detail-wrap">
+        <!-- detail header start -->
+        <div class="detail-header-wrap">
+            <div class="detail-header-title">
+                {{ post.subject }}
+            </div>
+            <div class="detail-header-meta">
+                <div class="header-page">
+                    자유
+                </div>
+                <div class="header-date">
+                    몇분 전
+                </div>
+                <div class="header-user">
+                    {{ post.user_name }}
+                </div>
+                <div class="header-info">
+                    <div class="header-info-item">
+                        조회 180
+                    </div>
+                    <div class="header-info-item">
+                        댓글 {{ post.comment_set.count }}
+                    </div>
+                    <div class="header-info-item">
+                        추천 {{ post.vote }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- detail header end -->
+        <div class="detail-content-wrap">
+            <div class="detail-content">
+                    {{ post.content }}
+            </div>
+        </div>
+        <div class="detail-votebox-wrap">
+            <div class="detail-votebox">
+                    <a class="votebox" href="#">
+                        추천
+                    </a>
+            </div>
+        </div>
+
+        <!-- comment start -->
+        <div class="detail-comment-wrap">
+            <div class="comment-header">
+                <h2 class="comment-header-title">
+                    댓글
+                </h2>
+                <span class="comment-header-content">
+                    총 {{ post.comment_set.count }} 개
+                </span>
+            </div>
+            <form action="{% url 'community:comment_create' post.id %}" method="post">
+                {% csrf_token %}
+                <div class="comment-editor-wrap">
+                    <div class="comment-editor">
+                        <textarea name="comment" class="comment-editor-input" placeholder="댓글"
+                              autocomplete="off" spellcheck="false" required="true" ></textarea>
+                    </div>
+                    <div class="comment-editor-submit">
+                        <input class="comment-submit" type="submit" value="작성">
+                    </div>
+                </div>
+            </form>
+            <div id="comment-list-container">
+                    {% for comment in post.comment_set.all %}
+                    <div class="comment-item-container">
+                        <div class="comment-item-meta">
+                            <div class="comment-item-user">
+                                유저명
+                            </div>
+                            <div class="comment-item-date">
+                                몇분 전
+                            </div>
+                        </div>
+                        <div class="comment-item-content">
+                            {{ comment.content }}
+                        </div>
+                    </div>
+                    {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

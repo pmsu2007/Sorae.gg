@@ -33,7 +33,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'rest_framework', # Django REST framework
-    'summoner.apps.SummonerConfig', # summoner 관련 테이블 생성
+    'summoner.apps.SummonerConfig', # summoner 관련 DB 생성
+    'community.apps.CommunityConfig', # community 관련 DB 생성
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

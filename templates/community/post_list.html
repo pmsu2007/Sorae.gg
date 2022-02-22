@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load summoner_filter %}
+
+{% block css_link %}
+<link rel="stylesheet" href="{% static 'community/css/post_list.css' %}">
+{% endblock css_link %}
+
+
+{% block content %}
+
+<div class="content-wrap">
+    <!-- side bar -->
+    {% include "sidebar.html" %}
+    <!-- content start -->
+    <div class="post-list-wrap">
+        <!-- post header start -->
+        <div class="post-header">
+            <div class="post-search-wrap">
+                <form action id = "post-search">
+                    {% csrf_token %}
+                    <select name="target" class="form-select-sm post-search-select">
+                        <option value="subject">
+                            제목
+                        </option>
+                        <option value="user_name">
+                            작성자
+                        </option>
+                    </select>
+                    <input type="text" name="query" class="form-control-sm post-search-input" placeholder="검색">
+                    <button class="post-search-button">
+                        <img src="{% static 'community/images/search-icon.png'%}" class="search-image" alt="검색">
+                    </button>
+                </form>
+            </div>
+            <div class="post-editor-wrap">
+                <form action="{% url 'community:editor' %}" method="post" id="post-editor">
+                    {% csrf_token %}
+                    <button class="post-editor-button">
+                        <img src="{% static 'community/images/pencil.png'%}" width="28" >
+                    </button>
+                </form>
+            </div>
+        </div>
+        <!-- post header end-->
+        <!-- post content start -->
+        {% if post_list %}
+            <div class="post-list-container">
+                {% for post in post_list %}
+                <div class="post-item-container">
+                    <div class="post-item-vote">
+                        <img src="{% static 'community/images/vote-icon.png'%}" width="14" >
+                        <span>{{post.vote}}</span>
+                    </div>
+                    <div class="post-item-content">
+                        <a href="{% url 'community:detail' post.id %}">
+                            <span class="post-title">{{ post.subject }}</span>
+                            {% if post.comment_set.count > 0 %}
+                            <span class="comment-count">[{{ post.comment_set.count }}]</span>
+                            {% endif %}
+                        </a>
+                    </div>
+                    <div class="post-item-date">
+                        <span>{{ post.create_date }}</span>
+                    </div>
+                    <div class="post-item-user">
+                        <span>{{ post.user_name }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <!-- post content end -->
+        <!-- post page start -->
+        <div class="post-paging">
+            <ul class="pagination justify-content-center">
+                <!-- previous page -->
+                {% if post_list.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ post_list.previous_page_number }}">◀</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true" href="#">◀</a>
+                </li>
+                {% endif %}
+                <!-- page list -->
+                {% for page_number in post_list.paginator.page_range %}
+                    {% if page_number >= post_list.number|add:-5 and page_number <= post_list.number|add:5 %}
+                        {% if page_number == question_list.number %}
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                        </li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                <!-- next page -->
+                {% if post_list.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ post_list.next_page_number }}">▶</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true" href="#">▶</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+         <!-- post page end -->
+    </div>
+    <!-- content end -->
+</div>
+{% endblock content %}
