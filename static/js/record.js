@@ -241,21 +241,41 @@ const getDetail = function(matchID, matchTime) {
         // damage manipulation
         () => {
             let damages = detailContainer.querySelectorAll('.damage-info');
+            let blueTotalDamages = 0;
+            let redTotalDamages = 0;
             damages = [...damages];
             damages.sort((a, b) => {
                 let aDamage = parseInt(a.firstElementChild.dataset.val);
                 let bDamage = parseInt(b.firstElementChild.dataset.val);
                 return bDamage - aDamage;
             })
-            let counter = 1;
+            // let counter = 1;
             let maximumDamage = parseInt(damages[0].firstElementChild.dataset.val);
             damages.forEach(elem => {
-                // 등수 표시 및 그래프
-                elem.firstElementChild.nextElementSibling.textContent = counter + '등';
-                counter++;
-                let damageRatio = parseInt(parseInt(elem.firstElementChild.dataset.val) / maximumDamage * 100);
+                // 그래프
+                // elem.querySelector('.damage-rank').textContent = counter + '등';
+                // counter++;
+                if (elem.closest('.blue-team')) {
+                    blueTotalDamages += parseInt(elem.firstElementChild.dataset.val);
+                } else {
+                    redTotalDamages += parseInt(elem.firstElementChild.dataset.val);
+                }
+                let garphRatio = parseInt(parseInt(elem.firstElementChild.dataset.val) / maximumDamage * 100);
                 const fill = elem.querySelector('.fill');
-                fill.style.width = damageRatio.toString() + '%';
+                fill.style.width = garphRatio.toString() + '%';
+                
+            })
+            damages.forEach(elem => {
+                // 딜 비중
+                const graph = elem.querySelector('.empty-fill');
+                if (elem.closest('.blue-team')) {
+                    graph.dataset.tippyContent = elem.firstElementChild.textContent + '/ ' + blueTotalDamages.toLocaleString() + ' '
+                    + '(' + Math.round((parseInt(elem.firstElementChild.dataset.val)/blueTotalDamages*100))  +'%' + ')';
+                } else {
+                    graph.dataset.tippyContent = elem.firstElementChild.textContent + '/ ' + redTotalDamages.toLocaleString() + ' '
+                    + '(' + Math.round((parseInt(elem.firstElementChild.dataset.val)/redTotalDamages*100))  +'%' + ')';
+                }
+                
                 
             })
             for (let i = 1; i <= 3; i++) {
