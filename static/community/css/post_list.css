@@ -1,0 +1,141 @@
+.content-wrap{
+    overflow: hidden;
+    max-width: 1044px;
+    margin: 20px auto;
+    width: 100%;
+}
+
+.post-list-wrap {
+    float: left;
+    box-sizing: border-box;
+    width: 728px;
+}
+
+.post-header {
+    overflow: hidden;
+    position: relative;
+    width: 728px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+    margin-bottom: 10px;
+    padding: 17.5px 0;
+}
+
+.post-editor-wrap {
+    float: right;
+    width: 20%;
+    position: relative;
+}
+
+.post-editor-button {
+    background-color: transparent;
+    border: 0;
+    float: right;
+    margin-right: 10px;
+}
+
+.post-search-wrap {
+    position: relative;
+    width: 80%;
+    float: left;
+}
+
+.post-search-select {
+    float: left;
+    display:block;
+    border-radius: 4px;
+    margin-left: 10px;
+    width: 15%;
+    padding: 5px 0 6px 8px;
+}
+
+.post-search-input {
+    float: left;
+    margin-left: 5px;
+    border-width: 1px;
+}
+
+.post-search-button {
+    float:left;
+    background-color: transparent;
+    border:0;
+    line-height: 100%;
+}
+
+.search-image {
+    margin-top: 3px;
+    width: 23px;
+}
+
+
+
+@media only screen and (min-width: 1024px) {
+    .post-list-item-content {
+        min-height: 76px;
+    }
+}
+
+.post-list-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+}
+
+.post-item-container {
+    display: flex;
+    height: 50px;
+    width: 100%;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+}
+
+.post-item-container:hover {
+    background-color: #f6f6f6;
+}
+
+.post-item-vote {
+    flex-basis: 10%;
+    display:flex;
+    align-items: center;
+    padding-left: 5px;
+}
+.post-item-vote > img {
+    margin-right: 5px;
+}
+
+.post-item-content {
+    flex-basis: 40%;
+    display:flex;
+    align-items: center;
+}
+
+.post-item-content > a {
+    color: #000000;
+}
+
+.comment-count {
+    color: #46cfa7;
+}
+
+.post-item-date {
+    flex-basis: 30%;
+    display:flex;
+    align-items: center;
+}
+.post-item-user {
+    flex-basis: 20%;
+    display:flex;
+    align-items: center;
+}
+
+.post-paging {
+    float: right;
+    width:100%;
+    margin-top: 10px;
+}
+
+.page-item > a {
+    color: #000000;
+}

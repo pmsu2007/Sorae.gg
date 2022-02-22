@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css_link %}
+<link rel="stylesheet" href="{% static 'community/css/post_editor.css' %}">
+{% endblock css_link %}
+
+{% block content %}
+<div class="content-wrap">
+    {% include "sidebar.html" %}
+    <!-- editor start -->
+    <form action="{% url 'community:post_create' %}" method="post" class="post-form my-3">
+        {% csrf_token %}
+        <div class="editor">
+            <div class="editor-header">
+                글 쓰기
+            </div>
+            <div class="editor-sort">
+                <label class="editor-sort-label">
+                    <select name="page" class="form-select-sm editor-select">
+                        <option value="free">
+                            자유 게시판
+                        </option>
+                        <option value="bug">
+                            버그 및 건의
+                        </option>
+                    </select>
+                </label>
+            </div>
+            <div class="editor-title">
+                <label class="editor-title-label">
+                    <input type="text" name="title" class="editor-title-input" placeholder="제목"
+                    autocomplete="off" required="true">
+                </label>
+            </div>
+            <div class="editor-content">
+                <label class="editor-content-label">
+                    <textarea type="text" name="content" class="editor-content-input" placeholder="본문"
+                              autocomplete="off" spellcheck="false" required="true"></textarea>
+                </label>
+            </div>
+            <div class="editor-button">
+                <div class="editor-button-item">
+                    <button type="submit" class="btn btn-primary">등록</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- editor end -->
+</div>
+{% endblock content %}
