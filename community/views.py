@@ -2,7 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.utils import timezone
 from community.models import Post, Comment
+from community.forms import PostForm, CommentForm
 from django.core.paginator import Paginator
+
 
 
 
@@ -33,16 +35,32 @@ def detail(request, post_id):
 def comment_create(request, post_id):
 
     post = get_object_or_404(Post, pk=post_id)
-    comment = Comment(post=post, content=request.POST.get('content'), create_date=timezone.now())
-    comment.save()
-    return redirect('community:detail', post_id=post.id)
+
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.create_date = timezone.now()
+            answer.question = post
+            answer.post_id = post.id
+            answer.save()
+            return redirect('community:detail', post_id=post.id)
+    else:
+        form = CommentForm()
+    context = {'post': post, 'form': form}
+    return render(request, 'community/post_detail.html', context)
 
 
-def post_create(request):
-    post = Post(subject=request.POST.get('subject'), content=request.POST.get('content'), create_date=timezone.now())
-    post.save()
-    return redirect('community:index')
+def post_editor(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.create_date = timezone.now()
+            question.save()
+            return redirect('community:list')
+    else:
+        form = PostForm()
+        context = {'form': form}
+        return render(request, 'community/post_editor.html', context)
 
-
-def editor(request):
-    return render(request, 'community/post_editor.html')

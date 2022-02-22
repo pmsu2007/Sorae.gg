@@ -4,7 +4,11 @@
         <div class="sidebar-header">
             <div class="sidebar-button">
                 <div class="sidebar-button-item">
-                    <a href="{% url 'community:login' %}" class="button">로그인</a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'common:logout' %}" class="button">Logout</a>
+                    {% else %}
+                    <a href="{% url 'common:login' %}" class="button">Login</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

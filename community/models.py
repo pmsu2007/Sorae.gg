@@ -5,8 +5,6 @@ class Post(models.Model):
     subject = models.CharField(max_length=200)
     content = models.TextField()
     create_date = models.DateTimeField()
-    vote = models.SmallIntegerField()
-    user_name = models.CharField(max_length=20)
 
     def __str__(self):
         return self.subject

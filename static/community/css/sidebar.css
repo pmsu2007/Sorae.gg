@@ -1,3 +1,9 @@
+@media screen and (max-width: 1060px) {
+    .sidebar {
+        display:none;
+    }
+}
+
 .sidebar {
     float: left;
     width: 300px;

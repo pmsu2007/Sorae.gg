@@ -9,8 +9,20 @@
 <div class="content-wrap">
     {% include "sidebar.html" %}
     <!-- editor start -->
-    <form action="{% url 'community:post_create' %}" method="post" class="post-form my-3">
+    <form method="post" class="post-form my-3">
         {% csrf_token %}
+         <!-- 오류표시 Start -->
+        {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+            {% for field in form %}
+                {% if field.errors %}
+                <strong>{{ field.label }}</strong>
+                {{ field.errors }}
+                {% endif %}
+            {% endfor %}
+            </div>
+        {% endif %}
+        <!-- 오류표시 End -->
         <div class="editor">
             <div class="editor-header">
                 글 쓰기
@@ -29,14 +41,15 @@
             </div>
             <div class="editor-title">
                 <label class="editor-title-label">
-                    <input type="text" name="title" class="editor-title-input" placeholder="제목"
-                    autocomplete="off" required="true">
+                    <input type="text" name="subject" class="editor-title-input" placeholder="제목"
+                    autocomplete="off" required="true" value="{{ form.subject.value|default_if_none:'' }}">
                 </label>
             </div>
             <div class="editor-content">
                 <label class="editor-content-label">
                     <textarea type="text" name="content" class="editor-content-input" placeholder="본문"
-                              autocomplete="off" spellcheck="false" required="true"></textarea>
+                              autocomplete="off" spellcheck="false" required="true"
+                              value="form.content.value|default_if_none:''"></textarea>
                 </label>
             </div>
             <div class="editor-button">

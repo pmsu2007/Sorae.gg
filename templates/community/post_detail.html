@@ -24,17 +24,17 @@
                     몇분 전
                 </div>
                 <div class="header-user">
-                    {{ post.user_name }}
+                    작성자
                 </div>
                 <div class="header-info">
                     <div class="header-info-item">
                         조회 180
                     </div>
                     <div class="header-info-item">
-                        댓글 {{ post.comment_set.count }}
+                        댓글수 {{ post.comment_set.count }}
                     </div>
                     <div class="header-info-item">
-                        추천 {{ post.vote }}
+                        추천수
                     </div>
                 </div>
             </div>
@@ -65,9 +65,21 @@
             </div>
             <form action="{% url 'community:comment_create' post.id %}" method="post">
                 {% csrf_token %}
+                <!-- Error Start -->
+                {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for field in form %}
+                        {% if field.errors %}
+                            <strong>{{ field.label }}</strong>
+                            {{ field.errors }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <!-- Error End -->
                 <div class="comment-editor-wrap">
                     <div class="comment-editor">
-                        <textarea name="comment" class="comment-editor-input" placeholder="댓글"
+                        <textarea name="content" class="comment-editor-input" placeholder="댓글"
                               autocomplete="off" spellcheck="false" required="true" ></textarea>
                     </div>
                     <div class="comment-editor-submit">

@@ -34,7 +34,7 @@
                 </form>
             </div>
             <div class="post-editor-wrap">
-                <form action="{% url 'community:editor' %}" method="post" id="post-editor">
+                <form action="{% url 'community:editor' %}" method="get" id="post-editor">
                     {% csrf_token %}
                     <button class="post-editor-button">
                         <img src="{% static 'community/images/pencil.png'%}" width="28" >
@@ -50,7 +50,7 @@
                 <div class="post-item-container">
                     <div class="post-item-vote">
                         <img src="{% static 'community/images/vote-icon.png'%}" width="14" >
-                        <span>{{post.vote}}</span>
+                        <span>추천 수</span>
                     </div>
                     <div class="post-item-content">
                         <a href="{% url 'community:detail' post.id %}">
@@ -64,7 +64,7 @@
                         <span>{{ post.create_date }}</span>
                     </div>
                     <div class="post-item-user">
-                        <span>{{ post.user_name }}</span>
+                        <span>작성자</span>
                     </div>
                 </div>
                 {% endfor %}

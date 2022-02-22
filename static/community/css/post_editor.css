@@ -2,7 +2,13 @@
     overflow: hidden;
     max-width: 1044px;
     margin: 20px auto;
-    width: 100%;
+}
+
+@media screen and (max-width: 1060px) {
+    .content-wrap {
+        display: flex;
+        justify-content: center;
+    }
 }
 
 .editor {
