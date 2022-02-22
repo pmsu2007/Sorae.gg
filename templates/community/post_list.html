@@ -77,11 +77,11 @@
                 <!-- previous page -->
                 {% if post_list.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ post_list.previous_page_number }}">이전</a>
+                    <a class="page-link" href="?page={{ post_list.previous_page_number }}">◀</a>
                 </li>
                 {% else %}
                 <li class="page-item disabled">
-                    <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+                    <a class="page-link" tabindex="-1" aria-disabled="true" href="#">◀</a>
                 </li>
                 {% endif %}
                 <!-- page list -->
@@ -101,11 +101,11 @@
                 <!-- next page -->
                 {% if post_list.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ post_list.next_page_number }}">다음</a>
+                    <a class="page-link" href="?page={{ post_list.next_page_number }}">▶</a>
                 </li>
                 {% else %}
                 <li class="page-item disabled">
-                    <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+                    <a class="page-link" tabindex="-1" aria-disabled="true" href="#">▶</a>
                 </li>
                 {% endif %}
             </ul>

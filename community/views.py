@@ -2,7 +2,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.utils import timezone
 from community.models import Post, Comment
-from community.forms import PostForm
 from django.core.paginator import Paginator
 
 
@@ -46,5 +45,4 @@ def post_create(request):
 
 
 def editor(request):
-    form = PostForm()
-    return render(request, 'community/post_editor.html', {'form': form})
+    return render(request, 'community/post_editor.html')

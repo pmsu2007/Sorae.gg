@@ -39,6 +39,10 @@
     color: #ffffff;
 }
 
+.sidebar-button-item > .button:hover {
+    background-color: #424242;
+}
+
 .sidebar-menu {
     border-top: 1px solid #ebeef1;
     padding: 16px 16px 16px;
