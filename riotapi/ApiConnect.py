@@ -8,7 +8,6 @@ class ApiConnect:
     """
 
     def __init__(self):
-
         self._apiKey = ""
 
     def getHeader (self):
