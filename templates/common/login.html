@@ -19,6 +19,8 @@
         <div class="login-content">
             <form method="post" class="post-form" action="{% url 'common:login' %}">
                 {% csrf_token %}
+                <!-- login success, jump to URL -->
+                <input type="hidden" name="next" value="{{ next }}">
                 {% include "form_errors.html" %}
                 <div class="form-group">
                     <label for="username">ID</label>
