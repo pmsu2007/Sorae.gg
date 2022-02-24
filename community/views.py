@@ -76,6 +76,12 @@ def post_delete(request, post_id):
 
 
 @login_required(login_url='common:login')
+def post_vote(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    post.voter.add(request.user)
+    return redirect('community:detail', post_id=post.id)
+
+@login_required(login_url='common:login')
 def comment_create(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
 
@@ -98,4 +104,10 @@ def comment_create(request, post_id):
 def comment_delete(request, post_id ,comment_id):
     comment = get_object_or_404(Comment, pk=comment_id)
     comment.delete()
+    return redirect('community:detail', post_id=post_id)
+
+@login_required(login_url='common:login')
+def comment_vote(request, post_id, comment_id):
+    comment = get_object_or_404(Comment, pk=comment_id)
+    comment.voter.add(request.user)
     return redirect('community:detail', post_id=post_id)

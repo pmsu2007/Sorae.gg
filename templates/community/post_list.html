@@ -50,7 +50,7 @@
                 <div class="post-item-container">
                     <div class="post-item-vote">
                         <img src="{% static 'community/images/vote-icon.png'%}" width="14" >
-                        <span>추천 수</span>
+                        <span>{{ post.voter.count }}</span>
                     </div>
                     <div class="post-item-content">
                         <a href="{% url 'community:detail' post.id %}">

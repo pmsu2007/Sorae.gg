@@ -34,7 +34,7 @@
                         댓글수 {{ post.comment_set.count }}
                     </div>
                     <div class="header-info-item">
-                        추천수
+                        추천수 {{ post.voter.count }}
                     </div>
                 </div>
             </div>
@@ -60,10 +60,13 @@
             </div>
         </div>
         <div class="detail-votebox-wrap">
+            <div class="detail-votebox-count">
+                <span>{{ post.voter.count }}</span>
+            </div>
             <div class="detail-votebox">
-                    <a class="votebox" href="#">
-                        추천
-                    </a>
+                <a class="votebox recommend" href="#" data-uri="{% url 'community:post_vote' post.id %}">
+                    추천
+                </a>
             </div>
         </div>
 
@@ -102,14 +105,23 @@
                 </div>
             </form>
             <div id="comment-list-container">
-                    {% for comment in post.comment_set.all %}
-                    <div class="comment-item-container">
+                {% for comment in post.comment_set.all %}
+                <div class="comment-item-container">
+                    <div class="comment-item-vote">
+                        <a href="#" data-uri="{% url 'community:comment_vote' post.id comment.id %}" class="recommend">
+                           <img src="{% static 'community/images/vote-icon.png' %}" width="20">
+                        </a>
+                    </div>
+                    <div class="comment-item">
                         <div class="comment-item-meta">
                             <div class="comment-item-user">
                                 {{ comment.author }}
                             </div>
                             <div class="comment-item-date">
                                 몇분 전
+                            </div>
+                            <div class="comment-item-vote-count">
+                                추천 수 {{ comment.voter.count }}
                             </div>
                             {% if request.user == comment.author %}
                             <div class="comment-item-delete">
@@ -122,7 +134,8 @@
                             {{ comment.content }}
                         </div>
                     </div>
-                    {% endfor %}
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -136,6 +149,12 @@
 $(document).ready(function(){
     $(".delete").on('click', function() {
         if(confirm("글을 삭제하시겠습니까?")) {
+            location.href = $(this).data('uri');
+        }
+    });
+
+    $(".recommend").on('click', function() {
+        if(confirm("글을 추천하시겠습니까?")) {
             location.href = $(this).data('uri');
         }
     });
