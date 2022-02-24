@@ -1,10 +1,12 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.views import generic
 from django.utils import timezone
 from community.models import Post, Comment
+from django.db.models import Q
 from community.forms import PostForm, CommentForm
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+
 
 
 '''
@@ -14,15 +16,24 @@ from django.contrib.auth.decorators import login_required
 
 def post_list(request):
     page = request.GET.get('page', '1')
+    keyword = request.GET.get('keyword', '')
+    target = request.GET.get('target', '')
 
     # 조회
-    postList = Post.objects.order_by('-create_date')
+    post_list = Post.objects.order_by('-create_date')
+    if keyword:
+        if target == "subject":
+            post_list = post_list.filter(Q(subject__icontains=keyword)).distinct()
+        elif target == "content":
+            post_list = post_list.filter(Q(content__icontains=keyword)).distinct()
+        elif target == "user_name":
+            post_list = post_list.filter(Q(author__username__icontains=keyword)).distinct()
 
     # 페이징 처리
-    paginator = Paginator(postList, 15)  # 페이지당 10개의 Post 출력
+    paginator = Paginator(post_list, 15)  # 페이지당 10개의 Post 출력
     pageObj = paginator.get_page(page)
 
-    context = {'post_list': pageObj}
+    context = {'post_list': pageObj, 'page': page, 'keyword': keyword, 'target': target}
     return render(request, 'community/post_list.html', context)
 
 
@@ -94,11 +105,12 @@ def comment_create(request, post_id):
             comment.post_id = post.id
             comment.author = request.user
             comment.save()
-            return redirect('community:detail', post_id=post.id)
+            return redirect('{}#comment_{}'.format(resolve_url('community:detail', post_id=post.id), comment.id))
     else:
         form = CommentForm()
     context = {'post': post, 'form': form}
     return render(request, 'community/post_detail.html', context)
+
 
 @login_required(login_url='common:login')
 def comment_delete(request, post_id ,comment_id):
@@ -106,8 +118,9 @@ def comment_delete(request, post_id ,comment_id):
     comment.delete()
     return redirect('community:detail', post_id=post_id)
 
+
 @login_required(login_url='common:login')
 def comment_vote(request, post_id, comment_id):
     comment = get_object_or_404(Comment, pk=comment_id)
     comment.voter.add(request.user)
-    return redirect('community:detail', post_id=post_id)
+    return redirect('{}#comment_{}'.format(resolve_url('community:detail', post_id=post_id), comment.id))

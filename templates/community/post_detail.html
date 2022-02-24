@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load community_filter %}
 
 {% block css_link %}
 <link rel="stylesheet" href="{% static 'community/css/post_detail.css' %}">
@@ -56,7 +57,7 @@
         <!-- detail header end -->
         <div class="detail-content-wrap">
             <div class="detail-content">
-                    {{ post.content }}
+                    {{ post.content|mark }}
             </div>
         </div>
         <div class="detail-votebox-wrap">
@@ -106,6 +107,7 @@
             </form>
             <div id="comment-list-container">
                 {% for comment in post.comment_set.all %}
+                <a id="comment_{{ comment.id }}"></a>
                 <div class="comment-item-container">
                     <div class="comment-item-vote">
                         <a href="#" data-uri="{% url 'community:comment_vote' post.id comment.id %}" class="recommend">
@@ -145,19 +147,5 @@
 {% endblock content %}
 
 {% block script %}
-<script type='text/javascript'>
-$(document).ready(function(){
-    $(".delete").on('click', function() {
-        if(confirm("글을 삭제하시겠습니까?")) {
-            location.href = $(this).data('uri');
-        }
-    });
-
-    $(".recommend").on('click', function() {
-        if(confirm("글을 추천하시겠습니까?")) {
-            location.href = $(this).data('uri');
-        }
-    });
-});
-</script>
+<script type="text/javascript" src="{% static 'community/js/post_detail.js' %}"></script>
 {% endblock %}

@@ -8,6 +8,7 @@ class Post(models.Model):
     create_date = models.DateTimeField()
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_post')
     voter = models.ManyToManyField(User, related_name='voter_post')
+    type = models.CharField(max_length=10)
 
     def __str__(self):
         return self.subject
