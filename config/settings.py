@@ -129,7 +129,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # https://docs.djangoproject.com/en/4.0/ref/contrib/auth/
 
 # Login URL
-LOGIN_REDIRECT_URL = '/community/'
+LOGIN_REDIRECT_URL = '/community/list/all/'
 
 # Logout URL
-LOGOUT_REDIRECT_URL = '/community/'
+LOGOUT_REDIRECT_URL = '/community/list/all/'

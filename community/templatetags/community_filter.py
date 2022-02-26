@@ -45,7 +45,7 @@ def elapse_date(value):
 @register.filter()
 def post_type(value):
 
-    if value == "developer":
+    if value == "develop":
         return "개발자"
     elif value == "free":
         return "자유"

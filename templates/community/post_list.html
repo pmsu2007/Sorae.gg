@@ -67,11 +67,11 @@
                     </div>
                     <div class="post-item-content">
                         <a href="{% url 'community:detail' post.id %}">
-                            <span class="post-title">{{ post.subject }}</span>
-                            {% if post.comment_set.count > 0 %}
-                            <span class="comment-count">[{{ post.comment_set.count }}]</span>
-                            {% endif %}
+                            {{ post.subject }}
                         </a>
+                        {% if post.comment_set.count > 0 %}
+                            <span class="comment-count">[{{ post.comment_set.count }}]</span>
+                        {% endif %}
                     </div>
                     <div class="post-item-date">
                         <span>{{ post.create_date|elapse_date }}</span>
@@ -127,11 +127,10 @@
     </div>
     <!-- content end -->
 </div>
-<form id="searchForm" method="get" action="{% url 'community:list' %}">
+<form id="searchForm" method="get" action="{% url 'community:list' category %}">
     <input type="hidden" id="target" name="target">
     <input type="hidden" id="keyword" name="keyword" value="{{ keyword|default_if_none:'' }}">
     <input type="hidden" id="page" name="page" value="{{ page }}">
-    <input type="hidden" id="type" name="type" value="{{ type }}">
     <input type="hidden" id="sort" name="sort" value="{{ sort }}">
 </form>
 {% endblock content %}

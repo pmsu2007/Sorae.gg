@@ -19,7 +19,7 @@
             </div>
             <div class="detail-header-meta">
                 <div class="header-page">
-                    {{ post.type|post_type }}
+                    {{ post.category_name|post_type }}
                 </div>
                 <div class="header-date">
                     {{ post.create_date|elapse_date }}
@@ -142,7 +142,6 @@
         </div>
     </div>
 </div>
-
 
 {% endblock content %}
 

@@ -12,13 +12,6 @@ $(document).ready(function() {
        $("#searchForm").submit();
    });
 
-   // post type
-   $(".post-type").on('click', function() {
-       $("#type").val($(this).data("type"));
-       $("#page").val(1);
-       $("#searchForm").submit();
-   });
-
    // post list sort
    $(".post-sortbox").on('click', function() {
        $("#sort").val($(this).data("sort"));

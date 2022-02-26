@@ -4,8 +4,8 @@ from django.contrib.auth import views as auth_views
 app_name = 'community'
 
 urlpatterns = [
-    path('', views.post_list, name='list'), # sorae.gg/community/ (list)
-    path('<int:post_id>/', views.post_detail, name='detail'), # sorae.gg/community/post_id
+    path('list/<str:category>/', views.post_list, name='list'), # sorae.gg/community/ (list)
+    path('detail/<int:post_id>/', views.post_detail, name='detail'), # sorae.gg/community/post_id
     path('editor/', views.post_editor, name='editor'), # sorae.gg/community/editor
     path('<int:post_id>/editor/', views.post_modify, name='modify'),
     path('<int:post_id>/delete/', views.post_delete, name='post_delete'),

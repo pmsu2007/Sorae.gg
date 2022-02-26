@@ -7,7 +7,6 @@
 
 {% block content %}
 <div class="content-wrap">
-    {% include "sidebar.html" %}
     <!-- editor start -->
     <form method="post" class="post-form my-3">
         {% csrf_token %}
@@ -29,9 +28,9 @@
             </div>
             <div class="editor-sort">
                 <label class="editor-sort-label">
-                    <select name="type" class="form-select-sm editor-select">
+                    <select name="category_name" class="form-select-sm editor-select">
                         {% if user.is_superuser %}
-                        <option value="developer">
+                        <option value="develop">
                             개발자 소식
                         </option>
                         {% endif %}

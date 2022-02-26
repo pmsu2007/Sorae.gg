@@ -10,4 +10,5 @@ $(document).ready(function(){
             location.href = $(this).data('uri');
         }
     });
+
 });

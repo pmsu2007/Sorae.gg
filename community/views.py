@@ -14,22 +14,24 @@ from django.contrib.auth.decorators import login_required
 '''
 
 
-def post_list(request):
+def post_list(request, category):
     page = request.GET.get('page', '1')
     keyword = request.GET.get('keyword', '')
     target = request.GET.get('target', '')
     type = request.GET.get('type', '')
     sort = request.GET.get('sort', '')
 
+    # 게시판 종류
+    post_list = Post.objects.all()
+
+    if category != "all":
+        post_list = Post.objects.filter(category_name=category)
+
     # 정렬
     if sort == "popular":
-        post_list = Post.objects.annotate(num_voter=Count('voter')).order_by('-num_voter', '-create_date')
+        post_list = post_list.annotate(num_voter=Count('voter')).order_by('-num_voter', '-create_date')
     else:
-        post_list = Post.objects.order_by('-create_date')
-
-    # 게시판 종류
-    if type:
-        post_list = post_list.filter(type=type)
+        post_list = post_list.order_by('-create_date')
 
     # 검색
     if keyword:
@@ -44,7 +46,7 @@ def post_list(request):
     paginator = Paginator(post_list, 15)  # 페이지당 10개의 Post 출력
     pageObj = paginator.get_page(page)
 
-    context = {'post_list': pageObj, 'page': page, 'keyword': keyword, 'type': type, 'sort': sort}
+    context = {'post_list': pageObj, 'page': page, 'keyword': keyword, 'type': type, 'sort': sort, 'category': category}
     return render(request, 'community/post_list.html', context)
 
 
@@ -66,7 +68,7 @@ def post_editor(request):
             post.create_date = timezone.now()
             post.author = request.user
             post.save()
-            return redirect('community:list')
+            return redirect('community:list', category=post.category_name)
     else:
         form = PostForm()
         context = {'form': form}
@@ -94,7 +96,7 @@ def post_modify(request, post_id):
 def post_delete(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     post.delete()
-    return redirect('community:list')
+    return redirect('community:list', category=post.category_name)
 
 
 @login_required(login_url='common:login')
