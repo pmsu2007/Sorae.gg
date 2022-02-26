@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load summoner_filter %}
+{% load community_filter %}
 
 {% block css_link %}
 <link rel="stylesheet" href="{% static 'community/css/post_list.css' %}">
@@ -15,32 +15,44 @@
     <!-- content start -->
     <div class="post-list-wrap">
         <!-- post header start -->
-        <div class="post-header">
-            <div class="post-search-wrap">
-                <select name="target" class="form-select-sm post-search-select target">
-                    <option value="subject">
-                        제목
-                    </option>
-                    <option value="content">
-                        내용
-                    </option>
-                    <option value="user_name">
-                        작성자
-                    </option>
-                </select>
-                <input type="text" name="keyword" class="form-control-sm post-search-input keyword" placeholder="검색"
-                       value="{{ keyword|default_if_none:'' }}">
-                <button class="post-search-button" id="search_button">
-                    <img src="{% static 'community/images/search-icon.png'%}" class="search-image" alt="검색">
-                </button>
-            </div>
-            <div class="post-editor-wrap">
-                <form action="{% url 'community:editor' %}" method="get" id="post-editor">
-                    {% csrf_token %}
-                    <button class="post-editor-button">
-                        <img src="{% static 'community/images/pencil.png'%}" width="28" >
+        <div class="post-header-wrap">
+            <div class="post-header">
+                <div class="post-search-wrap">
+                    <select name="target" class="form-select-sm post-search-select target">
+                        <option value="subject">
+                            제목
+                        </option>
+                        <option value="content">
+                            내용
+                        </option>
+                        <option value="user_name">
+                            작성자
+                        </option>
+                    </select>
+                    <input type="text" name="keyword" class="form-control-sm post-search-input keyword" placeholder="검색"
+                           value="{{ keyword|default_if_none:'' }}">
+                    <button class="post-search-button" id="search_button">
+                        <img src="{% static 'community/images/search-icon.png'%}" class="search-image" alt="검색">
                     </button>
-                </form>
+                </div>
+                <div class="post-editor-wrap">
+                    <form action="{% url 'community:editor' %}" method="get" id="post-editor">
+                        {% csrf_token %}
+                        <button class="post-editor-button">
+                            <img src="{% static 'community/images/pencil.png'%}" width="28" >
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="post-sortbox-wrap">
+                <div class="post-sortbox" href="#" data-sort="recent">
+                    <img src="{% static 'community/images/time-icon.png' %}" width="20">
+                    <span>최신순</span>
+                </div>
+                <div class="post-sortbox" href="#" data-sort="popular">
+                    <img src="{% static 'community/images/popular-icon.png' %}" width="20">
+                    <span>인기순</span>
+                </div>
             </div>
         </div>
         <!-- post header end-->
@@ -62,7 +74,7 @@
                         </a>
                     </div>
                     <div class="post-item-date">
-                        <span>{{ post.create_date }}</span>
+                        <span>{{ post.create_date|elapse_date }}</span>
                     </div>
                     <div class="post-item-user">
                         <span>{{ post.author.username }}</span>
@@ -116,9 +128,11 @@
     <!-- content end -->
 </div>
 <form id="searchForm" method="get" action="{% url 'community:list' %}">
-    <input type="hidden" id="target" name="target" value=" {{ target }}">
+    <input type="hidden" id="target" name="target">
     <input type="hidden" id="keyword" name="keyword" value="{{ keyword|default_if_none:'' }}">
     <input type="hidden" id="page" name="page" value="{{ page }}">
+    <input type="hidden" id="type" name="type" value="{{ type }}">
+    <input type="hidden" id="sort" name="sort" value="{{ sort }}">
 </form>
 {% endblock content %}
 

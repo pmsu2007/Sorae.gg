@@ -29,7 +29,12 @@
             </div>
             <div class="editor-sort">
                 <label class="editor-sort-label">
-                    <select name="page" class="form-select-sm editor-select">
+                    <select name="type" class="form-select-sm editor-select">
+                        {% if user.is_superuser %}
+                        <option value="developer">
+                            개발자 소식
+                        </option>
+                        {% endif %}
                         <option value="free">
                             자유 게시판
                         </option>

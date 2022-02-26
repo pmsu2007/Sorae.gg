@@ -10,10 +10,10 @@
     <div class="signup">
         <div class="signup-header">
             <div class="signup-header-title">
-                Sign Up
+                회원가입
             </div>
             <div class="signup-header-login">
-                <a href="{% url 'common:login' %}">login</a>
+                <a href="{% url 'common:login' %}">로그인</a>
             </div>
         </div>
         <div class="signup-content">
@@ -21,28 +21,28 @@
                 {% csrf_token %}
                 {% include "form_errors.html" %}
                     <div class="form-group">
-                        <label for="username">ID</label>
+                        <label for="username">아이디</label>
                         <input type="text" class="form-control" name="username" id="username"
                                value="{{ form.username.value|default_if_none:'' }}">
                     </div>
                     <div class="form-group">
-                        <label for="password1">Password</label>
+                        <label for="password1">비밀번호</label>
                         <input type="password" class="form-control" name="password1" id="password1"
                                value="{{ form.password1.value|default_if_none:'' }}">
                     </div>
                     <div class="form-group">
-                        <label for="password2">Confirm Password</label>
+                        <label for="password2">비밀번호 확인</label>
                         <input type="password" class="form-control" name="password2" id="password2"
                                value="{{ form.password2.value|default_if_none:'' }}">
                     </div>
                     <div class="form-group">
-                        <label for="email">Email</label>
+                        <label for="email">이메일</label>
                         <input type="text" class="form-control" name="email" id="email"
                                value="{{ form.email.value|default_if_none:'' }}">
                     </div>
                     <div class="form-button-wrap">
                         <div class="form-button">
-                            <button type="submit" class="btn btn-primary">SAVE</button>
+                            <button type="submit" class="btn btn-primary">가입</button>
                         </div>
                     </div>
             </form>

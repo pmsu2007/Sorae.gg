@@ -16,21 +16,22 @@
     box-sizing: border-box;
     width: 728px;
 }
+.post-header-wrap {
+    display: flex;
+    flex-direction: column;
+}
+
 
 .post-header {
-    overflow: hidden;
-    position: relative;
+    display: flex;
     width: 728px;
     background-color: #ffffff;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
-    margin-bottom: 10px;
     padding: 17.5px 0;
 }
 
 .post-editor-wrap {
-    float: right;
-    width: 20%;
-    position: relative;
+    flex-basis: 20%;
 }
 
 .post-editor-button {
@@ -41,14 +42,11 @@
 }
 
 .post-search-wrap {
-    position: relative;
-    width: 80%;
-    float: left;
+    flex-basis: 80%;
+    display: flex;
 }
 
 .post-search-select {
-    float: left;
-    display:block;
     border-radius: 4px;
     margin-left: 10px;
     width: 15%;
@@ -56,23 +54,51 @@
 }
 
 .post-search-input {
-    float: left;
     margin-left: 5px;
     border-width: 1px;
 }
 
 .post-search-button {
-    float:left;
     background-color: transparent;
     border:0;
     line-height: 100%;
 }
+
+.post-search-button > img {
+    background-color: transparent;
+}
+
 
 .search-image {
     margin-top: 3px;
     width: 23px;
 }
 
+.post-sortbox-wrap {
+    display: flex;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+    margin-bottom: 10px;
+}
+
+.post-sortbox {
+    padding: 10px 10px;
+    margin: 5px 5px;
+}
+
+.post-sortbox:hover {
+    background-color: #f6f6f6;
+}
+
+.post-sortbox > span {
+    font-weight: 400;
+    line-height: 24px;
+    vertical-align: middle;
+    font-size: 20px;
+    padding-left: 5px;
+}
+.post-sortbox > img {
+    vertical-align: middle;
+}
 
 
 @media only screen and (min-width: 1024px) {
@@ -85,7 +111,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    width: 100%;
+    min-width: 0;
     background-color: #ffffff;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
 }
@@ -93,7 +119,6 @@
 .post-item-container {
     display: flex;
     height: 50px;
-    width: 100%;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
 }
 
@@ -105,16 +130,19 @@
     flex-basis: 10%;
     display:flex;
     align-items: center;
-    padding-left: 5px;
+    padding-left: 10px;
 }
 .post-item-vote > img {
     margin-right: 5px;
 }
 
 .post-item-content {
-    flex-basis: 40%;
+    flex-basis: 57%;
     display:flex;
     align-items: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .post-item-content > a {
@@ -126,9 +154,10 @@
 }
 
 .post-item-date {
-    flex-basis: 30%;
+    flex-basis: 13%;
     display:flex;
     align-items: center;
+    padding-left: 10px;
 }
 .post-item-user {
     flex-basis: 20%;

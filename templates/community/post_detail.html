@@ -19,10 +19,10 @@
             </div>
             <div class="detail-header-meta">
                 <div class="header-page">
-                    자유
+                    {{ post.type|post_type }}
                 </div>
                 <div class="header-date">
-                    몇분 전
+                    {{ post.create_date|elapse_date }}
                 </div>
                 <div class="header-user">
                     {{ post.author.username }}
@@ -39,7 +39,7 @@
                     </div>
                 </div>
             </div>
-            {% if request.user == post.author %}
+            {% if request.user == post.author or user.is_superuser %}
             <div class="detail-header-control">
                 <div class="control-button-delete">
                     <a href="#" data-uri="{% url 'community:post_delete' post.id %}" class="delete">
@@ -125,7 +125,7 @@
                             <div class="comment-item-vote-count">
                                 추천 수 {{ comment.voter.count }}
                             </div>
-                            {% if request.user == comment.author %}
+                            {% if request.user == comment.author or user.is_superuser %}
                             <div class="comment-item-delete">
                                 <a href="#" data-uri="{% url 'community:comment_delete' post.id comment.id %}"
                                 class="delete">삭제</a>

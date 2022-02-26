@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.views import generic
 from django.utils import timezone
 from community.models import Post, Comment
-from django.db.models import Q
+from django.db.models import Q, Count
 from community.forms import PostForm, CommentForm
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
@@ -18,9 +18,20 @@ def post_list(request):
     page = request.GET.get('page', '1')
     keyword = request.GET.get('keyword', '')
     target = request.GET.get('target', '')
+    type = request.GET.get('type', '')
+    sort = request.GET.get('sort', '')
 
-    # 조회
-    post_list = Post.objects.order_by('-create_date')
+    # 정렬
+    if sort == "popular":
+        post_list = Post.objects.annotate(num_voter=Count('voter')).order_by('-num_voter', '-create_date')
+    else:
+        post_list = Post.objects.order_by('-create_date')
+
+    # 게시판 종류
+    if type:
+        post_list = post_list.filter(type=type)
+
+    # 검색
     if keyword:
         if target == "subject":
             post_list = post_list.filter(Q(subject__icontains=keyword)).distinct()
@@ -33,7 +44,7 @@ def post_list(request):
     paginator = Paginator(post_list, 15)  # 페이지당 10개의 Post 출력
     pageObj = paginator.get_page(page)
 
-    context = {'post_list': pageObj, 'page': page, 'keyword': keyword, 'target': target}
+    context = {'post_list': pageObj, 'page': page, 'keyword': keyword, 'type': type, 'sort': sort}
     return render(request, 'community/post_list.html', context)
 
 
