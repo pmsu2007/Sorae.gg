@@ -1,13 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.views import generic
 from django.utils import timezone
-from community.models import Post, Comment
 from django.db.models import Q, Count
-from community.forms import PostForm, CommentForm
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-
-
+from tools.tool import *
+from community.models import *
+from community.forms import *
 
 '''
  나중에, View name 리팩토링 해야 됨 
@@ -18,10 +17,9 @@ def post_list(request, category):
     page = request.GET.get('page', '1')
     keyword = request.GET.get('keyword', '')
     target = request.GET.get('target', '')
-    type = request.GET.get('type', '')
     sort = request.GET.get('sort', '')
 
-    # 게시판 종류
+    # 카테고리
     post_list = Post.objects.all()
 
     if category != "all":
@@ -43,10 +41,10 @@ def post_list(request, category):
             post_list = post_list.filter(Q(author__username__icontains=keyword)).distinct()
 
     # 페이징 처리
-    paginator = Paginator(post_list, 15)  # 페이지당 10개의 Post 출력
+    paginator = Paginator(post_list, 15)  # 페이지당 15개의 Post 출력
     pageObj = paginator.get_page(page)
 
-    context = {'post_list': pageObj, 'page': page, 'keyword': keyword, 'type': type, 'sort': sort, 'category': category}
+    context = {'post_list': pageObj, 'page': page, 'keyword': keyword, 'sort': sort, 'category': category}
     return render(request, 'community/post_list.html', context)
 
 
@@ -55,6 +53,16 @@ def post_detail(request, post_id):
     detail 내용 출력
     """
     post = get_object_or_404(Post, pk=post_id)
+
+    # 조회수
+    ip = get_client_ip(request)
+    register = PostHits.objects.filter(ip=ip, post=post).count()
+    if register == 0:
+        h = PostHits(ip=ip, post=post)
+        h.save()
+        post.hits += 1
+        post.save()
+
     context = {'post': post}
     return render(request, 'community/post_detail.html', context)
 
@@ -104,6 +112,7 @@ def post_vote(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     post.voter.add(request.user)
     return redirect('community:detail', post_id=post.id)
+
 
 @login_required(login_url='common:login')
 def comment_create(request, post_id):

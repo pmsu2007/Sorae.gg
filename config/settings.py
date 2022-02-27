@@ -11,16 +11,25 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-import os
+import os, json
+from tools.tool import get_secret
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_ei5t4b(3=+9#*%nm_@_+@nu0p0k&8i9un*sghy-05^w4jqdu^'
+secret_file = os.path.join(BASE_DIR, 'secrets.json')
+
+with open(secret_file) as f:
+    secrets = json.loads(f.read())
+
+
+SECRET_KEY = get_secret("SECRET_KEY", secrets)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -133,3 +142,24 @@ LOGIN_REDIRECT_URL = '/community/list/all/'
 
 # Logout URL
 LOGOUT_REDIRECT_URL = '/community/list/all/'
+
+
+# Email sending settings
+
+# 메일을 호스트하는 서버
+EMAIL_HOST = 'smtp.gmail.com'
+
+# gmail과의 통신하는 포트
+EMAIL_PORT = '587'
+
+# 발신할 이메일
+EMAIL_HOST_USER = get_secret("EMAIL_HOST_USER", secrets)
+
+# 발신할 메일의 비밀번호
+EMAIL_HOST_PASSWORD = get_secret("EMAIL_HOST_PASSWORD", secrets)
+
+# TLS 보안 방법
+EMAIL_USE_TLS = True
+
+# 사이트와 관련한 자동응답을 받을 이메일 주소
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
