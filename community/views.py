@@ -54,7 +54,7 @@ def post_detail(request, post_id):
     """
     detail 내용 출력
     """
-    post = Post.objects.get(id=post_id)
+    post = get_object_or_404(Post, pk=post_id)
     context = {'post': post}
     return render(request, 'community/post_detail.html', context)
 
