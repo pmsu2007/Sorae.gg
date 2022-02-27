@@ -26,7 +26,6 @@ class SummonerAPI:
         if self.isValid():
             self._summonerName = self._ID['name']
             self._DB = UpdateDB(self._summonerName)
-        print(self._ID)
         """
         accountId : Encrypted account ID
         id : Encrypted summoner ID
