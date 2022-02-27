@@ -58,6 +58,7 @@
 
 .form-button > button:hover {
     background-color: #424242;
+    border-color: #424242;
 }
 
 .forgot-password{

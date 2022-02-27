@@ -337,7 +337,7 @@ backend/media/
 
 .pytest_cache/
 
-# Project folder
+# Sorae Project folder
 .idea
-
+secrets.json
 db.sqlite3
