@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load community_filter %}
 
 {% block css_link %}
 <link rel="stylesheet" href="{% static 'community/css/post_detail.css' %}">
@@ -18,38 +19,55 @@
             </div>
             <div class="detail-header-meta">
                 <div class="header-page">
-                    자유
+                    {{ post.category_name|post_type }}
                 </div>
                 <div class="header-date">
-                    몇분 전
+                    {{ post.create_date|elapse_date }}
                 </div>
                 <div class="header-user">
-                    {{ post.user_name }}
+                    {{ post.author.username }}
                 </div>
                 <div class="header-info">
                     <div class="header-info-item">
                         조회 180
                     </div>
                     <div class="header-info-item">
-                        댓글 {{ post.comment_set.count }}
+                        댓글수 {{ post.comment_set.count }}
                     </div>
                     <div class="header-info-item">
-                        추천 {{ post.vote }}
+                        추천수 {{ post.voter.count }}
                     </div>
                 </div>
             </div>
+            {% if request.user == post.author or user.is_superuser %}
+            <div class="detail-header-control">
+                <div class="control-button-delete">
+                    <a href="#" data-uri="{% url 'community:post_delete' post.id %}" class="delete">
+                        삭제
+                    </a>
+                </div>
+                <div class="control-button-modify">
+                    <a href="{% url 'community:modify' post.id %}">
+                        수정
+                    </a>
+                </div>
+            </div>
+            {% endif %}
         </div>
         <!-- detail header end -->
         <div class="detail-content-wrap">
             <div class="detail-content">
-                    {{ post.content }}
+                    {{ post.content|mark }}
             </div>
         </div>
         <div class="detail-votebox-wrap">
+            <div class="detail-votebox-count">
+                <span>{{ post.voter.count }}</span>
+            </div>
             <div class="detail-votebox">
-                    <a class="votebox" href="#">
-                        추천
-                    </a>
+                <a class="votebox recommend" href="#" data-uri="{% url 'community:post_vote' post.id %}">
+                    추천
+                </a>
             </div>
         </div>
 
@@ -65,9 +83,21 @@
             </div>
             <form action="{% url 'community:comment_create' post.id %}" method="post">
                 {% csrf_token %}
+                <!-- Error Start -->
+                {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for field in form %}
+                        {% if field.errors %}
+                            <strong>{{ field.label }}</strong>
+                            {{ field.errors }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <!-- Error End -->
                 <div class="comment-editor-wrap">
                     <div class="comment-editor">
-                        <textarea name="comment" class="comment-editor-input" placeholder="댓글"
+                        <textarea name="content" class="comment-editor-input" placeholder="댓글"
                               autocomplete="off" spellcheck="false" required="true" ></textarea>
                     </div>
                     <div class="comment-editor-submit">
@@ -76,25 +106,45 @@
                 </div>
             </form>
             <div id="comment-list-container">
-                    {% for comment in post.comment_set.all %}
-                    <div class="comment-item-container">
+                {% for comment in post.comment_set.all %}
+                <a id="comment_{{ comment.id }}"></a>
+                <div class="comment-item-container">
+                    <div class="comment-item-vote">
+                        <a href="#" data-uri="{% url 'community:comment_vote' post.id comment.id %}" class="recommend">
+                           <img src="{% static 'community/images/vote-icon.png' %}" width="20">
+                        </a>
+                    </div>
+                    <div class="comment-item">
                         <div class="comment-item-meta">
                             <div class="comment-item-user">
-                                유저명
+                                {{ comment.author }}
                             </div>
                             <div class="comment-item-date">
                                 몇분 전
                             </div>
+                            <div class="comment-item-vote-count">
+                                추천 수 {{ comment.voter.count }}
+                            </div>
+                            {% if request.user == comment.author or user.is_superuser %}
+                            <div class="comment-item-delete">
+                                <a href="#" data-uri="{% url 'community:comment_delete' post.id comment.id %}"
+                                class="delete">삭제</a>
+                            </div>
+                            {% endif %}
                         </div>
                         <div class="comment-item-content">
                             {{ comment.content }}
                         </div>
                     </div>
-                    {% endfor %}
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
 
-
 {% endblock content %}
+
+{% block script %}
+<script type="text/javascript" src="{% static 'community/js/post_detail.js' %}"></script>
+{% endblock %}

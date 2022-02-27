@@ -2,7 +2,13 @@
     overflow: hidden;
     max-width: 1044px;
     margin: 20px auto;
-    width: 100%;
+}
+
+@media screen and (max-width: 1060px) {
+    .content-wrap {
+        display: flex;
+        justify-content: center;
+    }
 }
 
 .post-detail-wrap {
@@ -20,8 +26,8 @@
 .detail-header-title {
     font-weight: 500;
     font-size: 24px;
+    line-height: 30px;
     padding: 10px 15px;
-    border-bottom: rgba(0, 0, 0, 0.15);
 }
 
 .detail-header-meta {
@@ -32,7 +38,7 @@
 }
 
 .header-page {
-    flex-basis: 5%;
+    flex-basis: 10%;
     text-align: center;
 }
 
@@ -56,6 +62,42 @@
     padding: 0 5px;
 }
 
+.detail-header-control {
+    display: flex;
+    border-top: 2px solid #f6f6f6;
+}
+
+.control-button-delete {
+    padding: 10px 15px;
+    margin: 10px 10px;
+    border-radius: 4px;
+    border: 1px solid #ff0000;
+}
+
+.control-button-modify {
+    padding: 10px 15px;
+    margin: 10px;
+    border-radius: 4px;
+    border: 1px solid black;
+}
+
+.control-button-delete > a {
+    color: #ff0000;
+}
+
+.control-button-delete:hover {
+    background-color: #ff9393;
+}
+
+.control-button-modify > a {
+    color: #000000;
+}
+
+.control-button-modify:hover {
+    background-color: #727272;
+}
+
+
 .detail-content-wrap {
     overflow: auto;
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 15%);
@@ -76,6 +118,20 @@
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 15%);
 }
 
+.detail-votebox-count {
+    display: table;
+    margin: 15px -15px;
+}
+
+.detail-votebox-count > span {
+    display:table-cell;
+    vertical-align: middle;
+    border: 1px solid #000000;
+    padding: 0 15px;
+    font-size: 20px;
+    font-weight: 500;
+}
+
 .detail-votebox {
     margin: 15px;
     line-height: 24px;
@@ -85,7 +141,6 @@
     display: inline-block;
     color: #ffffff;
     background-color: #000000;
-    border-radius: 4px;
     padding: 10px 10px;
 }
 
@@ -145,9 +200,7 @@
 .comment-submit {
     width: 100%;
     min-height: 70px;
-    border-radius: 0px;
     border-width: 1px;
-    border-color: #ffffff;
     background-color: #000000;
     color:#ffffff;
     font-size: 20px;
@@ -161,12 +214,29 @@
     display: flex;
     flex-direction: column;
 }
-
 .comment-item-container {
+    display: flex;
+}
+
+.comment-item-vote {
+    margin: 10px 0 0 0;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 15%);
+    display: flex;
+    align-content: center;
+    flex-basis: 10%;
+}
+
+.comment-item-vote > a {
+    margin: auto auto;
+    padding: 25px;
+}
+
+.comment-item {
     display: flex;
     flex-direction: column;
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 15%);
-    margin: 10px 0;
+    margin: 10px 0 0 0;
+    flex-basis: 90%;
 }
 
 .comment-item-meta {
@@ -182,4 +252,14 @@
 .comment-item-content {
     padding: 10px 20px 10px 20px;
     line-height: 21px;
+}
+
+.comment-item-delete {
+    margin-left: 10px;
+}
+
+
+.comment-item-delete > a {
+    color: #ff0000;
+
 }

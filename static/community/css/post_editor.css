@@ -1,12 +1,11 @@
 .content-wrap{
-    overflow: hidden;
     max-width: 1044px;
     margin: 20px auto;
-    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .editor {
-    float: right;
     width: 728px;
 }
 

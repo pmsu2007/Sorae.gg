@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('summoner.urls')),
     path('community/', include('community.urls')),
+    path('common/', include('common.urls')),
 ]
