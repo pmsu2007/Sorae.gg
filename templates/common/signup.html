@@ -39,6 +39,7 @@
                         <label for="email">이메일</label>
                         <input type="text" class="form-control" name="email" id="email"
                                value="{{ form.email.value|default_if_none:'' }}">
+                        <span class="email-description"> ※ 본인의 이메일 주소를 정확하게 입력하세요. 비밀번호 분실시 사용됩니다. </span>
                     </div>
                     <div class="form-button-wrap">
                         <div class="form-button">

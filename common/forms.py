@@ -11,6 +11,20 @@ class UserForm(auth_forms.UserCreationForm):
         model = User
         fields = ("username", "password1", "password2", "email")
 
+    def clean_username(self):
+        data = self.cleaned_data['username']
+        if 1 < len(data) < 9:
+            return data
+        else:
+            raise ValidationError("은 2자 이상, 8자 이하만 가능합니다.")
+
+    def clean_email(self):
+        data = self.cleaned_data['email']
+
+        if data.split('@')[1] != 'gmail.com':
+            raise ValidationError("은 Gmail 형식의 이메일만 지원합니다.")
+
+
 
 class PasswordResetForm(auth_forms.PasswordResetForm):
     username = auth_forms.UsernameField(label="사용자 ID")
