@@ -1,6 +1,9 @@
 from django.core.exceptions import ImproperlyConfigured
 
 def get_client_ip(request):
+    """
+    get client ip address
+    """
     xff = request.META.get('HTTP_X_FORWARDED_FOR')
     if xff:
         ip = xff.split(',')[0]
@@ -11,6 +14,9 @@ def get_client_ip(request):
 
 
 def get_secret(setting, secrets):
+    """
+    using secrets.json for hiding private key
+    """
     try:
         return secrets[setting]
     except KeyError:
