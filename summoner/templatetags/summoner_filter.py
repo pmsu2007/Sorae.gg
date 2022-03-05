@@ -9,6 +9,10 @@ ENG_TO_KOR = {"Aatrox":"아트록스","Ahri":"아리","Akali":"아칼리","Aksha
 
 # match type dict
 MATCH_TYPE = {
+    '0':{
+        'type':'사용자',
+        'map':'소환사의 협곡'
+    },
     '420':{
         'type':'솔로랭크',
         'map':'소환사의 협곡'
